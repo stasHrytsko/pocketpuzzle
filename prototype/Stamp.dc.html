@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Марка</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: {{w}}px; height: {{h}}px; box-sizing: border-box; background: #FFF9EF; border: {{bw}}px dotted #E8DCCB; border-radius: 3px; padding: {{pad}}px; box-shadow: 0 2px 3px rgba(76,57,36,0.12), 0 6px 14px rgba(76,57,36,0.06); flex-shrink: 0;">
+  <div style="width: 100%; height: 100%; box-sizing: border-box; background: {{light}}; border: 1.5px solid {{dark}}; border-radius: 4px; display: flex; align-items: center; justify-content: center; color: {{dark}};">
+    <sc-if value="{{isAF}}" hint-placeholder-val="{{ true }}"><svg aria-hidden="true" width="{{icon}}" height="{{icon}}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"></path></svg></sc-if>
+    <sc-if value="{{isPF}}" hint-placeholder-val="{{ false }}"><svg aria-hidden="true" width="{{icon}}" height="{{icon}}" viewBox="0 0 24 24" fill="currentColor"><path d="M6 4h5v10h7v6H6z"></path></svg></sc-if>
+    <sc-if value="{{isGap}}" hint-placeholder-val="{{ false }}"><svg aria-hidden="true" width="{{icon}}" height="{{icon}}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"></rect><rect x="9" y="9" width="6" height="6" stroke-dasharray="2 2"></rect></svg></sc-if>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"game":{"editor":"enum","options":["af","pf","gap"],"default":"af"},"w":{"editor":"int","default":48,"min":24,"max":240},"$preview":{"width":48,"height":56}}'>
+var STAMP_COLORS = {
+  af:  { light: '#E2EAF0', dark: '#3D647D' },
+  pf:  { light: '#F3DFD8', dark: '#884C38' },
+  gap: { light: '#EAE1ED', dark: '#66516F' }
+};
+class Component extends DCLogic {
+  renderVals() {
+    var game = this.props.game || 'af';
+    var w = this.props.w ?? 48;
+    var k = w / 48;
+    var c = STAMP_COLORS[game] || STAMP_COLORS.af;
+    return {
+      w: w, h: Math.round(w * 56 / 48),
+      bw: Math.max(2, Math.round(3 * k)), pad: Math.max(3, Math.round(4 * k)),
+      icon: Math.round(22 * k),
+      light: c.light, dark: c.dark,
+      isAF: game === 'af', isPF: game === 'pf', isGap: game === 'gap'
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,6 +1,6 @@
 {
   "name": "Pocket Puzzle UI kit",
-  "version": "1.3",
+  "version": "1.4",
   "date": "2026-11-01",
   "status": "Единый источник значений. При расхождении с Designer Spec 1.1 (docx) действует этот файл; список отличий — в changes.",
   "colorSpace": "sRGB",
@@ -239,23 +239,6 @@
       "game": 48,
       "plus": "safe-area-inset-top"
     },
-    "bottomNav": {
-      "height": 64,
-      "plus": "safe-area-inset-bottom",
-      "labelStyle": "caption",
-      "items": [
-        "Почта",
-        "Письма",
-        "Игры"
-      ],
-      "hiddenOn": [
-        "игра",
-        "оформление конверта",
-        "отправка"
-      ],
-      "active": "sage.light фон + sage.dark текст и залитая иконка",
-      "inactive": "textSecondary, контурная иконка"
-    },
     "touchTarget": {
       "minimum": 44,
       "base": 48
@@ -272,6 +255,47 @@
       "maxContentWidth": 430,
       "align": "center",
       "note": "PWA на широком экране — одна колонка по центру на фоне paper."
+    },
+    "homePager": {
+      "panels": [
+        "Письма",
+        "Сегодня",
+        "Игры"
+      ],
+      "default": "Сегодня",
+      "gesture": "горизонтальный свайп, порог 60 px",
+      "labels": {
+        "height": 44,
+        "radius": 22,
+        "style": "caption",
+        "active": "sage.light фон, textPrimary 600, точка action 8 px",
+        "inactive": "textSecondary, точка-контур strokeStrong"
+      },
+      "hiddenOn": [
+        "игра",
+        "оформление конверта",
+        "отправка",
+        "письмо",
+        "глава",
+        "страница игры"
+      ]
+    },
+    "bottomCta": {
+      "height": 56,
+      "radius": 18,
+      "variant": "primary",
+      "lines": [
+        "label 15/20 600",
+        "sub 13/18"
+      ],
+      "icon": "play 22",
+      "states": [
+        "Новое письмо",
+        "Продолжить письмо · задача N из M",
+        "Открыть главу",
+        "Оформить конверт",
+        "Продолжить · игра, уровень N"
+      ]
     }
   },
   "elevation": {
@@ -751,6 +775,27 @@
       "showAfterMs": 300,
       "text": "Загружаем письмо",
       "shimmer": false
+    },
+    "levelGrid": {
+      "columns": 3,
+      "gap": 12,
+      "cellRadius": 14,
+      "aspect": "1:1",
+      "states": {
+        "done": "panel + галочка success",
+        "current": "action + ▶ onAction, raised",
+        "future": "slot + цифра textSecondary, inset, без замка"
+      },
+      "progress": {
+        "text": "N из M",
+        "bar": {
+          "height": 10,
+          "radius": 5,
+          "track": "slot",
+          "fill": "action"
+        }
+      },
+      "difficultyTabs": "только если есть в движке игры (segmentedControl)"
     }
   },
   "game": {
@@ -1351,6 +1396,12 @@
       "segmentedControl в MVP: Письма → Отправленные / Записки.",
       "Карточка игры в сетке 2 в ряд; не пришедшие игры видны без замка, с пометкой «придёт по почте».",
       "Цвета не менялись — пересчёт контраста не нужен (текст «придёт по почте» — textPrimary на panel)."
+    ],
+    "1.4": [
+      "Навигация: три панели главной со свайпом (Письма ← Сегодня → Игры) вместо нижних вкладок; подписи-кнопки; одна главная кнопка внизу (решение автора).",
+      "Иконка покупки отложена (решение автора).",
+      "Добавлена сетка уровней на странице игры, без замков.",
+      "Цвета не менялись — пересчёт контраста не нужен."
     ]
   }
 }

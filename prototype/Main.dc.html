@@ -89,7 +89,7 @@ button{font-family:inherit}
   <div style="font-size: 13px; line-height: 18px; color: #6E6459;">{{today.full}}</div>
 
   <div style="flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 24px; padding: 16px 0 24px;">
-    <div style="position: relative; width: 290px; height: 240px;">
+    <button type="button" onClick="{{homePrimary}}" aria-label="{{homeEnvLabel}}" style="position: relative; width: 290px; height: 240px; padding: 0; margin: 0; background: transparent; border: none; cursor: pointer; border-radius: 6px; display: block;">
       <sc-if value="{{homeOpen}}" hint-placeholder-val="{{ false }}">
         <div style="position: absolute; left: 30px; top: 0; width: 230px; height: 150px; background: #FFF9EF; border: 1px solid #C6B7A5; border-radius: 4px; box-shadow: 0 2px 3px rgba(76,57,36,0.12); padding: 16px; box-sizing: border-box; display: flex; flex-direction: column; gap: 8px;">
           <div style="height: 6px; width: 60%; background: #E8DCCB; border-radius: 3px;"></div>
@@ -100,7 +100,7 @@ button{font-family:inherit}
       <div style="position: absolute; left: 0; top: 40px;">
         <dc-import name="Envelope" w="{{ 290 }}" slots="{{todaySlots}}" postmark="{{todaySent}}" date="{{today.mark}}" hint-size="290px,200px"></dc-import>
       </div>
-    </div>
+    </button>
     <div style="display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center;">
       <div style="font: 500 26px/34px 'Source Serif 4', Georgia, serif;">{{homeTitle}}</div>
       <sc-if value="{{homeShowMarks}}" hint-placeholder-val="{{ false }}">
@@ -173,7 +173,7 @@ button{font-family:inherit}
         <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#33312E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
       </div>
       <div style="display: flex; flex-direction: column; gap: 2px;">
-        <span style="font: 600 15px/20px Inter, system-ui, sans-serif;">{{L.chTitle}} · запечатана</span>
+        <span style="font: 600 15px/20px Inter, system-ui, sans-serif;">Записка почтальона · запечатана</span>
         <span style="font-size: 13px; line-height: 18px; color: #33312E;">Откроется, когда решишь все задачи письма</span>
       </div>
     </div>
@@ -182,8 +182,8 @@ button{font-family:inherit}
     <button type="button" class="card" onClick="{{L.readChapter}}" style="min-height: 76px; display: flex; align-items: center; gap: 12px; padding: 16px; background: #FFF9EF; border: 1px solid #C6B7A5;">
       <div style="width: 44px; height: 44px; flex-shrink: 0; border-radius: 12px; background: #F3E6CA; border: 1.5px solid #805617; display: flex; align-items: center; justify-content: center; font: 600 15px/20px Inter, system-ui, sans-serif; color: #805617;">{{L.chNum}}</div>
       <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px;">
-        <span style="font: 600 15px/20px Inter, system-ui, sans-serif;">{{L.chTitle}} · открыта</span>
-        <span style="font-size: 13px; line-height: 18px; color: #6E6459;">Кусочек истории мира. Нажми, чтобы прочитать</span>
+        <span style="font: 600 15px/20px Inter, system-ui, sans-serif;">Записка почтальона · открыта</span>
+        <span style="font-size: 13px; line-height: 18px; color: #6E6459;">{{L.chHint}}</span>
       </div>
       <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6E6459" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
     </button>
@@ -200,9 +200,11 @@ button{font-family:inherit}
           <sc-if value="{{t.isAF}}"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#33312E" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></svg></sc-if>
           <sc-if value="{{t.isPF}}"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="#33312E"><path d="M6 4h5v10h7v6H6z"/></svg></sc-if>
           <sc-if value="{{t.isGap}}"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#33312E" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6" stroke-dasharray="2 2"/></svg></sc-if>
+          <sc-if value="{{t.isPh}}"><span style="font: 600 17px/24px Inter, system-ui, sans-serif; color: #33312E;">{{t.phNum}}</span></sc-if>
         </div>
         <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px;">
           <span style="font: 600 15px/20px Inter, system-ui, sans-serif;">{{t.name}}</span>
+          <sc-if value="{{t.isNew}}" hint-placeholder-val="{{ false }}"><span style="font: 600 13px/18px Inter, system-ui, sans-serif; color: #805617;">Новая игра</span></sc-if>
           <span style="font-size: 13px; line-height: 18px; color: #6E6459;">{{t.desc}}</span>
         </div>
         <span class="tag" style="{{t.tagStyle}}"><sc-if value="{{t.solved}}"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg></sc-if>{{t.status}}</span>
@@ -267,16 +269,19 @@ button{font-family:inherit}
 <div style="flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; padding: 56px 20px 32px; box-sizing: border-box;">
   <div style="display: flex; flex-direction: column; align-items: center; gap: 24px; text-align: center; padding-top: 40px;">
     <span class="tag" style="background: #E2E8D9; color: #465D3D;"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg>Решено</span>
-    <div class="rise"><dc-import name="Stamp" game="{{cur.id}}" w="{{ 120 }}" hint-size="120px,140px"></dc-import></div>
+    <div class="rise"><dc-import name="Stamp" game="{{cur.id}}" time="{{solvedTime}}" w="{{ 120 }}" hint-size="120px,140px"></dc-import></div>
     <div style="display: flex; flex-direction: column; gap: 4px;">
       <div style="font: 500 26px/34px 'Source Serif 4', Georgia, serif;">{{solvedTitle}}</div>
       <div style="font: 600 15px/20px Inter, system-ui, sans-serif;">{{cur.name}}</div>
+      <sc-if value="{{solvedTime}}" hint-placeholder-val="{{ false }}"><div style="font-size: 13px; line-height: 18px; color: #33312E;">Время: {{solvedTime}}</div></sc-if>
       <div style="font-size: 13px; line-height: 18px; color: #6E6459;">{{solvedNote}}</div>
     </div>
+    <sc-if value="{{solvedAll}}" hint-placeholder-val="{{ false }}">
+      <span class="tag" style="background: #F3E6CA; color: #805617;"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3l2.6 5.6 6 .7-4.5 4.1 1.2 6L12 16.6 6.7 19.4l1.2-6L3.4 9.3l6-.7z"/></svg>Все задачи решены — записка почтальона открыта</span>
+    </sc-if>
   </div>
   <div style="display: flex; flex-direction: column; gap: 8px;">
     <sc-if value="{{hasNext}}" hint-placeholder-val="{{ true }}"><button type="button" class="btn primary" onClick="{{nextTask}}">Следующая задача</button></sc-if>
-    <sc-if value="{{offerChapter}}" hint-placeholder-val="{{ false }}"><button type="button" class="btn primary" onClick="{{openChapterReward}}">Открыть главу</button></sc-if>
     <sc-if value="{{offerDecorate}}" hint-placeholder-val="{{ false }}"><button type="button" class="btn primary" onClick="{{goDecorate}}">Оформить конверт</button></sc-if>
     <button type="button" class="btn quiet" onClick="{{goLetter}}">К письму</button>
   </div>
@@ -286,25 +291,25 @@ button{font-family:inherit}
 <!-- ======================= ГЛАВА ======================= -->
 <sc-if value="{{isChapter}}" hint-placeholder-val="{{ false }}">
 <div style="height: 56px; flex-shrink: 0; display: flex; align-items: center; padding: 0 8px; gap: 4px;">
-  <button type="button" class="ib" aria-label="Закрыть главу" onClick="{{chapterClose}}"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
-  <div style="flex-grow: 1; font: 600 17px/24px Inter, system-ui, sans-serif;">История мира</div>
+  <button type="button" class="ib" aria-label="Закрыть записку" onClick="{{chapterClose}}"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  <div style="flex-grow: 1; font: 600 17px/24px Inter, system-ui, sans-serif;">Записка почтальона</div>
   <div style="width: 48px;"></div>
 </div>
 <div style="flex-grow: 1; overflow-y: auto; padding: 8px 20px 24px; box-sizing: border-box; display: flex; flex-direction: column; gap: 20px;">
   <sc-if value="{{chapterIsReward}}" hint-placeholder-val="{{ true }}">
-    <div style="display: flex; justify-content: center;"><span class="tag" style="background: #F3E6CA; color: #805617;"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3l2.6 5.6 6 .7-4.5 4.1 1.2 6L12 16.6 6.7 19.4l1.2-6L3.4 9.3l6-.7z"/></svg>Все задачи решены — глава открыта</span></div>
+    <div style="display: flex; justify-content: center;"><span class="tag" style="background: #F3E6CA; color: #805617;"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3l2.6 5.6 6 .7-4.5 4.1 1.2 6L12 16.6 6.7 19.4l1.2-6L3.4 9.3l6-.7z"/></svg>Письмо в пути — записка открыта</span></div>
   </sc-if>
   <div class="rise" style="display: flex; justify-content: center;">
     <div style="width: 120px; height: 120px; border-radius: 22px; background: #F3E6CA; border: 1.5px solid #805617; display: flex; align-items: center; justify-content: center; font: 500 48px/56px 'Source Serif 4', Georgia, serif; color: #805617; box-shadow: 0 2px 3px rgba(76,57,36,0.12), 0 6px 14px rgba(76,57,36,0.06), inset 0 1px 0 rgba(255,249,239,0.65);">{{ch.num}}</div>
   </div>
   <div style="display: flex; flex-direction: column; gap: 8px; text-align: center;">
     <div style="font: 500 26px/34px 'Source Serif 4', Georgia, serif;">{{ch.title}}</div>
-    <div style="font-size: 13px; line-height: 18px; color: #6E6459;">Кусочек {{ch.num}} из {{piecesTotal}} · из письма {{ch.date}}</div>
+    <div style="font-size: 13px; line-height: 18px; color: #6E6459;">Кусочек большого пазла · из письма {{ch.date}}</div>
   </div>
   <div style="background: #FFF9EF; border: 1px solid #C6B7A5; border-radius: 18px; padding: 20px; font-size: 16px; line-height: 24px; white-space: pre-line;">{{ch.text}}</div>
   <div style="flex-grow: 1;"></div>
   <sc-if value="{{chapterIsReward}}" hint-placeholder-val="{{ true }}">
-    <button type="button" class="btn primary" onClick="{{goDecorate}}">Дальше: оформить конверт</button>
+    <button type="button" class="btn primary" onClick="{{chapterClose}}">Дальше</button>
     <button type="button" class="btn quiet" onClick="{{goWorld}}">Посмотреть большой пазл</button>
   </sc-if>
   <sc-if value="{{chapterNotReward}}" hint-placeholder-val="{{ false }}">
@@ -317,11 +322,11 @@ button{font-family:inherit}
 <sc-if value="{{isWorld}}" hint-placeholder-val="{{ false }}">
 <div style="height: 56px; flex-shrink: 0; display: flex; align-items: center; padding: 0 8px; gap: 4px;">
   <button type="button" class="ib" aria-label="Назад" onClick="{{worldBack}}"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
-  <div style="flex-grow: 1; font: 600 17px/24px Inter, system-ui, sans-serif;">История мира</div>
+  <div style="flex-grow: 1; font: 600 17px/24px Inter, system-ui, sans-serif;">Записки</div>
   <div style="width: 48px;"></div>
 </div>
 <div style="flex-grow: 1; overflow-y: auto; padding: 8px 20px 24px; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px;">
-  <div style="font-size: 13px; line-height: 18px; color: #6E6459;">Каждая глава — кусочек большой картины. Открыто {{chaptersOpen}} из {{piecesTotal}}.</div>
+  <div style="font-size: 13px; line-height: 18px; color: #6E6459;">Каждая записка — кусочек большой картины. Открыто: {{chaptersOpen}}.</div>
   <div style="background: #E8DCCB; border: 1.5px solid #756B5D; border-radius: 18px; padding: 10px; box-shadow: inset 0 2px 4px rgba(76,57,36,0.14);">
     <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px;">
       <sc-for list="{{pieces}}" as="p" hint-placeholder-count="9">
@@ -342,11 +347,11 @@ button{font-family:inherit}
 <sc-if value="{{isDecorate}}" hint-placeholder-val="{{ false }}">
 <div style="height: 56px; flex-shrink: 0; display: flex; align-items: center; padding: 0 8px; gap: 4px;">
   <button type="button" class="ib" aria-label="Назад" onClick="{{goLetter}}"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
-  <div style="flex-grow: 1; font: 600 17px/24px Inter, system-ui, sans-serif;">Оформить конверт</div>
+  <div style="flex-grow: 1; font: 600 17px/24px Inter, system-ui, sans-serif;">Конверт</div>
   <div style="width: 48px;"></div>
 </div>
 <div style="flex-grow: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 24px; padding: 16px 20px 24px; box-sizing: border-box;">
-  <div style="display: flex; justify-content: center; padding-top: 16px;">
+  <div class="env-move" style="display: flex; justify-content: center; padding-top: 16px; {{envMoveStyle}}">
     <dc-import name="Envelope" w="{{ 290 }}" slots="{{decorSlots}}" postmark="{{ false }}" date="" hint-size="290px,200px"></dc-import>
   </div>
   <div style="{{decorHintStyle}}">{{decorHint}}</div>
@@ -355,7 +360,7 @@ button{font-family:inherit}
     <div style="background: #E8DCCB; border-radius: 18px; padding: 12px; min-height: 76px; display: flex; gap: 8px; overflow-x: auto; box-shadow: inset 0 2px 4px rgba(76,57,36,0.14);">
       <sc-for list="{{tray}}" as="s" hint-placeholder-count="3">
         <button type="button" aria-label="{{s.label}}" aria-pressed="{{s.selected}}" onClick="{{s.pick}}" style="{{s.style}}">
-          <dc-import name="Stamp" game="{{s.game}}" w="{{ 48 }}" hint-size="48px,56px"></dc-import>
+          <dc-import name="Stamp" game="{{s.game}}" time="{{s.time}}" w="{{ 48 }}" hint-size="48px,56px"></dc-import>
           <sc-if value="{{s.placed}}"><span style="position: absolute; right: 2px; top: 2px; width: 20px; height: 20px; border-radius: 10px; background: #465D3D; display: flex; align-items: center; justify-content: center;"><svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#FFF9EF" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg></span></sc-if>
         </button>
       </sc-for>
@@ -363,7 +368,7 @@ button{font-family:inherit}
     </div>
   </div>
   <div style="flex-grow: 1;"></div>
-  <button type="button" class="btn primary" onClick="{{goSend}}">Готово</button>
+  <button type="button" class="btn primary" onClick="{{send}}">{{sendLabel}}</button>
 </div>
 </sc-if>
 
@@ -375,30 +380,23 @@ button{font-family:inherit}
   <div style="width: 48px;"></div>
 </div>
 <div style="flex-grow: 1; display: flex; flex-direction: column; padding: 16px 20px 32px; box-sizing: border-box;">
-  <sc-if value="{{L.notSent}}" hint-placeholder-val="{{ true }}">
-    <div style="flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-      <div class="env-move" style="{{envMoveStyle}}">
-        <dc-import name="Envelope" w="{{ 218 }}" slots="{{L.slotsView}}" postmark="{{ false }}" date="" hint-size="218px,150px"></dc-import>
-      </div>
-      <div style="position: relative; width: 260px; height: 180px; margin-top: 24px; background: #F1E7D8; border: 1px solid #756B5D; border-radius: 28px 28px 8px 8px; box-sizing: border-box; box-shadow: 0 2px 3px rgba(76,57,36,0.12), 0 6px 14px rgba(76,57,36,0.06), inset 0 1px 0 rgba(255,249,239,0.65); display: flex; flex-direction: column; align-items: center;">
-        <div style="margin-top: 36px; width: 180px; height: 28px; border-radius: 14px; background: #33312E; box-shadow: inset 0 2px 4px rgba(0,0,0,0.4);"></div>
-        <div style="margin-top: 24px; font: 600 13px/18px Inter, system-ui, sans-serif; letter-spacing: 0.08em; color: #6E6459;">ПОЧТА</div>
-        <div style="position: absolute; left: -1px; right: -1px; bottom: -1px; height: 10px; background: #C78D73; border: 1px solid #884C38; border-radius: 0 0 8px 8px; box-sizing: border-box;"></div>
-      </div>
-    </div>
-    <button type="button" class="btn primary" onClick="{{send}}">{{sendLabel}}</button>
-  </sc-if>
   <sc-if value="{{L.sent}}" hint-placeholder-val="{{ false }}">
     <div style="flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 32px; text-align: center;">
       <div class="rise"><dc-import name="Envelope" w="{{ 290 }}" slots="{{L.slotsView}}" postmark="{{ true }}" date="{{L.mark}}" hint-size="290px,200px"></dc-import></div>
       <div style="display: flex; flex-direction: column; gap: 8px;">
         <div style="font: 500 26px/34px 'Source Serif 4', Georgia, serif;">Отправлено</div>
-        <div style="font-size: 16px; line-height: 24px; color: #6E6459;">Следующее письмо придёт завтра.</div>
+        <div style="font-size: 16px; line-height: 24px; color: #6E6459;">{{sentNote}}</div>
       </div>
     </div>
     <div style="display: flex; flex-direction: column; gap: 8px;">
-      <button type="button" class="btn primary" onClick="{{afterSend}}">Дальше</button>
-      <button type="button" class="btn quiet" onClick="{{goLetter}}">Посмотреть письмо</button>
+      <sc-if value="{{noteUnread}}" hint-placeholder-val="{{ true }}">
+        <button type="button" class="btn primary" onClick="{{readNoteAfterSend}}">Прочитать записку почтальона</button>
+        <button type="button" class="btn quiet" onClick="{{afterSend}}">Дальше</button>
+      </sc-if>
+      <sc-if value="{{noteRead}}" hint-placeholder-val="{{ false }}">
+        <button type="button" class="btn primary" onClick="{{afterSend}}">Дальше</button>
+        <button type="button" class="btn quiet" onClick="{{goLetter}}">Посмотреть письмо</button>
+      </sc-if>
     </div>
   </sc-if>
 </div>
@@ -460,7 +458,7 @@ button{font-family:inherit}
     </sc-if>
   </sc-if>
   <sc-if value="{{lettersTabNotes}}" hint-placeholder-val="{{ false }}">
-    <div style="font-size: 13px; line-height: 18px; color: #6E6459;">Каждая глава — кусочек большой картины. Открыто {{chaptersOpen}} из {{piecesTotal}}.</div>
+    <div style="font-size: 13px; line-height: 18px; color: #6E6459;">Каждая записка — кусочек большой картины. Открыто: {{chaptersOpen}}.</div>
     <div style="background: #E8DCCB; border: 1.5px solid #756B5D; border-radius: 18px; padding: 10px; box-shadow: inset 0 2px 4px rgba(76,57,36,0.14);">
       <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px;">
         <sc-for list="{{pieces}}" as="p" hint-placeholder-count="9">
@@ -475,7 +473,7 @@ button{font-family:inherit}
     </div>
     <div style="font: 600 20px/28px Inter, system-ui, sans-serif;">Записки почтальона</div>
     <sc-if value="{{notesEmpty}}" hint-placeholder-val="{{ false }}">
-      <div style="font-size: 16px; line-height: 24px; color: #6E6459;">Первая глава откроется, когда решишь все задачи письма.</div>
+      <div style="font-size: 16px; line-height: 24px; color: #6E6459;">Первая записка откроется, когда решишь все задачи письма.</div>
     </sc-if>
     <sc-for list="{{chapterList}}" as="n" hint-placeholder-count="1">
       <button type="button" class="card" onClick="{{n.read}}" style="min-height: 64px; display: flex; align-items: center; gap: 12px; padding: 12px 16px; background: #FFF9EF; border: 1px solid #C6B7A5;">
@@ -484,7 +482,7 @@ button{font-family:inherit}
         <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6E6459" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
       </button>
     </sc-for>
-    <div style="font-size: 13px; line-height: 18px; color: #33312E;">[Картина большого пазла — по библии мира. Записки у разных игроков разные — с v2.]</div>
+    <div style="font-size: 13px; line-height: 18px; color: #33312E;">[Картина большого пазла и число кусочков — по библии мира. Записки от других игроков — с v2.]</div>
   </sc-if>
 </div>
 </sc-if>
@@ -503,6 +501,7 @@ button{font-family:inherit}
           <sc-if value="{{g.isAF}}"><svg aria-hidden="true" width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#33312E" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></svg></sc-if>
           <sc-if value="{{g.isPF}}"><svg aria-hidden="true" width="34" height="34" viewBox="0 0 24 24" fill="#33312E"><path d="M6 4h5v10h7v6H6z"/></svg></sc-if>
           <sc-if value="{{g.isGap}}"><svg aria-hidden="true" width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#33312E" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6" stroke-dasharray="2 2"/></svg></sc-if>
+          <sc-if value="{{g.isPh}}"><span style="font: 600 26px/34px Inter, system-ui, sans-serif; color: #33312E;">{{g.phNum}}</span></sc-if>
         </div>
         <span style="font: 600 15px/20px Inter, system-ui, sans-serif; text-align: center;">{{g.name}}</span>
         <sc-if value="{{g.unlocked}}" hint-placeholder-val="{{ true }}">
@@ -561,6 +560,7 @@ button{font-family:inherit}
       <sc-if value="{{curF.isAF}}"><svg aria-hidden="true" width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#33312E" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></svg></sc-if>
       <sc-if value="{{curF.isPF}}"><svg aria-hidden="true" width="44" height="44" viewBox="0 0 24 24" fill="#33312E"><path d="M6 4h5v10h7v6H6z"/></svg></sc-if>
       <sc-if value="{{curF.isGap}}"><svg aria-hidden="true" width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#33312E" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6" stroke-dasharray="2 2"/></svg></sc-if>
+      <sc-if value="{{curF.isPh}}"><span style="font: 600 34px/40px Inter, system-ui, sans-serif; color: #33312E;">{{curF.phNum}}</span></sc-if>
     </div>
     <div style="display: flex; flex-direction: column; gap: 4px;">
       <div style="font: 500 26px/34px 'Source Serif 4', Georgia, serif;">{{freeTitle}}</div>
@@ -750,25 +750,38 @@ button{font-family:inherit}
 var G = {
   af:  { id: 'af',  name: 'Arrow Flip',  desc: 'Меняй направление', light: '#E2EAF0', base: '#A5BBC8', dark: '#3D647D' },
   pf:  { id: 'pf',  name: 'Perfect Fit', desc: 'Заполни поле',       light: '#F3DFD8', base: '#C78D73', dark: '#884C38' },
-  gap: { id: 'gap', name: 'The Gap',     desc: 'Сортируй по колбам', light: '#EAE1ED', base: '#A998AD', dark: '#66516F' }
+  gap: { id: 'gap', name: 'The Gap',     desc: 'Сортируй по колбам', light: '#EAE1ED', base: '#A998AD', dark: '#66516F' },
+  g4:  { id: 'g4',  name: '[Игра 4]',    desc: '[Описание игры]',    light: '#F1E7D8', base: '#DED0BD', dark: '#6E6459', ph: '4' },
+  g5:  { id: 'g5',  name: '[Игра 5]',    desc: '[Описание игры]',    light: '#F1E7D8', base: '#DED0BD', dark: '#6E6459', ph: '5' },
+  g6:  { id: 'g6',  name: '[Игра 6]',    desc: '[Описание игры]',    light: '#F1E7D8', base: '#DED0BD', dark: '#6E6459', ph: '6' }
 };
-var ORDER = ['af', 'pf', 'gap'];
-var SLOT_X = [218, 162, 106];
+// Темп игр (гипотеза автора, 2026-11-01; частоту ещё тестировать): день 1 — три игры, день 2 — 4-я, через неделю — 5-я, через 2 недели — 6-я.
+var ORDER = ['af', 'pf', 'gap', 'g4', 'g5', 'g6'];
+var WD = ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'];
+var MON = ['янв.', 'февр.', 'марта', 'апр.', 'мая', 'июня', 'июля', 'авг.', 'сент.', 'окт.', 'нояб.', 'дек.'];
+var MON_G = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
+var ROMAN = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
+function dayInfo(offset) {
+  var d = new Date(); d.setHours(12, 0, 0, 0); d.setDate(d.getDate() + offset);
+  var n = d.getDate(), m = d.getMonth();
+  return { date: n + ' ' + MON[m], full: WD[d.getDay()] + ', ' + n + ' ' + MON[m] + ' ' + d.getFullYear(), mark: n + ' ' + ROMAN[m], long: n + ' ' + MON_G[m], iso: d.toISOString().slice(0, 10) };
+}
+var D1 = dayInfo(0), D2 = dayInfo(1);
 var LETTERS = {
   l1: {
-    id: 'l1', day: 1, date: '30 окт.', full: 'Пт, 30 окт. 2026', mark: '30 X',
-    title: 'Первое письмо', attTitle: 'Записка почтальона',
-    att: 'Привет! Я почтальон.\nКаждый день я буду приносить тебе письмо с головоломкой. Реши её — получишь марку. Наклей марку на конверт и отправь письмо обратно.\nА когда решишь всё, что в письме, — откроется глава. По главам ты узнаешь, где мы и почему я ношу эти письма.\nЗавтра принесу новое.',
-    tasks: ['af'],
-    chNum: 1, chTitle: 'Глава 1',
-    chText: '[Текст главы 1 — из библии мира автора.]\n\nНапример, о чём она может быть: кто такой почтальон и как он оказался здесь.'
+    id: 'l1', day: 1, date: D1.date, full: D1.full, mark: D1.mark,
+    title: 'Первое письмо', attTitle: 'Вступление',
+    att: 'Привет! Я почтальон.\nКаждый день я приношу письмо с головоломками. За каждую решённую — марка. Наклей марки на конверт и отправь письмо обратно.\nКогда решишь всё, в письме откроется моя записка.\nЗавтра принесу новое.\n\n[Вступление в мир — по библии мира автора.]',
+    tasks: ['af', 'pf', 'gap'],
+    chNum: 1, chTitle: 'Записка 1',
+    chText: '[Текст записки почтальона 1 — из библии мира автора.]'
   },
   l2: {
-    id: 'l2', day: 2, date: '31 окт.', full: 'Сб, 31 окт. 2026', mark: '31 X',
-    title: 'Письмо от 31 октября', attTitle: '', att: '',
-    tasks: ['af', 'pf', 'gap'],
-    chNum: 2, chTitle: 'Глава 2',
-    chText: '[Текст главы 2 — из библии мира автора.]\n\nНапример: откуда приходят письма и почему в них загадки.'
+    id: 'l2', day: 2, date: D2.date, full: D2.full, mark: D2.mark,
+    title: 'Письмо от ' + D2.long, attTitle: '', att: '',
+    tasks: ['pf', 'g4'],
+    chNum: 2, chTitle: 'Записка 2',
+    chText: '[Текст записки почтальона 2 — из библии мира автора.]'
   }
 };
 var PIECES_TOTAL = 9;
@@ -782,22 +795,23 @@ var BANNERS = {
   newLetter: { text: 'Пришло новое письмо. Текущая задача сохранена.', mark: '✉', tone: 'neutral', action: 'На главную' }
 };
 
-function flags(id) { return { isAF: id === 'af', isPF: id === 'pf', isGap: id === 'gap' }; }
+function flags(id) { return { isAF: id === 'af', isPF: id === 'pf', isGap: id === 'gap', isPh: !!(G[id] && G[id].ph), phNum: (G[id] && G[id].ph) || '' }; }
+function fmtTime(sec) { if (sec == null) return ''; var m = Math.floor(sec / 60), r = sec % 60; return m + ':' + (r < 10 ? '0' : '') + r; }
 function tile(g, size, r) {
   return 'width: ' + size + 'px; height: ' + size + 'px; flex-shrink: 0; box-sizing: border-box; border-radius: ' + r + 'px; background: ' + g.base + '; border: 1.5px solid ' + g.dark + '; display: flex; align-items: center; justify-content: center; box-shadow: ' + SHADOW_RAISED + ';';
 }
-function emptyLetter() { return { opened: false, solved: {}, slots: [null, null, null], phase: 'ready' }; }
+function emptyLetter(id) { return { opened: false, solved: {}, times: {}, slots: LETTERS[id].tasks.map(() => null), phase: 'ready' }; }
 function initState(startDay) {
   var day2 = String(startDay) === '2';
-  var l1 = emptyLetter();
-  if (day2) { l1 = { opened: true, solved: { af: true }, slots: ['af', null, null], phase: 'done' }; }
+  var l1 = emptyLetter('l1');
+  if (day2) { l1 = { opened: true, solved: { af: true, pf: true, gap: true }, times: {}, slots: ['af', 'pf', 'gap'], phase: 'done' }; }
   return {
     screen: 'splash', next: 'home', day: day2 ? 2 : 1,
-    letters: { l1: l1, l2: emptyLetter() },
+    letters: { l1: l1, l2: emptyLetter('l2') },
     lid: day2 ? 'l2' : 'l1', letterFrom: 'home',
     cur: 'af', src: 'letter', replay: false, firstStamp: !day2,
-    level: { af: day2 ? 2 : 1, pf: 1, gap: 1 }, doneLevel: 1,
-    played: day2 ? { af: true } : {}, tutorialFor: null,
+    level: { af: 1, pf: 1, gap: 1, g4: 1, g5: 1, g6: 1 }, doneLevel: 1,
+    played: day2 ? { af: true, pf: true, gap: true } : {}, tutorialFor: null,
     sel: null, attOpen: true, sheet: false, modal: false, toast: null, toastKind: 'ok',
     sound: true, vib: true, reminderAsked: day2, remOn: false,
     banner: null, failNextSend: false, sendFailed: false, hintOn: false, sysPrompt: false,
@@ -844,31 +858,32 @@ class Component extends DCLogic {
     return u;
   }
 
-  slotsFor(arr, interactive) {
-    return SLOT_X.map((x, i) => {
-      var g = arr[i];
-      return {
-        x: x, game: g || '', filled: !!g, show: interactive || !!g, inert: !interactive, sw: 48,
-        border: interactive && !g ? '1.5px dashed #756B5D' : 'none',
-        label: g ? ('Место ' + (i + 1) + ': марка ' + G[g].name) : ('Пустое место ' + (i + 1)),
-        tap: interactive ? () => this.tapSlot(i) : null
-      };
-    });
+  slotsFor(arr, interactive, times) {
+    var tm = times || {};
+    return arr.map((g, i) => ({
+      x: 218 - 56 * i, game: g || '', time: g ? fmtTime(tm[g]) : '', filled: !!g, show: interactive || !!g, inert: !interactive, sw: 48,
+      border: interactive && !g ? '1.5px dashed #756B5D' : 'none',
+      label: g ? ('Место ' + (i + 1) + ': марка ' + G[g].name + '. Нажми, чтобы снять') : ('Пустое место ' + (i + 1)),
+      tap: interactive ? () => this.tapSlot(i) : null
+    }));
+  }
+
+  // Один тап: марка из лотка встаёт на первое свободное место; тап по марке на конверте — обратно в лоток.
+  placeStamp(g) {
+    var st = this.state; var lid = st.lid; var s = st.letters[lid].slots.slice();
+    var at = s.indexOf(g);
+    if (at !== -1) s[at] = null;
+    else { var free = s.indexOf(null); if (free === -1) { this.showToast('Все места заняты — сними марку с конверта'); return; } s[free] = g; }
+    this.setState({ letters: this.patchLetter(lid, { slots: s }) });
   }
 
   tapSlot(i) {
-    var st = this.state; var lid = st.lid;
-    var s = st.letters[lid].slots.slice();
-    if (st.sel) {
-      for (var j = 0; j < 3; j++) { if (s[j] === st.sel) s[j] = null; }
-      s[i] = st.sel;
-      this.setState({ letters: this.patchLetter(lid, { slots: s }), sel: null });
-    } else if (s[i]) {
-      s[i] = null;
-      this.setState({ letters: this.patchLetter(lid, { slots: s }) });
-    } else {
-      this.showToast('Сначала выбери марку в лотке');
-    }
+    var st = this.state; var lid = st.lid; var ls = st.letters[lid];
+    var s = ls.slots.slice();
+    if (s[i]) { s[i] = null; this.setState({ letters: this.patchLetter(lid, { slots: s }) }); return; }
+    var next = LETTERS[lid].tasks.find((g) => ls.solved[g] && s.indexOf(g) === -1);
+    if (!next) { this.showToast('Все марки уже на конверте'); return; }
+    s[i] = next; this.setState({ letters: this.patchLetter(lid, { slots: s }) });
   }
 
   openLetter(id, from) {
@@ -876,9 +891,9 @@ class Component extends DCLogic {
     this.setState({ letters: this.patchLetter(id, patch), lid: id, letterFrom: from || 'home', screen: 'letter', attOpen: true, sel: null });
   }
 
-  openChapterReward(id) {
+  openNote(id, from) {
     var seen = Object.assign({}, this.state.chSeen); seen[id] = true;
-    this.setState({ screen: 'chapter', chId: id, lid: id, chReward: true, chFrom: 'letter', chSeen: seen });
+    this.setState({ screen: 'chapter', chId: id, chReward: from === 'sent', chFrom: from, chSeen: seen });
   }
 
   startPuzzle(id, src) {
@@ -886,7 +901,7 @@ class Component extends DCLogic {
     var first = !st.played[id];
     var played = Object.assign({}, st.played); played[id] = true;
     this.setState({ cur: id, src: src, screen: 'puzzle', sheet: false, modal: false, played: played, tutorialFor: first ? id : null, hintOn: false, playLevel: src === 'free' ? (this._pl || null) : null, lastFree: src === 'free' ? id : this.state.lastFree });
-    this._pl = null;
+    this._pl = null; this._t0 = Date.now();
   }
 
   letterView(id) {
@@ -897,9 +912,9 @@ class Component extends DCLogic {
       var done = !!ls.solved[g];
       var isNew = !done && LETTERS.l1.tasks.indexOf(g) === -1 && id === 'l2';
       return Object.assign({}, G[g], flags(g), {
-        solved: done,
-        status: done ? 'Решено' : (isNew ? 'Новая игра' : 'Не решено'),
-        tagStyle: done ? 'background: #E2E8D9; color: #465D3D;' : (isNew ? 'background: #F3E6CA; color: #805617;' : 'background: #E8DCCB; color: #33312E;'),
+        solved: done, isNew: isNew,
+        status: done ? 'Решено' : 'Не решено',
+        tagStyle: done ? 'background: #E2E8D9; color: #465D3D;' : 'background: #E8DCCB; color: #33312E;',
         tileStyle: tile(G[g], 44, 12),
         open: () => this.startPuzzle(g, 'letter')
       });
@@ -908,10 +923,11 @@ class Component extends DCLogic {
     var allSolved = solvedN === meta.tasks.length;
     return Object.assign({}, meta, {
       hasNote: !!meta.att, chOpen: allSolved, chSealed: !allSolved,
-      readChapter: () => { var seen = Object.assign({}, st.chSeen); seen[id] = true; this.setState({ screen: 'chapter', chId: id, chReward: false, chFrom: 'letter', chSeen: seen }); },
+      chHint: st.chSeen[id] ? 'Нажми, чтобы перечитать' : (sent ? 'Нажми, чтобы прочитать' : 'Прочитаешь сейчас или после отправки'),
+      readChapter: () => this.openNote(id, 'letter'),
       sent: sent, notSent: !sent, opened: ls.opened, solvedCount: solvedN, total: meta.tasks.length,
       ready: ls.opened && solvedN === meta.tasks.length && !sent, tasks: tasks, when: when,
-      slotsView: this.slotsFor(ls.slots, false)
+      slotsView: this.slotsFor(ls.slots, false, ls.times)
     });
   }
 
@@ -927,22 +943,20 @@ class Component extends DCLogic {
     var lMeta = LETTERS[st.lid];
     var nextUnsolved = lMeta.tasks.find((g) => !ls.solved[g]);
 
-    var homeTitle, homeBody, homePrimaryLabel, homePrimary;
+    var homeTitle, homeBody, homePrimary, homeEnvLabel;
     if (!today.opened) {
-      homeTitle = 'Вам письмо'; homeBody = st.day === 1 ? 'Почтальон принёс первое письмо.' : 'Новые головоломки ждут внутри.';
-      homePrimaryLabel = 'Открыть'; homePrimary = () => this.openLetter(todayId, 'home');
+      homeTitle = 'Вам письмо'; homeBody = st.day === 1 ? 'Почтальон принёс первое письмо. Нажми на конверт.' : 'Новые головоломки ждут внутри.';
+      homeEnvLabel = 'Открыть письмо'; homePrimary = () => this.openLetter(todayId, 'home');
     } else if (today.sent) {
-      homeTitle = 'Письмо отправлено'; homeBody = 'Следующее придёт завтра. Пока ждёшь — загляни в игры.';
-      homePrimaryLabel = 'К играм'; homePrimary = this.go('collection');
-    } else if (today.ready && !st.chSeen[todayId]) {
-      homeTitle = 'Все задачи решены'; homeBody = 'Глава истории открыта.';
-      homePrimaryLabel = 'Открыть главу'; homePrimary = () => this.openChapterReward(todayId);
+      homeTitle = 'Письмо отправлено';
+      homeBody = st.chSeen[todayId] ? 'Следующее придёт завтра. Пока ждёшь — загляни в игры.' : 'Следующее придёт завтра. Записка почтальона ждёт в письме.';
+      homeEnvLabel = 'Посмотреть отправленное письмо'; homePrimary = () => this.openLetter(todayId, 'home');
     } else if (today.ready) {
-      homeTitle = 'Все задачи решены'; homeBody = 'Осталось оформить конверт и отправить.';
-      homePrimaryLabel = 'Оформить конверт'; homePrimary = () => this.setState({ lid: todayId, screen: 'decorate', sel: null });
+      homeTitle = 'Все задачи решены'; homeBody = 'Осталось наклеить марки и отправить.';
+      homeEnvLabel = 'Оформить конверт'; homePrimary = () => this.setState({ lid: todayId, screen: 'decorate' });
     } else {
       homeTitle = 'Письмо открыто'; homeBody = '';
-      homePrimaryLabel = 'К задачам'; homePrimary = () => this.openLetter(todayId, 'home');
+      homeEnvLabel = 'Открыть письмо'; homePrimary = () => this.openLetter(todayId, 'home');
     }
 
     var y = st.letters.l1;
@@ -979,7 +993,7 @@ class Component extends DCLogic {
     var sentIds = Object.keys(LETTERS).filter((id) => LETTERS[id].day <= st.day && st.letters[id].phase === 'done').reverse();
     var sentList = sentIds.map((id) => ({
       title: LETTERS[id].title, date: LETTERS[id].full, mark: LETTERS[id].mark,
-      slots: this.slotsFor(st.letters[id].slots, false), label: 'Отправленное письмо, ' + LETTERS[id].date,
+      slots: this.slotsFor(st.letters[id].slots, false, st.letters[id].times), label: 'Отправленное письмо, ' + LETTERS[id].date,
       open: () => this.openLetter(id, 'mailbox')
     }));
     var navTab = st.screen === 'home' ? 'home' : (st.screen === 'mailbox' ? 'mail' : (st.screen === 'collection' ? 'games' : ''));
@@ -991,14 +1005,14 @@ class Component extends DCLogic {
     var tdNext = tdMeta.tasks.find((g) => !td.solved[g]);
     var ctaV;
     if (!td.opened) ctaV = { label: 'Пришло новое письмо', sub: (st.day === 1 ? 'Первое письмо · ' : '') + tdMeta.date, go: () => this.openLetter(tdId, 'home') };
+    else if (td.phase === 'done' && !st.chSeen[tdId]) ctaV = { label: 'Прочитать записку', sub: 'Записка почтальона · ' + tdMeta.date, go: () => this.openNote(tdId, 'home') };
     else if (td.phase === 'done') {
       var lf = st.lastFree;
       ctaV = lf ? { label: 'Продолжить', sub: G[lf].name + ' · уровень ' + st.level[lf], go: () => { this.setState({ lid: tdId }); this.startPuzzle(lf, 'free'); } }
                 : { label: 'Письмо отправлено', sub: 'Пока ждёшь — выбери игру', go: () => this.setState({ screen: 'collection' }) };
     }
     else if (tdNext) ctaV = { label: 'Продолжить письмо', sub: 'Задача ' + (tdMeta.tasks.indexOf(tdNext) + 1) + ' из ' + tdMeta.tasks.length + ' · ' + G[tdNext].name, go: () => { this.setState({ lid: tdId }); this.startPuzzle(tdNext, 'letter'); } };
-    else if (!st.chSeen[tdId]) ctaV = { label: 'Открыть главу', sub: 'Все задачи решены', go: () => this.openChapterReward(tdId) };
-    else ctaV = { label: 'Оформить конверт', sub: 'И отправить письмо', go: () => this.setState({ lid: tdId, screen: 'decorate', sel: null }) };
+    else ctaV = { label: 'Оформить конверт', sub: 'Наклеить марки и отправить', go: () => this.setState({ lid: tdId, screen: 'decorate' }) };
     var gvId = st.gameView; var gMax = GAME_MAX[gvId]; var gCur = st.level[gvId];
     var shown = gMax || (gCur + 8);
     var gLevels = [];
@@ -1026,17 +1040,16 @@ class Component extends DCLogic {
 
     var solvedTray = lMeta.tasks.filter((g) => ls.solved[g]);
     var tray = solvedTray.map((g) => {
-      var placed = ls.slots.indexOf(g) !== -1; var selected = st.sel === g;
+      var placed = ls.slots.indexOf(g) !== -1;
       return {
-        game: g, placed: placed, selected: selected,
-        label: 'Марка ' + G[g].name + (placed ? ', на конверте' : '') + (selected ? ', выбрана' : ''),
-        style: 'position: relative; width: 64px; height: 72px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; padding: 0; border-radius: 12px; cursor: pointer; background: #F1E7D8; ' +
-          (selected ? 'border: 2px solid #33312E;' : 'border: 1px solid #C6B7A5;') + (placed ? ' opacity: 0.55;' : ''),
-        pick: () => this.setState({ sel: selected ? null : g })
+        game: g, placed: placed, selected: false, time: fmtTime(ls.times && ls.times[g]),
+        label: 'Марка ' + G[g].name + (placed ? ', на конверте. Нажми, чтобы снять' : '. Нажми, чтобы наклеить'),
+        style: 'position: relative; width: 64px; height: 72px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; padding: 0; border-radius: 12px; cursor: pointer; background: #F1E7D8; border: 1px solid #C6B7A5;' + (placed ? ' opacity: 0.55;' : ''),
+        pick: () => this.placeStamp(g)
       };
     });
     var noneSent = sentCount === 0;
-    var decorHint = noneSent ? 'Тапни марку в лотке, потом место на конверте. Тап по марке на конверте вернёт её в лоток.' : 'Выбери марку, потом место на конверте.';
+    var decorHint = noneSent ? 'Нажми на марку — она встанет на конверт. Нажми на марку на конверте — вернётся обратно.' : 'Нажми на марку, чтобы наклеить или снять.';
     var decorHintStyle = 'font-size: 13px; line-height: 18px; text-align: center; border-radius: 12px; padding: 8px 12px; ' +
       (noneSent ? 'background: #E2EAF0; color: #33312E; border: 2px solid #3D647D;' : 'color: #6E6459;');
 
@@ -1059,7 +1072,7 @@ class Component extends DCLogic {
         open: isOpen, closed: !isOpen, num: pi + 1,
         label: isOpen ? (LETTERS[cid].chTitle + ', прочитать') : '',
         style: 'aspect-ratio: 1; width: 100%; border-radius: 8px; box-sizing: border-box; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #805617; background: ' + (pi % 2 ? '#F3E6CA' : '#E7BE70') + '; border: 1.5px solid #805617; box-shadow: ' + SHADOW_RAISED + ';',
-        read: isOpen ? (() => { var c2 = cid; return () => this.setState({ screen: 'chapter', chId: c2, chReward: false, chFrom: 'world' }); })() : null
+        read: isOpen ? (() => { var c2 = cid; return () => this.openNote(c2, 'world'); })() : null
       });
     }
 
@@ -1075,6 +1088,7 @@ class Component extends DCLogic {
     function track(on) { return 'position: relative; width: 44px; height: 28px; border-radius: 14px; display: block; transition: background-color 120ms; background: ' + (on ? '#526348' : '#756B5D') + ';'; }
     function thumb(on) { return 'position: absolute; top: 2px; left: ' + (on ? '18px' : '2px') + '; width: 24px; height: 24px; border-radius: 12px; background: #FFF9EF; box-shadow: 0 2px 3px rgba(76,57,36,0.2); transition: left 120ms cubic-bezier(0.2,0.8,0.2,1);'; }
 
+    var stampsTotal = Object.keys(st.letters).reduce((n, id) => n + Object.keys(st.letters[id].solved).length, 0);
     var showTutorial = st.screen === 'puzzle' && st.tutorialFor === st.cur;
 
     return {
@@ -1124,16 +1138,16 @@ class Component extends DCLogic {
       },
       toastOk: st.toastKind !== 'err', toastErr: st.toastKind === 'err',
 
-      splashSlots: this.slotsFor(['af', null, null], false),
+      splashSlots: this.slotsFor(['af', 'pf', 'gap'], false),
       splashLine: (st.day === 1 && !st.letters.l1.opened) ? 'Несём первое письмо…' : 'Несём письмо…',
       skipSplash: () => { clearTimeout(this._splashT); this.setState({ screen: st.next }); },
-      emptySlots: this.slotsFor([null, null, null], false),
+      emptySlots: this.slotsFor([], false),
       openToday: () => this.openLetter(todayId, 'home'),
 
       today: today, todaySlots: today.slotsView, todaySent: today.sent,
       homeOpen: today.opened && !today.sent, homeShowMarks: today.opened && !today.sent,
       todayMarks: todayMarks, todaySolvedCount: today.solvedCount, todayTotal: today.total,
-      homeTitle: homeTitle, homeBody: homeBody, homePrimaryLabel: homePrimaryLabel, homePrimary: homePrimary,
+      homeTitle: homeTitle, homeBody: homeBody, homePrimary: homePrimary, homeEnvLabel: homeEnvLabel,
       yesterdayWaiting: yesterdayWaiting, yesterdayNote: yesterdayNote, openYesterday: () => this.openLetter('l1', 'home'),
       mailboxNote: sentCount ? ('Отправлено: ' + sentCount) : 'Пока пусто',
       collectionNote: unlockedN === 0 ? 'Пока пусто' : (unlockedN === 1 ? '1 игра' : unlockedN + ' игры'),
@@ -1144,22 +1158,28 @@ class Component extends DCLogic {
       letterBack: () => this.setState({ screen: st.letterFrom === 'mailbox' ? 'mailbox' : 'home' }),
       toggleAtt: () => this.setState({ attOpen: !st.attOpen }),
       goLetter: () => this.setState({ screen: 'letter' }),
-      goDecorate: () => this.setState({ screen: 'decorate', sel: null }),
+      goDecorate: () => this.setState({ screen: 'decorate' }),
 
       cur: cur, curF: flags(st.cur), curTileBig: tile(cur, 96, 22),
       curSub: st.src === 'letter' ? ('Задача ' + (lMeta.tasks.indexOf(st.cur) + 1) + ' из ' + lMeta.tasks.length + ' · ' + lMeta.date) : ('Уровень ' + (st.playLevel || st.level[st.cur])),
       cells: cells, showTutorial: showTutorial, noTutorial: !showTutorial,
       closeTutorial: () => this.setState({ tutorialFor: null }),
       solvedTitle: st.replay ? 'Марка уже у тебя' : 'Марка получена',
-      solvedNote: st.replay ? 'Повторное решение не выдаёт новую марку.' : (st.firstStamp ? 'Марки клеятся на конверт. Эта уже лежит в лотке.' : 'Марка лежит в лотке для конверта.'),
+      solvedNote: st.replay ? 'Повторное решение не выдаёт новую марку.' : (stampsTotal === 1 ? 'Марки копятся, а перед отправкой ты наклеишь их на конверт.' : 'Марка ждёт конверта.'),
+      solvedTime: st.src === 'letter' && !st.replay && ls.times ? fmtTime(ls.times[st.cur]) : '',
+      solvedAll: !nextUnsolved && !st.replay && ls.phase !== 'done',
       hasNext: !!nextUnsolved,
-      offerChapter: !nextUnsolved && !st.chSeen[st.lid],
-      offerDecorate: !nextUnsolved && !!st.chSeen[st.lid] && ls.phase !== 'done',
-      openChapterReward: () => this.openChapterReward(st.lid),
+      offerDecorate: !nextUnsolved && ls.phase !== 'done',
       isChapter: st.screen === 'chapter', isWorld: st.screen === 'world',
       ch: { num: LETTERS[st.chId].chNum, title: LETTERS[st.chId].chTitle, text: LETTERS[st.chId].chText, date: LETTERS[st.chId].date },
       chapterIsReward: st.chReward, chapterNotReward: !st.chReward,
-      chapterClose: () => this.setState({ screen: st.chReward ? 'letter' : (st.chFrom === 'world' ? 'mailbox' : 'letter'), lettersTab: st.chFrom === 'world' ? 'notes' : st.lettersTab, chReward: false }),
+      chapterClose: () => {
+        var f = st.chFrom;
+        if (f === 'sent') this.setState({ screen: st.reminderAsked ? 'home' : 'reminder', chReward: false });
+        else if (f === 'world') this.setState({ screen: 'mailbox', lettersTab: 'notes', chReward: false });
+        else if (f === 'home') this.setState({ screen: 'home', chReward: false });
+        else this.setState({ screen: 'letter', chReward: false });
+      },
       piecesTotal: PIECES_TOTAL,
       chaptersOpen: chapterIds.length,
       pieces: pieces,
@@ -1189,33 +1209,33 @@ class Component extends DCLogic {
       setTabSent: () => this.setState({ lettersTab: 'sent' }), setTabNotes: () => this.setState({ lettersTab: 'notes' }),
       sentList: sentList, sentEmpty: sentList.length === 0, sentHas: sentList.length > 0,
       chapterList: chapterIds.map((id) => ({ num: LETTERS[id].chNum, title: LETTERS[id].chTitle, date: LETTERS[id].date,
-        read: () => this.setState({ screen: 'chapter', chId: id, chReward: false, chFrom: 'world' }) })),
+        read: () => this.openNote(id, 'world') })),
       notesEmpty: chapterIds.length === 0,
       worldBack: () => this.setState({ screen: st.worldFrom === 'chapter' ? 'letter' : (st.worldFrom || 'home'), chReward: false }),
       nextTask: () => { if (nextUnsolved) this.startPuzzle(nextUnsolved, 'letter'); },
       doneLevel: st.doneLevel,
 
-      decorSlots: this.slotsFor(ls.slots, true), tray: tray, trayEmpty: tray.length === 0,
+      decorSlots: this.slotsFor(ls.slots, true, ls.times), tray: tray, trayEmpty: tray.length === 0,
       decorHint: decorHint, decorHintStyle: decorHintStyle,
-      goSend: () => {
-        if (ls.slots.every((s) => !s)) this.showToast('Конверт без марок — тоже можно');
-        this.setState({ screen: 'send' });
-      },
-
-      sendTitle: ls.phase === 'done' ? 'Отправлено' : 'Отправка',
+      sendTitle: 'Отправлено',
+      sentNote: st.chSeen[st.lid] ? 'Следующее письмо придёт завтра.' : 'Следующее письмо придёт завтра. А пока — записка почтальона.',
+      noteUnread: !st.chSeen[st.lid], noteRead: !!st.chSeen[st.lid],
+      readNoteAfterSend: () => this.openNote(st.lid, 'sent'),
       sendLabel: ls.phase === 'sending' ? 'Отправляем…' : (st.sendFailed ? 'Повторить отправку' : 'Отправить'),
-      envMoveStyle: ls.phase === 'sending' ? 'transform: translateY(150px) scale(0.4); opacity: 0;' : 'transform: none; opacity: 1;',
-      sendBack: () => this.setState({ screen: ls.phase === 'done' ? 'home' : 'decorate' }),
+      envMoveStyle: ls.phase === 'sending' ? 'transform: translateY(260px) scale(0.5); opacity: 0;' : 'transform: none; opacity: 1;',
+      sendBack: () => this.setState({ screen: 'home' }),
       send: () => {
         var lid = st.lid;
-        if (ls.phase === 'sending') { clearTimeout(this._sendT); this.setState({ letters: this.patchLetter(lid, { phase: 'done' }) }); return; }
+        if (ls.phase === 'sending') return;
         if (st.failNextSend) {
           this.setState({ failNextSend: false, sendFailed: true });
           this.showToast('Не удалось отправить. Конверт сохранён — попробуй ещё раз', 'err');
           return;
         }
+        if (ls.slots.every((x) => !x)) this.showToast('Конверт без марок — тоже можно');
         this.setState({ letters: this.patchLetter(lid, { phase: 'sending' }), sendFailed: false });
-        this._sendT = setTimeout(() => this.setState({ letters: this.patchLetter(lid, { phase: 'done' }) }), 600);
+        clearTimeout(this._sendT);
+        this._sendT = setTimeout(() => this.setState({ letters: this.patchLetter(lid, { phase: 'done' }), screen: 'send' }), 650);
       },
       afterSend: () => this.setState({ screen: st.reminderAsked ? 'home' : 'reminder' }),
 
@@ -1239,7 +1259,9 @@ class Component extends DCLogic {
         if (st.src === 'letter') {
           var was = !!ls.solved[st.cur];
           var solved = Object.assign({}, ls.solved); solved[st.cur] = true;
-          this.setState({ letters: this.patchLetter(st.lid, { solved: solved }), replay: was, screen: 'solved', tutorialFor: null });
+          var times = Object.assign({}, ls.times || {});
+          if (!was) times[st.cur] = Math.max(1, Math.round((Date.now() - (this._t0 || Date.now())) / 1000));
+          this.setState({ letters: this.patchLetter(st.lid, { solved: solved, times: times }), replay: was, screen: 'solved', tutorialFor: null });
         } else {
           var d = st.playLevel || st.level[st.cur]; var l0 = Object.assign({}, st.level); l0[st.cur] = Math.max(st.level[st.cur], d + 1);
           this.setState({ doneLevel: d, level: l0, screen: 'free', tutorialFor: null, playLevel: null });
@@ -1259,7 +1281,7 @@ class Component extends DCLogic {
       toggleVib: () => this.setState({ vib: !st.vib }),
       toggleRem: () => this.setState({ remOn: !st.remOn }),
       langTap: () => this.showToast('Выбор языка — после решения, какие языки будут'),
-      exportData: () => this.showToast('Сохранено: pocket-puzzle-progress-2026-10-31.json'),
+      exportData: () => this.showToast('Сохранено: pocket-puzzle-progress-' + D1.iso + '.json'),
       resetProto: () => { this.setState(initState('1')); this.armSplash(); },
 
       sheet: st.sheet, modal: st.modal,

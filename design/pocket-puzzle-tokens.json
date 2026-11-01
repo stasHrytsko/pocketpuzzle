@@ -1,0 +1,1407 @@
+{
+  "name": "Pocket Puzzle UI kit",
+  "version": "1.4",
+  "date": "2026-11-01",
+  "status": "Единый источник значений. При расхождении с Designer Spec 1.1 (docx) действует этот файл; список отличий — в changes.",
+  "colorSpace": "sRGB",
+  "units": {
+    "layout": "CSS px at 1x",
+    "motion": "ms",
+    "opacity": "0-1"
+  },
+  "relationToStazzi": {
+    "note": "Значения заданы для Pocket Puzzle. Сверка с существующими токенами @stazzi/puzzle-ui не проведена: до неё неизвестно, какие токены переопределяются, а какие совпадают. Сверку выполнить до реализации.",
+    "reconciled": false
+  },
+  "theme": {
+    "default": "light",
+    "supported": [
+      "light"
+    ],
+    "darkInMvp": false
+  },
+  "colors": {
+    "paper": "#F7F2E9",
+    "panel": "#F1E7D8",
+    "board": "#E8DCCB",
+    "slot": "#DED0BD",
+    "strokeSoft": "#C6B7A5",
+    "strokeStrong": "#756B5D",
+    "textPrimary": "#33312E",
+    "textSecondary": "#6E6459",
+    "highlight": "#FFF9EF",
+    "action": "#526348",
+    "actionPressed": "#43523B",
+    "onAction": "#FFF9EF",
+    "focus": "#3D647D",
+    "focusTint": "#E2EAF0",
+    "success": "#465D3D",
+    "successTint": "#E2E8D9",
+    "warning": "#805617",
+    "warningTint": "#F3E6CA",
+    "error": "#A13636",
+    "errorTint": "#F9DCDC",
+    "disabledFill": "#E5DBCD",
+    "disabledInk": "#8E8275"
+  },
+  "aliases": {
+    "cellBoundary": "colors.strokeStrong",
+    "onAction": "colors.highlight",
+    "textOnBoard": "colors.textPrimary",
+    "disabledReasonText": "colors.textSecondary"
+  },
+  "colorRules": [
+    "strokeSoft — только декоративный разделитель; для клеток, фишек и контролов запрещён.",
+    "Любой текст на board и slot (HUD, подписи, «N из M») — textPrimary. textSecondary на board даёт 4.28:1 и не проходит.",
+    "Причина недоступности действия пишется textSecondary, не disabledInk.",
+    "Каждый статус (success, warning, error, selected) всегда имеет символ или подпись; цвет не единственный признак.",
+    "Акцент раздела не используется для состояний на игровом поле (выбор, подсказка, ошибка, успех). В Arrow Flip синий акцент только в превью и метке; в Perfect Fit глиняный — только в превью и метке.",
+    "Награда (sun) всегда показывается с символом звезды или марки; warning — всегда с иконкой «!». Рядом на одном экране не ставятся."
+  ],
+  "accents": {
+    "sage": {
+      "light": "#E2E8D9",
+      "base": "#A7B39B",
+      "dark": "#526348"
+    },
+    "dustyBlue": {
+      "light": "#E2EAF0",
+      "base": "#A5BBC8",
+      "dark": "#3D647D"
+    },
+    "clay": {
+      "light": "#F3DFD8",
+      "base": "#C78D73",
+      "dark": "#884C38"
+    },
+    "sun": {
+      "light": "#F3E6CA",
+      "base": "#E7BE70",
+      "dark": "#805617"
+    },
+    "plum": {
+      "light": "#EAE1ED",
+      "base": "#A998AD",
+      "dark": "#66516F"
+    }
+  },
+  "accentRules": [
+    "light — фон под текстом в цвете dark.",
+    "base — заливка физических объектов (фишки, марки, наклейки). Сам по себе base не отделяет объект от slot/board (1.3–2.1:1), поэтому у объекта всегда есть контур pieces.stroke.",
+    "dark — текст на light и контур объекта."
+  ],
+  "sectionAccent": {
+    "mail": "sage",
+    "arrowFlip": "dustyBlue",
+    "perfectFit": "clay",
+    "theGap": "plum",
+    "reward": "sun"
+  },
+  "typography": {
+    "families": {
+      "ui": {
+        "name": "Inter",
+        "fallback": "system-ui, sans-serif"
+      },
+      "editorial": {
+        "name": "Source Serif 4",
+        "fallback": "Georgia, serif"
+      }
+    },
+    "editorialAllowedIn": [
+      "welcome",
+      "letterTitle",
+      "completionHeading"
+    ],
+    "styles": {
+      "display": {
+        "family": "editorial",
+        "size": 32,
+        "lineHeight": 40,
+        "weight": 500
+      },
+      "title": {
+        "family": "editorial",
+        "size": 26,
+        "lineHeight": 34,
+        "weight": 500
+      },
+      "titleFunctional": {
+        "family": "ui",
+        "size": 26,
+        "lineHeight": 34,
+        "weight": 500
+      },
+      "section": {
+        "family": "ui",
+        "size": 20,
+        "lineHeight": 28,
+        "weight": 600
+      },
+      "body": {
+        "family": "ui",
+        "size": 16,
+        "lineHeight": 24,
+        "weight": 400
+      },
+      "label": {
+        "family": "ui",
+        "size": 15,
+        "lineHeight": 20,
+        "weight": 600
+      },
+      "caption": {
+        "family": "ui",
+        "size": 13,
+        "lineHeight": 18,
+        "weight": 400
+      },
+      "numeric": {
+        "family": "ui",
+        "size": 20,
+        "lineHeight": 24,
+        "weight": 600,
+        "fontVariantNumeric": "tabular-nums"
+      }
+    },
+    "rules": [
+      "titleFunctional — для функциональных заголовков экранов; title — только для названия письма.",
+      "numeric используется и для HUD (отдельного стиля hud нет).",
+      "lineHeight — минимум; при увеличении текста высота растёт. Проверка при 200%."
+    ],
+    "minBoardSymbolSize": 16
+  },
+  "spacing": [
+    4,
+    8,
+    12,
+    16,
+    20,
+    24,
+    32,
+    40,
+    48
+  ],
+  "radii": {
+    "R1": 12,
+    "R2": 18,
+    "R3": 28,
+    "envelope": 6,
+    "cell": 8,
+    "cellSmall": 4,
+    "cellSmallBelowSide": 32
+  },
+  "strokes": {
+    "cell": 1.5,
+    "board": 1.5,
+    "piece": 1.5,
+    "secondaryButton": 1,
+    "envelope": 1,
+    "icon": 2,
+    "postmark": 1.5,
+    "previewDash": 2,
+    "selected": 2,
+    "hint": 2
+  },
+  "focusRing": {
+    "color": "colors.focus",
+    "width": 2,
+    "offset": 2,
+    "style": "solid",
+    "usage": "Только клавиатурный фокус."
+  },
+  "scrim": {
+    "dialog": "rgba(51,49,46,0.24)",
+    "spotlight": "rgba(51,49,46,0.40)"
+  },
+  "layout": {
+    "frames": {
+      "primary": [
+        390,
+        844
+      ],
+      "small": [
+        320,
+        568
+      ],
+      "additionalWidths": [
+        360,
+        430
+      ]
+    },
+    "screenMargin": {
+      "default": 20,
+      "at320": 16
+    },
+    "boardMinInset": 16,
+    "topBar": {
+      "default": 56,
+      "game": 48,
+      "plus": "safe-area-inset-top"
+    },
+    "touchTarget": {
+      "minimum": 44,
+      "base": 48
+    },
+    "icon": {
+      "size": 24,
+      "hitArea": 48,
+      "grid": 24,
+      "stroke": 2,
+      "caps": "round",
+      "joins": "round"
+    },
+    "desktop": {
+      "maxContentWidth": 430,
+      "align": "center",
+      "note": "PWA на широком экране — одна колонка по центру на фоне paper."
+    },
+    "homePager": {
+      "panels": [
+        "Письма",
+        "Сегодня",
+        "Игры"
+      ],
+      "default": "Сегодня",
+      "gesture": "горизонтальный свайп, порог 60 px",
+      "labels": {
+        "height": 44,
+        "radius": 22,
+        "style": "caption",
+        "active": "sage.light фон, textPrimary 600, точка action 8 px",
+        "inactive": "textSecondary, точка-контур strokeStrong"
+      },
+      "hiddenOn": [
+        "игра",
+        "оформление конверта",
+        "отправка",
+        "письмо",
+        "глава",
+        "страница игры"
+      ]
+    },
+    "bottomCta": {
+      "height": 56,
+      "radius": 18,
+      "variant": "primary",
+      "lines": [
+        "label 15/20 600",
+        "sub 13/18"
+      ],
+      "icon": "play 22",
+      "states": [
+        "Новое письмо",
+        "Продолжить письмо · задача N из M",
+        "Открыть главу",
+        "Оформить конверт",
+        "Продолжить · игра, уровень N"
+      ]
+    }
+  },
+  "elevation": {
+    "lightDirection": "top-left",
+    "inset": {
+      "shadow": "inset 0 2px 4px rgba(76,57,36,0.14)",
+      "highlight": "inset 0 -1px 0 rgba(255,249,239,0.75)"
+    },
+    "raised": {
+      "shadow": "0 2px 3px rgba(76,57,36,0.12), 0 6px 14px rgba(76,57,36,0.06)",
+      "highlight": "inset 0 1px 0 rgba(255,249,239,0.65)"
+    },
+    "floating": {
+      "shadow": "0 12px 28px rgba(76,57,36,0.16)",
+      "highlight": "inset 0 1px 0 rgba(255,249,239,0.40)"
+    }
+  },
+  "texture": {
+    "name": "paper-grain-v1.svg",
+    "width": 256,
+    "height": 256,
+    "opacity": 0.015,
+    "blendMode": "normal",
+    "repeat": true,
+    "appliesTo": [
+      "paper",
+      "panel",
+      "letterSheet",
+      "envelope"
+    ],
+    "excludedFrom": [
+      "board",
+      "slot",
+      "pieces",
+      "boardSymbols"
+    ],
+    "acceptance": "Проверить видимость на 2–3 реальных телефонах. При opacity 0.015 отклонение около ±2 уровней яркости; если фактура не различима, решить: поднять до 0.03 с повторной проверкой контраста или убрать.",
+    "svgSource": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"256\" height=\"256\" viewBox=\"0 0 256 256\"><filter id=\"paper\" x=\"0\" y=\"0\" width=\"100%\" height=\"100%\" color-interpolation-filters=\"sRGB\"><feTurbulence type=\"fractalNoise\" baseFrequency=\"0.65\" numOctaves=\"3\" seed=\"12\" stitchTiles=\"stitch\"/><feColorMatrix type=\"saturate\" values=\"0\"/></filter><rect width=\"256\" height=\"256\" filter=\"url(#paper)\"/></svg>"
+  },
+  "motion": {
+    "press": {
+      "duration": 90,
+      "easing": "cubic-bezier(0,0,0.58,1)",
+      "change": "translateY 1; тень уменьшается"
+    },
+    "lift": {
+      "duration": 120,
+      "easing": "cubic-bezier(0.2,0.8,0.2,1)",
+      "change": "translateY -4; scale 1.02; elevation floating"
+    },
+    "snap": {
+      "duration": 140,
+      "easing": "cubic-bezier(0.2,0.8,0.2,1)",
+      "change": "привязка к допустимой позиции"
+    },
+    "settle": {
+      "duration": 180,
+      "easing": "cubic-bezier(0.2,0.8,0.2,1)",
+      "change": "scale 1; elevation raised"
+    },
+    "reward": {
+      "duration": 220,
+      "easing": "cubic-bezier(0.2,0.8,0.2,1)",
+      "change": "opacity 0→1; scale 0.98→1"
+    },
+    "letterOpen": {
+      "duration": 400,
+      "easing": "cubic-bezier(0.2,0.8,0.2,1)",
+      "change": "клапан открывается, появляется лист"
+    },
+    "send": {
+      "duration": 600,
+      "easing": "cubic-bezier(0.2,0.8,0.2,1)",
+      "change": "письмо уходит в ящик"
+    },
+    "invalidDropReturn": {
+      "duration": 180,
+      "easing": "cubic-bezier(0.2,0.8,0.2,1)",
+      "change": "фишка возвращается в исходную позицию"
+    },
+    "spinner": {
+      "duration": 800,
+      "easing": "linear",
+      "size": 16
+    },
+    "rules": [
+      "Без повторного отскока и циклического покачивания.",
+      "Одна главная анимация в момент времени.",
+      "Тап во время letterOpen или send сразу показывает конечное состояние; сохранение не зависит от окончания анимации."
+    ]
+  },
+  "reducedMotion": {
+    "removeAnimatedTransforms": true,
+    "keepDirectManipulation": true,
+    "duration": 100,
+    "easing": "linear",
+    "transition": "opacity",
+    "affects": [
+      "press",
+      "lift",
+      "snap",
+      "settle",
+      "reward",
+      "letterOpen",
+      "send",
+      "invalidDropReturn",
+      "tutorialGesture"
+    ],
+    "notes": [
+      "Перетаскивание остаётся: фишка следует за пальцем или указателем, это прямое управление, а не анимация.",
+      "Спиннер заменяется статичным индикатором и подписью ожидания.",
+      "Демонстрация жеста заменяется статичным указателем и стрелкой."
+    ]
+  },
+  "audio": {
+    "format": {
+      "channels": "mono",
+      "sampleRate": 48000,
+      "source": "WAV",
+      "delivery": [
+        "WebM/Opus",
+        "AAC"
+      ],
+      "peakMaxDbfs": -6
+    },
+    "master": 1.0,
+    "startsAfterUserInteraction": true,
+    "maxSimultaneousUi": 1,
+    "mergeWindowMs": 80,
+    "backgroundMusic": false
+  },
+  "haptics": {
+    "minPulseMs": 15,
+    "policy": "Редкая: только постановка, марка, задача решена, письмо отправлено и предупреждения. Обычные нажатия кнопок без вибрации.",
+    "unsupported": "Событие остаётся визуальным; звук вибрацию не имитирует. В iOS Safari Vibration API нет — на iPhone в PWA хаптики не будет.",
+    "acceptance": "Проверить ощутимость на 2–3 Android-устройствах; при необходимости увеличить импульсы, не меняя паттерн."
+  },
+  "feedbackDefaults": {
+    "sound": true,
+    "haptics": "on-if-supported",
+    "storage": "local"
+  },
+  "audioEvents": [
+    {
+      "event": "Нажатие кнопки",
+      "asset": "ui_tap",
+      "durationMs": 60,
+      "gainPercent": 20,
+      "vibrationMs": []
+    },
+    {
+      "event": "Открытие письма",
+      "asset": "paper_open",
+      "durationMs": 320,
+      "gainPercent": 25,
+      "vibrationMs": []
+    },
+    {
+      "event": "Захват фишки",
+      "asset": "piece_lift",
+      "durationMs": 70,
+      "gainPercent": 18,
+      "vibrationMs": []
+    },
+    {
+      "event": "Допустимая постановка",
+      "asset": "piece_snap",
+      "durationMs": 90,
+      "gainPercent": 30,
+      "vibrationMs": [
+        15
+      ]
+    },
+    {
+      "event": "Недопустимое действие",
+      "asset": "soft_warning",
+      "durationMs": 100,
+      "gainPercent": 20,
+      "vibrationMs": [
+        15,
+        50,
+        15
+      ]
+    },
+    {
+      "event": "Задача решена",
+      "asset": "puzzle_complete",
+      "durationMs": 180,
+      "gainPercent": 30,
+      "vibrationMs": [
+        15,
+        60,
+        15
+      ]
+    },
+    {
+      "event": "Марка приклеена",
+      "asset": "stamp_place",
+      "durationMs": 80,
+      "gainPercent": 25,
+      "vibrationMs": [
+        15
+      ]
+    },
+    {
+      "event": "Письмо отправлено",
+      "asset": "letter_send",
+      "durationMs": 400,
+      "gainPercent": 30,
+      "vibrationMs": [
+        20,
+        70,
+        20
+      ]
+    },
+    {
+      "event": "Ошибка сохранения",
+      "asset": "save_error",
+      "durationMs": 120,
+      "gainPercent": 20,
+      "vibrationMs": [
+        15,
+        60,
+        15
+      ]
+    },
+    {
+      "event": "Автосохранение / hover / ход таймера",
+      "asset": null,
+      "durationMs": 0,
+      "gainPercent": 0,
+      "vibrationMs": []
+    }
+  ],
+  "audioRules": [
+    "При решении задачи из письма звучит только puzzle_complete; появление награды второй звук не добавляет.",
+    "stamp_place звучит только при ручном размещении марки."
+  ],
+  "componentStates": [
+    "default",
+    "pressed",
+    "focus",
+    "disabled",
+    "loading"
+  ],
+  "components": {
+    "button": {
+      "height": 52,
+      "paddingX": 20,
+      "radius": 18,
+      "variants": {
+        "primary": {
+          "default": [
+            "action",
+            "onAction"
+          ],
+          "pressed": [
+            "actionPressed",
+            "onAction"
+          ],
+          "disabled": [
+            "disabledFill",
+            "disabledInk"
+          ]
+        },
+        "secondary": {
+          "default": [
+            "panel",
+            "textPrimary"
+          ],
+          "stroke": "strokeStrong",
+          "pressed": [
+            "board",
+            "textPrimary"
+          ],
+          "disabled": [
+            "disabledFill",
+            "disabledInk"
+          ]
+        },
+        "quiet": {
+          "default": [
+            "transparent",
+            "textPrimary"
+          ],
+          "pressed": [
+            "panel",
+            "textPrimary"
+          ],
+          "disabled": [
+            "transparent",
+            "disabledInk"
+          ]
+        },
+        "icon": {
+          "default": [
+            "panel",
+            "textPrimary"
+          ],
+          "pressed": [
+            "board",
+            "textPrimary"
+          ],
+          "disabled": [
+            "disabledFill",
+            "disabledInk"
+          ]
+        }
+      },
+      "loading": "Спиннер 16 вместо ведущей иконки (у icon — вместо иконки); ширина сохраняется; повторное действие блокируется; aria-busy."
+    },
+    "switch": {
+      "track": [
+        44,
+        28
+      ],
+      "thumb": 24,
+      "hitArea": [
+        48,
+        48
+      ],
+      "on": "action",
+      "off": "strokeStrong",
+      "thumbColor": "highlight",
+      "states": [
+        "on",
+        "off",
+        "pressed",
+        "focus",
+        "disabled"
+      ]
+    },
+    "settingsRow": {
+      "minHeight": 56,
+      "padding": 16,
+      "icon": 24,
+      "trailing": [
+        "control",
+        "chevron"
+      ]
+    },
+    "segmentedControl": {
+      "inMvp": true,
+      "height": 44,
+      "radius": 12,
+      "usage": [
+        "Письма: Отправленные / Записки"
+      ],
+      "note": "Для темы — позже, вместе с тёмной темой."
+    },
+    "tag": {
+      "height": 28,
+      "paddingX": 8,
+      "style": "caption",
+      "interactive": false,
+      "statuses": [
+        "Новое",
+        "Решено",
+        "В процессе",
+        "Отправлено"
+      ],
+      "difficulty": [
+        "Легко",
+        "Обычно",
+        "Сложно"
+      ],
+      "difficultyShownOnlyWithRealData": true
+    },
+    "cards": {
+      "game": {
+        "layout": "grid 2 columns, gap 12",
+        "minHeight": 152,
+        "padding": 16,
+        "preview": 72,
+        "radius": 18,
+        "states": [
+          "arrived",
+          "notArrived",
+          "pressed",
+          "focus"
+        ],
+        "arrived": "превью игры, название, реальный прогресс «N из M»",
+        "notArrived": "превью и название видны; без замка; значок конверта и «придёт по почте» textPrimary; фон panel, превью opacity 0.6"
+      },
+      "task": {
+        "minHeight": 76,
+        "preview": 44,
+        "states": [
+          "new",
+          "inProgress",
+          "solved"
+        ]
+      },
+      "attachment": {
+        "padding": 16,
+        "states": [
+          "expanded",
+          "collapsed"
+        ],
+        "toggle": "заголовок с chevron"
+      },
+      "archive": {
+        "envelope": [
+          145,
+          100
+        ],
+        "states": [
+          "sent",
+          "open",
+          "missed"
+        ]
+      },
+      "stamp": {
+        "size": [
+          64,
+          72
+        ],
+        "object": [
+          48,
+          56
+        ],
+        "minTouch": 44,
+        "states": [
+          "available",
+          "selected",
+          "placed"
+        ]
+      }
+    },
+    "progressMarks": {
+      "size": 20,
+      "gap": 8,
+      "counter": "N из M",
+      "states": [
+        "empty",
+        "current",
+        "checked"
+      ]
+    },
+    "bottomSheet": {
+      "padding": 24,
+      "radiusTop": 28,
+      "maxHeight": "85dvh",
+      "scroll": "internal",
+      "elevation": "floating",
+      "scrim": "scrim.dialog"
+    },
+    "modal": {
+      "width": "min(350px, 100vw - 40px)",
+      "padding": 24,
+      "radius": 28,
+      "elevation": "floating",
+      "scrim": "scrim.dialog"
+    },
+    "dialogRules": "Фокус удерживается внутри; Escape и close возвращают фокус инициатору; при риске потери ходов — явное подтверждение.",
+    "toast": {
+      "padding": [
+        12,
+        16
+      ],
+      "radius": 12,
+      "icon": 20,
+      "durationsMs": {
+        "saved": 2000,
+        "taskSolved": 2000,
+        "stampReceived": 2500,
+        "letterSent": 2500
+      },
+      "saveError": {
+        "persistent": true,
+        "action": "Повторить"
+      },
+      "queue": true,
+      "mayOverlapBoard": false
+    },
+    "loading": {
+      "showAfterMs": 300,
+      "text": "Загружаем письмо",
+      "shimmer": false
+    },
+    "levelGrid": {
+      "columns": 3,
+      "gap": 12,
+      "cellRadius": 14,
+      "aspect": "1:1",
+      "states": {
+        "done": "panel + галочка success",
+        "current": "action + ▶ onAction, raised",
+        "future": "slot + цифра textSecondary, inset, без замка"
+      },
+      "progress": {
+        "text": "N из M",
+        "bar": {
+          "height": 10,
+          "radius": 5,
+          "track": "slot",
+          "fill": "action"
+        }
+      },
+      "difficultyTabs": "только если есть в движке игры (segmentedControl)"
+    }
+  },
+  "game": {
+    "board": {
+      "fill": "board",
+      "stroke": "strokeStrong",
+      "strokeWidth": 1.5,
+      "solved": "статичная галочка с подписью + reward; поле остаётся читаемым"
+    },
+    "cellStates": {
+      "default": {
+        "fill": "slot",
+        "elevation": "inset",
+        "stroke": "strokeStrong",
+        "strokeWidth": 1.5
+      },
+      "selected": {
+        "stroke": "textPrimary",
+        "strokeWidth": 2,
+        "marker": "символ выбора"
+      },
+      "occupied": {
+        "note": "фишка внутри, граница клетки сохраняется"
+      },
+      "preview": {
+        "stroke": "strokeStrong",
+        "strokeWidth": 2,
+        "dash": true,
+        "silhouetteOpacity": 0.35
+      },
+      "blocked": {
+        "fill": "disabledFill",
+        "marker": "крест или штриховка"
+      },
+      "hint": {
+        "fill": "focusTint",
+        "stroke": "focus",
+        "strokeWidth": 2,
+        "dash": true
+      },
+      "correct": {
+        "fill": "successTint",
+        "ink": "success",
+        "marker": "галочка",
+        "onlyIfRulesProvide": true
+      },
+      "wrong": {
+        "fill": "errorTint",
+        "ink": "error",
+        "marker": "крест",
+        "onlyIfRulesProvide": true
+      }
+    },
+    "cellStateRules": "selected, hint и клавиатурный фокус различаются: selected — сплошной контур textPrimary; hint — пунктир focus с заливкой focusTint; фокус — внешнее кольцо focusRing.",
+    "pieces": {
+      "fill": "accent.base по правилам игры",
+      "stroke": "accent.dark того же акцента",
+      "strokeWidth": 1.5,
+      "symbol": "textPrimary",
+      "states": {
+        "idle": "raised",
+        "lifted": "motion.lift",
+        "moving": "следует за указателем",
+        "preview": "силуэт в целевой клетке",
+        "snapping": "motion.snap",
+        "placed": "motion.settle",
+        "locked": "lock-символ, захват недоступен"
+      },
+      "rules": [
+        "Символ не исчезает при движении.",
+        "Недопустимый drop — motion.invalidDropReturn.",
+        "Drag имеет альтернативу: выбор и тап по месту."
+      ]
+    },
+    "tray": {
+      "padding": 12,
+      "gap": 8,
+      "minHeight": 76,
+      "states": {
+        "filled": "все доступные детали",
+        "pieceTaken": "остаётся контур слота",
+        "empty": "Все детали на поле",
+        "overflow": "горизонтальный scroll, следующий элемент виден частично; клавиатурная прокрутка"
+      },
+      "keepOrderDuringDrag": true
+    },
+    "hintLayer": {
+      "stroke": "focus",
+      "strokeWidth": 2,
+      "fill": "focusTint",
+      "callout": {
+        "style": "body",
+        "maxLinesCollapsed": 3,
+        "fallback": "под полем, если мало места"
+      },
+      "closable": true,
+      "blinking": false,
+      "scope": "Объясняет один следующий шаг."
+    },
+    "rulesSheet": {
+      "titleStyle": "section",
+      "textStyle": "body",
+      "illustrationHeight": [
+        160,
+        240
+      ],
+      "sections": [
+        "цель",
+        "допустимое действие",
+        "условие завершения",
+        "короткий пример"
+      ],
+      "actions": [
+        "Понятно",
+        "close"
+      ]
+    }
+  },
+  "tutorial": {
+    "requiredFor": [
+      "arrowFlip",
+      "perfectFit",
+      "theGap"
+    ],
+    "placement": "внутри первой задачи каждой игры",
+    "spotlight": {
+      "scrim": "scrim.spotlight",
+      "padding": 8,
+      "radius": 12
+    },
+    "bubble": {
+      "fill": "panel",
+      "padding": 16,
+      "radius": 18,
+      "style": "body"
+    },
+    "gesture": {
+      "pointerDiameter": 24,
+      "demoMs": 700,
+      "pauseMs": 500,
+      "maxRepeats": 2
+    },
+    "tryThis": "focus-контур и краткая инструкция; ждёт реального действия",
+    "skippable": true,
+    "reopenable": true,
+    "errorReturnsToCurrentStep": true
+  },
+  "postalObjects": {
+    "envelope": {
+      "width": 290,
+      "height": 200,
+      "radius": 6,
+      "fill": "panel",
+      "stroke": "strokeStrong",
+      "strokeWidth": 1,
+      "flapHeight": 90,
+      "face": "stylized-single",
+      "faceNote": "Стилизация: показывается одна сторона с клапаном сверху; марки, наклейки и штемпель размещаются на ней же. Реалистичный переворот на лицевую сторону в MVP не делается.",
+      "states": [
+        "closed",
+        "open",
+        "sent"
+      ],
+      "slots": [
+        [
+          218,
+          16,
+          48,
+          56
+        ],
+        [
+          162,
+          16,
+          48,
+          56
+        ],
+        [
+          106,
+          16,
+          48,
+          56
+        ]
+      ],
+      "postmarkArea": [
+        60,
+        28,
+        88,
+        40
+      ],
+      "postmarkNote": "Штемпель частично заходит на левую марку (как гашение). В свободной раскладке эта область зарезервирована: украшения в неё не ставятся.",
+      "freeLayout": {
+        "innerPadding": 12,
+        "rotation": false,
+        "scale": false,
+        "coordinates": "normalized 0-1",
+        "keyboardStep": 4,
+        "keyboardStepShift": 16
+      }
+    },
+    "stamp": {
+      "width": 48,
+      "height": 56,
+      "inset": 6,
+      "perforationRadius": 2,
+      "perforationStep": 8,
+      "fill": "highlight",
+      "symbol": "arrowUp",
+      "symbolColor": "accent.dark раздела",
+      "stroke": "strokeStrong",
+      "strokeWidth": 1
+    },
+    "sticker": {
+      "width": 48,
+      "height": 48,
+      "shape": "circle",
+      "fill": "sun.base",
+      "stroke": "sun.dark",
+      "strokeWidth": 1.5,
+      "symbol": "star",
+      "symbolColor": "textPrimary"
+    },
+    "postmark": {
+      "width": 88,
+      "height": 40,
+      "circleDiameter": 32,
+      "stroke": 1.5,
+      "ringInk": "textSecondary",
+      "ringOpacity": 0.65,
+      "dateInk": "textSecondary",
+      "dateOpacity": 1,
+      "dateStyle": "caption",
+      "note": "Дата непрозрачная: при opacity 0.65 контраст 2.5:1. Кольцо и волны декоративны и остаются 0.65.",
+      "autoAfterSend": true,
+      "isReward": false
+    },
+    "stampTray": {
+      "card": [
+        64,
+        72
+      ],
+      "gap": 8,
+      "padding": 12,
+      "states": [
+        "filled",
+        "selected",
+        "placed",
+        "empty",
+        "overflow"
+      ],
+      "placement": "выбор + тап; drag не обязателен"
+    },
+    "mailbox": {
+      "body": [
+        260,
+        180
+      ],
+      "slot": [
+        180,
+        28
+      ],
+      "material": "panel с тонкой деревянной кромкой",
+      "sendButtonHeight": 52
+    },
+    "archive": {
+      "columns": 2,
+      "gap": 12,
+      "singleColumnWhen": [
+        "width <= 320",
+        "text 200%"
+      ],
+      "emptyText": "Здесь появятся твои письма",
+      "missedText": "Письмо не открыто",
+      "missedStyle": "нейтральный, без красного и крестика"
+    }
+  },
+  "share": {
+    "format": "png",
+    "width": 1080,
+    "height": 1350,
+    "safeMargin": 96,
+    "background": "#F7F2E9",
+    "colorSpace": "sRGB",
+    "envelope": {
+      "size": [
+        870,
+        600
+      ],
+      "center": [
+        540,
+        650
+      ]
+    },
+    "titleArea": [
+      120,
+      220
+    ],
+    "footerFromY": 1050,
+    "footerText": [
+      "дата",
+      "Письмо отправлено"
+    ],
+    "forbidden": [
+      "адреса",
+      "идентификаторы",
+      "UI-кнопки",
+      "выдуманные результаты"
+    ],
+    "fallback": "сохранение PNG при отсутствии системного шера"
+  },
+  "export": {
+    "fileName": "pocket-puzzle-progress-YYYY-MM-DD.json",
+    "location": "Настройки → Данные",
+    "states": [
+      "default",
+      "loading",
+      "success",
+      "error"
+    ],
+    "contains": [
+      "content_version",
+      "progress"
+    ]
+  },
+  "contrastChecks": [
+    {
+      "foreground": "textPrimary",
+      "background": "paper",
+      "ratio": 11.63,
+      "minimum": 4.5
+    },
+    {
+      "foreground": "textPrimary",
+      "background": "board",
+      "ratio": 9.59,
+      "minimum": 4.5
+    },
+    {
+      "foreground": "textPrimary",
+      "background": "slot",
+      "ratio": 8.56,
+      "minimum": 4.5
+    },
+    {
+      "foreground": "textSecondary",
+      "background": "paper",
+      "ratio": 5.19,
+      "minimum": 4.5
+    },
+    {
+      "foreground": "textSecondary",
+      "background": "panel",
+      "ratio": 4.73,
+      "minimum": 4.5
+    },
+    {
+      "foreground": "textSecondary",
+      "background": "board",
+      "ratio": 4.28,
+      "minimum": 4.5,
+      "pass": false,
+      "resolution": "на board текст только textPrimary"
+    },
+    {
+      "foreground": "onAction",
+      "background": "action",
+      "ratio": 6.19,
+      "minimum": 4.5
+    },
+    {
+      "foreground": "onAction",
+      "background": "actionPressed",
+      "ratio": 7.99,
+      "minimum": 4.5
+    },
+    {
+      "foreground": "focus",
+      "background": "paper",
+      "ratio": 5.68,
+      "minimum": 3
+    },
+    {
+      "foreground": "focus",
+      "background": "board",
+      "ratio": 4.68,
+      "minimum": 3
+    },
+    {
+      "foreground": "focus",
+      "background": "slot",
+      "ratio": 4.18,
+      "minimum": 3
+    },
+    {
+      "foreground": "strokeStrong",
+      "background": "panel",
+      "ratio": 4.27,
+      "minimum": 3
+    },
+    {
+      "foreground": "success",
+      "background": "successTint",
+      "ratio": 5.8,
+      "minimum": 4.5
+    },
+    {
+      "foreground": "warning",
+      "background": "warningTint",
+      "ratio": 5.21,
+      "minimum": 4.5
+    },
+    {
+      "foreground": "error",
+      "background": "errorTint",
+      "ratio": 5.26,
+      "minimum": 4.5
+    },
+    {
+      "foreground": "error",
+      "background": "paper",
+      "ratio": 6.08,
+      "minimum": 4.5
+    },
+    {
+      "foreground": "cellBoundary",
+      "background": "paper",
+      "ratio": 4.69,
+      "minimum": 3
+    },
+    {
+      "foreground": "cellBoundary",
+      "background": "panel",
+      "ratio": 4.27,
+      "minimum": 3
+    },
+    {
+      "foreground": "cellBoundary",
+      "background": "board",
+      "ratio": 3.87,
+      "minimum": 3
+    },
+    {
+      "foreground": "cellBoundary",
+      "background": "slot",
+      "ratio": 3.45,
+      "minimum": 3
+    },
+    {
+      "foreground": "sage.dark",
+      "background": "sage.light",
+      "ratio": 5.18,
+      "minimum": 4.5
+    },
+    {
+      "foreground": "dustyBlue.dark",
+      "background": "dustyBlue.light",
+      "ratio": 5.2,
+      "minimum": 4.5
+    },
+    {
+      "foreground": "clay.dark",
+      "background": "clay.light",
+      "ratio": 5.21,
+      "minimum": 4.5
+    },
+    {
+      "foreground": "sun.dark",
+      "background": "sun.light",
+      "ratio": 5.21,
+      "minimum": 4.5
+    },
+    {
+      "foreground": "plum.dark",
+      "background": "plum.light",
+      "ratio": 5.55,
+      "minimum": 4.5
+    },
+    {
+      "foreground": "sage.dark (piece stroke)",
+      "background": "slot",
+      "ratio": 4.28,
+      "minimum": 3
+    },
+    {
+      "foreground": "dustyBlue.dark (piece stroke)",
+      "background": "slot",
+      "ratio": 4.18,
+      "minimum": 3
+    },
+    {
+      "foreground": "clay.dark (piece stroke)",
+      "background": "slot",
+      "ratio": 4.42,
+      "minimum": 3
+    },
+    {
+      "foreground": "sun.dark (piece stroke)",
+      "background": "slot",
+      "ratio": 4.25,
+      "minimum": 3
+    },
+    {
+      "foreground": "plum.dark (piece stroke)",
+      "background": "slot",
+      "ratio": 4.67,
+      "minimum": 3
+    },
+    {
+      "foreground": "textPrimary (symbol)",
+      "background": "clay.base",
+      "ratio": 4.62,
+      "minimum": 4.5
+    },
+    {
+      "foreground": "textPrimary (symbol)",
+      "background": "plum.base",
+      "ratio": 4.8,
+      "minimum": 4.5
+    },
+    {
+      "foreground": "textPrimary (symbol)",
+      "background": "dustyBlue.base",
+      "ratio": 6.51,
+      "minimum": 4.5
+    },
+    {
+      "foreground": "textPrimary (symbol)",
+      "background": "sage.base",
+      "ratio": 5.91,
+      "minimum": 4.5
+    },
+    {
+      "foreground": "textPrimary (symbol)",
+      "background": "sun.base",
+      "ratio": 7.41,
+      "minimum": 4.5
+    },
+    {
+      "foreground": "sage.dark (stamp symbol)",
+      "background": "highlight",
+      "ratio": 6.19,
+      "minimum": 4.5
+    },
+    {
+      "foreground": "textSecondary (postmark date)",
+      "background": "panel",
+      "ratio": 4.73,
+      "minimum": 4.5
+    },
+    {
+      "foreground": "highlight (switch thumb)",
+      "background": "strokeStrong",
+      "ratio": 4.99,
+      "minimum": 3
+    },
+    {
+      "foreground": "action (switch on)",
+      "background": "panel",
+      "ratio": 5.3,
+      "minimum": 3
+    }
+  ],
+  "contrastNotes": [
+    "Измерено на сплошных заливках по WCAG 2.x relative luminance.",
+    "accent.base относительно slot/board — 1.3–2.1:1; поэтому фишки и марки обязаны иметь контур accent.dark.",
+    "disabledInk / disabledFill — 2.74:1; допустимо только для подписи самого недоступного контрола (исключение WCAG), не для читаемых сообщений.",
+    "Экраны с фактурой, дальтонизм (протанопия, дейтеранопия, тританопия, grayscale) и реальные устройства проверяются при приёмке."
+  ],
+  "openProductDecisions": [
+    "Количество задач в письме (компоненты поддерживают любое M; макеты M=1,3,5).",
+    "Содержание вложений и отправитель письма.",
+    "Доступ к пропущенным письмам задним числом.",
+    "Подсказки: количество и влияние на марки.",
+    "Языки интерфейса (Inter и Source Serif 4 покрывают латиницу и кириллицу).",
+    "Слоты или свободная раскладка конверта — после сравнения S10A/S10B."
+  ],
+  "source": "CONCEPT.md в stasHrytsko/pocketpuzzle; Designer Spec 1.1 (design/Pocket_Puzzle_Designer_Spec_v1.1.docx).",
+  "changes": {
+    "1.2": [
+      "error #984B3C → #A13636, errorTint #F3DFD8 → #F9DCDC: ошибка была неотличима от clay.dark (1.09:1) и совпадала с clay.light, акцентом Perfect Fit.",
+      "selected: контур focus → сплошной textPrimary 2; hint: пунктир focus. Выбор, подсказка, фокус и акцент Arrow Flip больше не один синий; убран «номер шага» у подсказки.",
+      "Добавлен контур фишек accent.dark 1.5 (base на slot был 1.3–2.1:1) и контур наклейки sun.dark.",
+      "textOnBoard = textPrimary: textSecondary на board 4.28:1.",
+      "Дата штемпеля непрозрачная (было 2.5:1 при opacity 0.65).",
+      "Причина недоступности — textSecondary, не disabledInk.",
+      "Правила разведения акцентов и статусов (colorRules).",
+      "Хаптика: убрана вибрация с обычного нажатия кнопки; минимальный импульс 15 мс.",
+      "Reduced Motion: перетаскивание сохраняется, убираются только автоматические анимации.",
+      "Конверт: зафиксирована стилизация одной стороны; координаты штемпеля для обеих раскладок.",
+      "Добавлены в JSON: layout, strokes, focusRing, scrim, components, game, tutorial, mailbox, archive, share.envelope, export, audio.format, haptics.",
+      "Типографика: именованные стили с семейством; titleUi → titleFunctional; hud удалён (используется numeric); tabular-nums.",
+      "Радиусы: удалены дубли small/medium/large; добавлены cellSmall и envelope.",
+      "Обучение обязательно во всех трёх играх (было только у Arrow Flip в матрице).",
+      "Добавлены relationToStazzi, texture.acceptance, layout.desktop, openProductDecisions.",
+      "Основание обновлено: CONCEPT.md вместо ideas/puzzarium.md."
+    ],
+    "1.3": [
+      "Навигация: три вкладки — Почта, Письма, Игры (решение автора).",
+      "segmentedControl в MVP: Письма → Отправленные / Записки.",
+      "Карточка игры в сетке 2 в ряд; не пришедшие игры видны без замка, с пометкой «придёт по почте».",
+      "Цвета не менялись — пересчёт контраста не нужен (текст «придёт по почте» — textPrimary на panel)."
+    ],
+    "1.4": [
+      "Навигация: три панели главной со свайпом (Письма ← Сегодня → Игры) вместо нижних вкладок; подписи-кнопки; одна главная кнопка внизу (решение автора).",
+      "Иконка покупки отложена (решение автора).",
+      "Добавлена сетка уровней на странице игры, без замков.",
+      "Цвета не менялись — пересчёт контраста не нужен."
+    ]
+  }
+}

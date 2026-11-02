@@ -270,6 +270,9 @@ button{font:inherit;color:inherit}
               <path d="M1150 244 C1144 228 1148 214 1158 206 C1166 216 1168 232 1162 244Z" fill="#A7B39B"/>
               <rect x="1143" y="234" width="24" height="11" rx="3" fill="#FFF9EF" stroke="#C6B7A5"/>
             </g>
+            <g id="shelf4" style="display:none" aria-hidden="true">
+              <rect x="958" y="166" width="174" height="6" rx="2" fill="#FFF9EF"/><rect x="958" y="172" width="174" height="10" rx="2" fill="#DED0BD" stroke="#C6B7A5"/><rect x="958" y="182" width="174" height="7" fill="#4C3924" opacity="0.07"/>
+            </g>
             <g id="gameShelf"></g>
             <ellipse cx="1180" cy="520" rx="150" ry="30" fill="url(#gGlow)" opacity="0.8"/>
             <rect x="900" y="512" width="410" height="10" rx="3" fill="#FFF9EF"/>
@@ -370,7 +373,7 @@ button{font:inherit;color:inherit}
     <div class="card">
       <h3>Сценарий дня</h3>
       <button class="pbtn" type="button" id="dNewDay">Наступил новый день<small>Флажок опускается, конверт выезжает из щели; в календаре закрашивается день, когда камера на «Letters»</small></button>
-      <button class="pbtn" type="button" id="dNewGame">Пришла новая игра<small>Игра встаёт на полку: сначала средняя, потом нижняя, потом верхняя</small></button>
+      <button class="pbtn" type="button" id="dNewGame">Пришла новая игра<small>Игра встаёт на полку: средняя → нижняя → верхняя; после 9-й появляется 4-я полка, потом игры встают на стол</small></button>
       <button class="pbtn" type="button" id="dReset">Начать с первого запуска</button>
       <div class="flash" id="flash" role="status"></div>
     </div>
@@ -402,6 +405,7 @@ var GAMES=[
   {id:'g5',name:'[Game 5]',base:'#E7BE70',levels:null,ph:'5'},
   {id:'g6',name:'[Game 6]',base:'#C6B7A5',levels:null,ph:'6'}
 ];
+['#A5BBC8','#C78D73','#A998AD','#A7B39B','#E7BE70','#C6B7A5','#A5BBC8','#C78D73','#A998AD'].forEach(function(c,i){ var n=i+7; GAMES.push({id:'g'+n,name:'[Game '+n+']',base:c,levels:null,ph:String(n)}); });
 var PIECE_ORDER=[4,0,8,2,6,1,7,3,5];
 var PIECE_FILL=['#E2EAF0','#E2EAF0','#E2EAF0','#E2E8D9','#E2E8D9','#E2E8D9','#A7B39B','#A7B39B','#A7B39B'];
 var BOX_H=[96,86,102,90,98,88];
@@ -571,10 +575,12 @@ function gameSymbol(gm,host,cx,cy){
   else { var t=el('text',{x:cx,y:cy+5,'text-anchor':'middle','font-family':'Inter, system-ui, sans-serif','font-size':14,'font-weight':600,fill:'#33312E'},host); t.textContent=gm.ph; }
 }
 /* games: middle shelf first (eye level), then bottom, then top; three box shapes from one template */
-var SLOTS=[[948,338],[1008,338],[1072,338],[948,432],[1008,432],[1066,432],[1012,244],[1072,244],[1118,244]];
+/* after 9 games: a fourth shelf at the top of the arch, then the desk (author's decision) */
+var SLOTS=[[948,338],[1008,338],[1072,338],[948,432],[1008,432],[1066,432],[1012,244],[1072,244],[1118,244],[985,172],[1045,172],[1105,172],[960,512],[1025,512],[1088,512]];
 var SHAPES=[[30,64],[46,46],[54,36]];
 function renderShelf(animNewest){
   var host=$('gameShelf'); host.innerHTML=''; var newest=null;
+  $('shelf4').style.display=shown.games>9?'':'none';
   for(var i=0;i<shown.games;i++){
     var gm=GAMES[i], sh=SHAPES[i%3], w=sh[0], h=sh[1], x=SLOTS[i][0]-w/2, y=SLOTS[i][1]-h;
     var bx=el('g',{class:'vb',style:'transform:translate('+x+'px,'+y+'px)'},host);
@@ -778,7 +784,7 @@ $('dNewDay').addEventListener('click',function(){
 });
 $('dNewGame').addEventListener('click',function(){
   if(!state.unlockedOnce){ flash('Первые три игры приходят с первым письмом — откройте его.'); return; }
-  if(state.games>=6){ flash('Все шесть игр уже пришли. На полках есть места ещё для трёх.'); return; }
+  if(state.games>=GAMES.length){ flash('В прототипе больше мест нет: 4 полки и стол заняты.'); return; }
   state.games++; enqueue('games',function(){ shown.games++; return renderShelf(true); });
   flash(stopIdx===2?'Коробка встаёт на полку.':'Событие ждёт зону «Games» — свайпните вправо.');
 });

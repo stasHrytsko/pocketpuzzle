@@ -42,5 +42,5 @@
 
 ## Что ещё не синхронизировано
 
-- Основной кликабельный прототип показывает три плоские панели. Комната — отдельный прототип `design/ui-kit/main-page/prototype/room.html` (артефакт «Pocket Puzzle Room», https://claude.ai/artifact/KNL2BZwPJfe4EFJppo782r); после правки — публиковать тот же файл и коммитить. Объединить с основным — после согласования арта.
+- Основной кликабельный прототип показывает три плоские панели. Комната — отдельный прототип `design/ui-kit/main-page/prototype/room.html` (артефакт «Pocket Puzzle Room», https://claude.ai/artifact/KNL2BZwPJfe4EFJppo782r) и самостоятельная страница `prototype/index.html`. **После правки:** опубликовать тот же `room.html`, выполнить `python3 design/ui-kit/main-page/prototype/build_standalone.py`, закоммитить. Объединить с основным — после согласования арта.
 - Кликабельный прототип (артефакт «Pocket Puzzle прототип», https://claude.ai/artifact/E7n5buGvbbQbmWLGxdGHr2) покрывает MVP-экраны из `design/SCREENS.md`; поля игр — заглушки, обучение — карточка-плейсхолдер.

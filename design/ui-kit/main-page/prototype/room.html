@@ -15,7 +15,7 @@
   --f-ui: Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
   --f-serif: "Source Serif 4", Georgia, "Times New Roman", serif;
   --ease: cubic-bezier(0.2,0.8,0.2,1);
-  --pop-side:5%; --pop-tb:20%;
+  --pop-side:5%; --pop-tb:10%;
   color-scheme: light;
 }
 html,body{background:var(--board);color:var(--ink)}
@@ -149,19 +149,23 @@ button{font:inherit;color:inherit}
         <div id="world">
           <!-- L0: view outside the window (behind the wall). Drawn wider than the brief so the ×3 demo mode never shows an edge. -->
           <svg class="layer" id="L0a" style="left:205px;top:110px" width="900" height="400" viewBox="0 0 900 400" aria-hidden="true">
-            <rect width="900" height="400" fill="#E2EAF0"/>
-            <g id="dusk" opacity="0">
-              <defs><linearGradient id="gEve" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E2EAF0"/><stop offset="0.35" stop-color="#F3E6CA"/></linearGradient></defs>
-              <rect width="900" height="400" fill="url(#gEve)"/>
-            </g>
-            <g id="sunDay"><circle cx="400" cy="112" r="56" fill="#F3E6CA"/><circle cx="400" cy="112" r="34" fill="#E7BE70"/></g>
-            <g id="sunEve" opacity="0"><circle cx="490" cy="232" r="62" fill="#F3E6CA"/><circle cx="490" cy="232" r="34" fill="#E7BE70"/></g>
+            <defs>
+              <linearGradient id="gMorning" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E2EAF0"/><stop offset="0.7" stop-color="#F3E6CA"/></linearGradient>
+              <linearGradient id="gEve" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E2EAF0"/><stop offset="0.35" stop-color="#F3E6CA"/></linearGradient>
+            </defs>
+            <g data-phase="morning"><rect width="900" height="400" fill="url(#gMorning)"/><circle cx="330" cy="236" r="58" fill="#F3E6CA"/><circle cx="330" cy="236" r="32" fill="#E7BE70"/></g>
+            <g data-phase="day"><rect width="900" height="400" fill="#E2EAF0"/><circle cx="400" cy="112" r="56" fill="#F3E6CA"/><circle cx="400" cy="112" r="34" fill="#E7BE70"/></g>
+            <g data-phase="evening"><rect width="900" height="400" fill="url(#gEve)"/><circle cx="490" cy="232" r="62" fill="#F3E6CA"/><circle cx="490" cy="232" r="34" fill="#E7BE70"/></g>
+            <g data-phase="night"><rect width="900" height="400" fill="#3D647D"/><circle cx="470" cy="120" r="40" fill="#3D647D" stroke="#E2EAF0" stroke-opacity="0.25" stroke-width="18"/><circle cx="470" cy="120" r="24" fill="#F3E6CA"/><circle cx="480" cy="114" r="20" fill="#3D647D"/>
+              <g fill="#FFF9EF"><circle cx="330" cy="70" r="2"/><circle cx="390" cy="150" r="1.5"/><circle cx="560" cy="80" r="2"/><circle cx="620" cy="170" r="1.5"/><circle cx="300" cy="190" r="1.5"/><circle cx="520" cy="200" r="1.2"/><circle cx="420" cy="40" r="1.5"/></g></g>
           </svg>
           <svg class="layer" id="L0b" style="left:275px;top:110px" width="760" height="400" viewBox="0 0 760 400" aria-hidden="true">
             <path d="M0 270 C90 230 160 240 250 262 S420 210 520 236 S680 270 760 248 V400 H0Z" fill="#E2E8D9"/>
+            <path data-phase="night" d="M0 270 C90 230 160 240 250 262 S420 210 520 236 S680 270 760 248 V400 H0Z" fill="#526348"/>
           </svg>
           <svg class="layer" id="L0c" style="left:355px;top:110px" width="600" height="400" viewBox="0 0 600 400" aria-hidden="true">
             <path d="M0 330 C80 300 150 290 230 312 S380 352 460 318 S560 300 600 312 V400 H0Z" fill="#A7B39B"/>
+            <path data-phase="night" d="M0 330 C80 300 150 290 230 312 S380 352 460 318 S560 300 600 312 V400 H0Z" fill="#43523B"/>
           </svg>
 
           <!-- L1: the room. Everything in here moves as one body. -->
@@ -326,21 +330,33 @@ button{font:inherit;color:inherit}
         <li>Свайп по комнате (или стрелки ← →). Отпустите на полпути: камера доедет за ~300 мс.</li>
         <li>Тап в любое место зоны «Letters» или «Games» — попап. Закрыть: крестик, тап мимо попапа, Esc.</li>
         <li>Тап по ящику — письмо. Отправьте его и переключите день: в календаре закрасится новый день.</li>
+        <li>Вид за окном идёт по часам вашего устройства; в карточке «Вид за окном» можно посмотреть все четыре.</li>
       </ul>
     </div>
     <div class="card">
       <h3>Размер попапа</h3>
       <div class="range"><label for="rSide">Поля по бокам</label><output id="oSide">5%</output><input type="range" id="rSide" min="0" max="15" step="1" value="5"></div>
-      <div class="range"><label for="rTb">Поля сверху и снизу</label><output id="oTb">20%</output><input type="range" id="rTb" min="5" max="30" step="1" value="20"></div>
+      <div class="range"><label for="rTb">Поля сверху и снизу</label><output id="oTb">10%</output><input type="range" id="rTb" min="5" max="30" step="1" value="10"></div>
       <div class="seg" role="group" aria-label="Размытие фона">
         <button type="button" data-blur="0" aria-pressed="false">Без размытия</button>
-        <button type="button" data-blur="8" aria-pressed="true">Размытие 8</button>
-        <button type="button" data-blur="16" aria-pressed="false">Размытие 16</button>
+        <button type="button" data-blur="6" aria-pressed="true">Размытие 6</button>
+        <button type="button" data-blur="12" aria-pressed="false">Размытие 12</button>
       </div>
     </div>
     <div class="card">
+      <h3>Вид за окном</h3>
+      <div class="seg" style="grid-template-columns:repeat(5,1fr)" role="group" aria-label="Время суток за окном">
+        <button type="button" data-ph="auto" aria-pressed="true">По часам</button>
+        <button type="button" data-ph="morning" aria-pressed="false">Утро</button>
+        <button type="button" data-ph="day" aria-pressed="false">День</button>
+        <button type="button" data-ph="evening" aria-pressed="false">Вечер</button>
+        <button type="button" data-ph="night" aria-pressed="false">Ночь</button>
+      </div>
+      <div class="muted" id="phaseNow"></div>
+    </div>
+    <div class="card">
       <h3>Сценарий дня</h3>
-      <button class="pbtn" type="button" id="dNewDay">Наступил новый день<small>Конверт выезжает из щели; в календаре закрашивается день, когда камера на «Letters»</small></button>
+      <button class="pbtn" type="button" id="dNewDay">Наступил новый день<small>Флажок опускается, конверт выезжает из щели; в календаре закрашивается день, когда камера на «Letters»</small></button>
       <button class="pbtn" type="button" id="dNewGame">Пришла новая игра<small>Коробка встаёт на полку, видно в зоне «Games»</small></button>
       <button class="pbtn" type="button" id="dReset">Начать с первого запуска</button>
       <div class="flash" id="flash" role="status"></div>
@@ -382,11 +398,11 @@ var phone=$('phone'), world=$('world');
 var L0={a:$('L0a'),b:$('L0b'),c:$('L0c')}, L2=$('L2');
 var START=new Date(); START.setHours(12,0,0,0);
 
-var state, shown, camX=655, stopIdx=1, scale=1, parMode='spec', reduced=false, blurPx=8;
+var state, shown, camX=655, stopIdx=1, scale=1, parMode='spec', reduced=false, blurPx=6;
 var queue=[], busy=false, running=[], moving=false, popOpen=false, screenOpen=false;
 
 function fresh(){
-  state={letter:'new',evening:false,noteRead:true,games:0,sent:0,notes:0,received:1,played:{},day:1,unlockedOnce:false};
+  state={letter:'new',noteRead:true,games:0,sent:0,notes:0,received:1,played:{},day:1,unlockedOnce:false};
   shown={games:0,received:1};
 }
 function dayDate(i){var d=new Date(START);d.setDate(d.getDate()+i);return d;}
@@ -494,21 +510,23 @@ function renderBox(){
   $('hotProp').style.display=state.letter==='open'?'':'none';
   $('hotProp').setAttribute('tabindex',state.letter==='open'?'0':'-1');
   $('flag').style.transform=state.letter==='sent'?'rotate(0deg)':'rotate(-90deg)';
-  setEvening(state.evening,false);
   $('hotBox').setAttribute('aria-label',{new:"Today's letter, new",open:"Today's letter, in progress",sent:"Today's letter, sent"}[state.letter]);
 }
-function setEvening(on,animate){
-  var to=on?1:0;
-  ['dusk','sunEve'].forEach(function(id){$(id).setAttribute('opacity',to);});
-  $('sunDay').setAttribute('opacity',1-to);
-  if(animate&&!reduced){
-    var p=play($('dusk'),[{opacity:1-to},{opacity:to}],400,'linear');
-    play($('sunEve'),[{opacity:1-to},{opacity:to}],400,'linear');
-    play($('sunDay'),[{opacity:to},{opacity:1-to}],400,'linear');
-    return p;
-  }
-  return Promise.resolve();
+/* window view follows the phone's clock (author's decision): morning 5–9, day 9–17, evening 17–21, night 21–5 [proposal] */
+var phase=null, phaseMode='auto';
+function phaseFor(h){ return h>=5&&h<9?'morning':h>=9&&h<17?'day':h>=17&&h<21?'evening':'night'; }
+function currentPhase(){ return phaseMode==='auto'?phaseFor(new Date().getHours()):phaseMode; }
+function setPhase(ph,animate){
+  var prev=phase; phase=ph;
+  document.querySelectorAll('[data-phase]').forEach(function(n){
+    var on=n.getAttribute('data-phase')===ph, was=n.getAttribute('data-phase')===prev;
+    n.setAttribute('opacity',on?1:0);
+    if(animate&&!reduced&&(on||was)&&prev!==ph) n.animate([{opacity:was?1:0},{opacity:on?1:0}],{duration:400,easing:'linear'});
+  });
+  var lbl={morning:'утро',day:'день',evening:'вечер',night:'ночь'}[ph];
+  var pe=document.getElementById('phaseNow'); if(pe) pe.textContent='Сейчас за окном: '+lbl+(phaseMode==='auto'?' (по часам: '+new Date().toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'})+')':'');
 }
+setInterval(function(){ if(phaseMode==='auto'){ var ph=currentPhase(); if(ph!==phase) setPhase(ph,true); else setPhase(ph,false);} },30000);
 /* calendar in the arch: month of the first letter, Monday first */
 function renderCalendar(animNewest){
   var host=$('calGrid'); host.innerHTML='';
@@ -575,13 +593,13 @@ function processQueue(){
   Promise.resolve().then(it.fn).catch(function(){}).then(function(){ busy=false; processQueue(); });
 }
 function evLetterArrived(){
-  return setEvening(false,true)
+  return Promise.resolve()
     .then(function(){ $('flag').style.transform='rotate(-90deg)'; return play($('flag'),[{transform:'rotate(0deg)'},{transform:'rotate(-90deg)'}],180); })
     .then(function(){ $('env').style.transform=ENV_REST; return play($('env'),[{transform:ENV_HIDDEN},{transform:ENV_REST}],400); });
 }
 function evSent(){
   $('flag').style.transform='rotate(0deg)';
-  return play($('flag'),[{transform:'rotate(-90deg)'},{transform:'rotate(0deg)'}],180).then(function(){ return setEvening(true,true); });
+  return play($('flag'),[{transform:'rotate(-90deg)'},{transform:'rotate(0deg)'}],180);
 }
 
 /* ---------- actions ---------- */
@@ -623,7 +641,7 @@ function renderLetter(){
   var s=$('btnSend'); if(s) s.onclick=sendLetter;
 }
 function sendLetter(){
-  state.letter='sent'; state.evening=true; state.noteRead=false; state.sent++;
+  state.letter='sent'; state.noteRead=false; state.sent++;
   $('hotProp').style.display='none'; $('hotProp').setAttribute('tabindex','-1');
   closeScreens(); enqueue('today',evSent); renderCTA();
 }
@@ -721,7 +739,7 @@ function flash(t){ $('flash').textContent=t; }
 $('dNewDay').addEventListener('click',function(){
   if(screenOpen||popOpen){ flash('Сначала закройте экран или попап в телефоне.'); return; }
   if(state.letter!=='sent'){ flash('Сначала отправьте сегодняшнее письмо: тап по ящику → «Solve all and send».'); return; }
-  state.day++; state.received++; state.letter='new'; state.evening=false; state.noteRead=true;
+  state.day++; state.received++; state.letter='new'; state.noteRead=true;
   flash('Новый день. Конверт — в зоне «Today», день в календаре — в зоне «Letters».');
   enqueue('today',evLetterArrived);
   enqueue('letters',function(){ shown.received++; return renderCalendar(true); });
@@ -748,6 +766,9 @@ document.querySelectorAll('[data-blur]').forEach(function(b){
 document.querySelectorAll('[data-par]').forEach(function(b){
   b.addEventListener('click',function(){ parMode=b.dataset.par; document.querySelectorAll('[data-par]').forEach(function(x){x.setAttribute('aria-pressed',x===b?'true':'false');}); applyCamera(); });
 });
+document.querySelectorAll('[data-ph]').forEach(function(b){
+  b.addEventListener('click',function(){ phaseMode=b.dataset.ph; document.querySelectorAll('[data-ph]').forEach(function(x){x.setAttribute('aria-pressed',x===b?'true':'false');}); setPhase(currentPhase(),true); });
+});
 $('optFg').addEventListener('change',function(e){ L2.style.display=e.target.checked?'':'none'; });
 $('optReduced').addEventListener('change',function(e){ reduced=e.target.checked; applyCamera(); });
 $('optZones').addEventListener('change',function(e){ $('zonesOverlay').style.display=e.target.checked?'':'none'; });
@@ -769,6 +790,6 @@ function fit(){
   wrap.style.width=(390*scale+20)+'px'; wrap.style.height=(844*scale+20)+'px';
 }
 window.addEventListener('resize',fit);
-fresh(); fit(); renderAll(); applyCamera(); updatePager();
+fresh(); fit(); renderAll(); setPhase(currentPhase(),false); applyCamera(); updatePager();
 })();
 </script>

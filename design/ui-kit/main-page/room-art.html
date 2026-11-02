@@ -36,7 +36,7 @@ body{margin:0;background:#E9DFD0;color:var(--ink);font:400 15px/22px var(--sans)
 /* code-drawn placeholders */
 .ph{outline:0 dashed transparent}
 .show-ph .ph{outline:2px dashed #D0558A;outline-offset:2px}
-.pedestal{left:530px;top:606px;width:250px;height:28px;border-radius:14px;background:linear-gradient(#FFF9EF,#EFE4D3);box-shadow:inset 0 -3px 0 rgba(198,183,165,.6),0 1px 0 rgba(255,249,239,.8)}
+.pedestal{left:555px;top:606px;width:200px;height:28px;border-radius:14px;background:linear-gradient(#FFF9EF,#EFE4D3);box-shadow:inset 0 -3px 0 rgba(198,183,165,.6),0 1px 0 rgba(255,249,239,.8)}
 .cal{left:160px;top:186px;width:210px;height:256px;border-radius:10px;background:var(--hi);box-shadow:0 3px 6px rgba(76,57,36,.12),0 10px 20px rgba(76,57,36,.06);padding:0 14px 12px;display:flex;flex-direction:column;font-family:var(--sans)}
 .cal .head{height:30px;margin:0 -14px 8px;border-radius:10px 10px 0 0;background:var(--slot);position:relative}
 .cal .head::before,.cal .head::after{content:"";position:absolute;top:-8px;width:8px;height:18px;border-radius:4px;background:#C9B79F}
@@ -63,12 +63,15 @@ body{margin:0;background:#E9DFD0;color:var(--ink);font:400 15px/22px var(--sans)
 .gbox svg{width:50%;height:50%}
 .envnext{width:40px;height:28px;border-radius:4px;background:var(--hi);box-shadow:inset 0 0 0 1.5px var(--stroke-soft)}
 .envnext::after{content:"";position:absolute;inset:3px 3px auto;height:14px;border-bottom:1.5px solid var(--stroke-soft);border-left:0;clip-path:polygon(0 0,100% 0,50% 100%);background:linear-gradient(135deg,transparent 48%,var(--stroke-soft) 49% 51%,transparent 52%),linear-gradient(225deg,transparent 48%,var(--stroke-soft) 49% 51%,transparent 52%)}
-.slot-env{left:588px;top:356px;width:120px;height:72px;transform:rotate(-6deg);transform-origin:50% 0}
-.flag{left:768px;top:452px;width:28px;height:80px;transform-origin:6px 74px;transition:transform 400ms cubic-bezier(.2,.8,.2,1)}
+.slot-env{left:601px;top:407px;width:95px;height:57px;transform:rotate(-6deg);transform-origin:50% 0}
+.flag{left:745px;top:482px;width:22px;height:64px;transform-origin:5px 59px;transition:transform 400ms cubic-bezier(.2,.8,.2,1)}
 .flag.up{transform:rotate(0)}.flag.down{transform:rotate(90deg)}
-.openprop{left:740px;top:560px;width:76px;height:56px}
+.openprop{left:752px;top:562px;width:76px;height:56px}
 /* overlay: safe zones */
 .zones{position:absolute;inset:0;pointer-events:none;display:none}
+.depth{position:absolute;left:0;top:0;width:1310px;height:844px;pointer-events:none}
+.plant{top:462px;width:80px;height:200px;filter:drop-shadow(0 6px 8px rgba(76,57,36,.18))}
+.no-fg #fg{display:none}
 .show-zones .zones{display:block}
 .zones .top{position:absolute;left:0;right:0;top:0;height:110px;background:rgba(61,100,125,.18);border-bottom:1px dashed var(--focus)}
 .zones .bot{position:absolute;left:0;right:0;top:660px;bottom:0;background:rgba(61,100,125,.18);border-top:1px dashed var(--focus)}
@@ -123,12 +126,14 @@ label.check input{width:18px;height:18px;accent-color:var(--action)}
           <div class="p ph cabinet" aria-hidden="true"><div class="top"></div><div class="body"><div class="door"></div><div class="door"></div></div><div class="leg" style="left:22px"></div><div class="leg" style="right:22px"></div></div>
           <div class="p ph notes" id="notes" aria-hidden="true"></div>
           <!-- centre -->
-          <div class="shadow" style="left:500px;top:618px;width:310px;height:26px"></div>
+          <div class="depth" id="front">
+          <div class="shadow" style="left:530px;top:618px;width:250px;height:24px"></div>
           <div class="p ph pedestal" aria-hidden="true"></div>
           <svg class="p ph flag down" id="flag" viewBox="0 0 28 80" aria-hidden="true"><rect x="3" y="10" width="6" height="66" rx="3" fill="#526348"/><rect x="6" y="6" width="22" height="16" rx="4" fill="#C78D73"/></svg>
-          <img src="art/mailbox.png" alt="" id="mailbox" style="left:545px;top:339px;width:220px">
+          <img src="art/mailbox.png" alt="" id="mailbox" style="left:567.5px;top:394px;width:175px">
           <svg class="p ph slot-env" id="slotEnv" viewBox="0 0 120 72" aria-hidden="true"><rect x="1" y="1" width="118" height="70" rx="4" fill="#FFF9EF" stroke="#C6B7A5"/><path d="M2 3 60 40 118 3" fill="#F1E7D8" stroke="#C6B7A5"/><circle cx="60" cy="40" r="9" fill="#C78D73"/><circle cx="60" cy="40" r="5.5" fill="none" stroke="#884C38" stroke-opacity=".6"/></svg>
           <svg class="p ph openprop" id="openProp" viewBox="0 0 76 56" aria-hidden="true" style="display:none"><rect x="14" y="2" width="48" height="40" rx="3" fill="#FFF9EF" stroke="#C6B7A5"/><path d="M22 12h30M22 20h26M22 28h22" stroke="#C6B7A5" stroke-width="2" stroke-linecap="round"/><path d="M2 24h72v30H2z" fill="#F1E7D8" stroke="#C6B7A5"/><path d="M2 24 38 44 74 24" fill="none" stroke="#C6B7A5"/></svg>
+          </div>
           <!-- right zone -->
           <img src="art/niche.png" alt="" style="left:895px;top:127px;width:300px">
           <div class="p ph shelf" style="left:975px;top:244px;width:190px"></div>
@@ -138,6 +143,7 @@ label.check input{width:18px;height:18px;accent-color:var(--action)}
           <div class="p ph gbox" style="left:985px;top:292px;width:46px;height:46px;background:#C78D73"><svg viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="3" width="8" height="8" rx="1.6"/><rect x="3" y="13" width="8" height="8" rx="1.6"/><rect x="13" y="13" width="8" height="8" rx="1.6"/></svg></div>
           <div class="p ph gbox" style="left:1050px;top:302px;width:54px;height:36px;background:#A998AD"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 3h6v2h-1v4.5l5.6 9.2A2 2 0 0 1 17.9 22H6.1a2 2 0 0 1-1.7-3.3L10 9.5V5H9z"/></svg></div>
           <div class="p ph envnext" style="left:935px;top:404px" title="Next game arrives by mail"></div>
+          <div class="depth" id="fg"><svg class="p ph plant" style="left:422px" viewBox="0 0 80 200" aria-hidden="true"><g fill="#A7B39B"><path d="M40 150C30 110 12 96 4 70c22 6 34 30 36 80z"/><path d="M40 150c4-50 18-80 34-96-2 34-14 66-34 96z" fill="#8E9C80"/><path d="M40 150C38 104 34 60 42 14c10 40 8 90-2 136z"/><path d="M40 150c-14-26-30-34-40-34 14 22 26 32 40 34z" fill="#8E9C80"/></g><path d="M20 146h40l-5 50H25z" fill="#F1E7D8"/><path d="M18 140h44v10H18z" rx="4" fill="#FFF9EF"/></svg><svg class="p ph plant" style="left:818px" viewBox="0 0 80 200" aria-hidden="true" transform="scale(-1,1)"><g fill="#A7B39B"><path d="M40 150C30 110 12 96 4 70c22 6 34 30 36 80z"/><path d="M40 150c4-50 18-80 34-96-2 34-14 66-34 96z" fill="#8E9C80"/><path d="M40 150C38 104 34 60 42 14c10 40 8 90-2 136z"/><path d="M40 150c-14-26-30-34-40-34 14 22 26 32 40 34z" fill="#8E9C80"/></g><path d="M20 146h40l-5 50H25z" fill="#F1E7D8"/><path d="M18 140h44v10H18z" rx="4" fill="#FFF9EF"/></svg></div>
           <div class="zones" aria-hidden="true"><div class="top"></div><div class="bot"></div><div class="col" style="left:115px"></div><div class="col" style="left:505px"></div><div class="col" style="left:895px"></div></div>
         </div>
         <div class="ui" id="ui">
@@ -155,7 +161,7 @@ label.check input{width:18px;height:18px;accent-color:var(--action)}
   </div>
 
   <div class="card">
-    <div><h1>Room from parts</h1><p class="note" style="margin-top:6px">AI art for the wall, niche, window frame, mailbox, sky and hills (day and night), placed by the layout in ROOM-ART-BRIEF.md §2.3. Swipe the room or use the zone labels and the arrow keys.</p></div>
+    <div><h1>Room from parts</h1><p class="note" style="margin-top:6px">AI art for the wall, niche, window frame, mailbox, sky and hills (day and night), placed by the layout in ROOM-ART-BRIEF.md §2.3. Mailbox is smaller (175 pt) so more of the window shows. Swipe the room or use the zone labels and the arrow keys.</p></div>
     <div><h2>Screen</h2><div class="seg" role="group" aria-label="Screen size" id="devSeg">
       <button type="button" data-w="390" data-h="844" aria-pressed="true">390 × 844</button>
       <button type="button" data-w="375" data-h="667" aria-pressed="false">375 × 667</button>
@@ -174,11 +180,14 @@ label.check input{width:18px;height:18px;accent-color:var(--action)}
     <div class="stack" style="display:flex;flex-direction:column;gap:8px">
       <label class="check"><input type="checkbox" id="optZones"> Safe zones and 300 pt columns</label>
       <label class="check"><input type="checkbox" id="optPh"> Outline parts still drawn in code</label>
+      <label class="check"><input type="checkbox" id="optDepth" checked> Depth: mailbox ×1.04, foreground plants ×1.14</label>
+      <label class="check"><input type="checkbox" id="optFg" checked> Foreground plants</label>
       <label class="check"><input type="checkbox" id="optUi" checked> Show interface</label>
     </div>
     <div><h2>Still missing as art</h2>
       <ul class="list">
                 <li><b>Pedestal, flag, envelopes</b> — now code</li>
+        <li><b>Foreground plants</b> — placeholder for the depth test</li>
         <li><b>Calendar sheet, nightstand, notes</b> — now code</li>
         <li><b>Shelves, game boxes, desk, lamp</b> — now code or missing</li>
       </ul>
@@ -220,6 +229,7 @@ function apply(anim){
   const w=$('world'); w.style.transition=anim?'transform 300ms cubic-bezier(.2,.8,.2,1)':'none'; w.style.transform=`translateX(${x}px)`;
   const d=cam-655, set=(id,k,wid)=>{const el=$(id);el.style.transition=w.style.transition;el.style.left=((304-wid)/2)+'px';el.style.transform=`translateX(${(1-k)*d}px)`};
   set('Lsky',K.sky,520);set('Lfar',K.far,470);set('Lnear',K.near,410);
+  const deep=$('optDepth').checked;[['front',deep?1.04:1],['fg',deep?1.14:1]].forEach(([id,k])=>{const el=$(id);el.style.transition=w.style.transition;el.style.transform=`translateX(${(1-k)*d}px)`});
   [...$('pager').children].forEach((b,i)=>b.setAttribute('aria-current',i===zone?'true':'false'));
   $('readout').textContent=`${dev.w}×${dev.h} · visible ${Math.round(vw)} pt · camera ${Math.round(cam)}`;
 }
@@ -245,6 +255,8 @@ segs('boxSeg',b=>{const s=+b.dataset.s;$('slotEnv').style.display=s===1?'':'none
 segs('todSeg',b=>{tod=b.dataset.t;drawView(isNight())});
 $('optZones').addEventListener('change',e=>sc.classList.toggle('show-zones',e.target.checked));
 $('optPh').addEventListener('change',e=>sc.classList.toggle('show-ph',e.target.checked));
+$('optDepth').addEventListener('change',()=>apply(false));
+$('optFg').addEventListener('change',e=>sc.classList.toggle('no-fg',!e.target.checked));
 $('optUi').addEventListener('change',e=>{$('ui').style.display=e.target.checked?'':'none'});
 
 drawView(isNight());layout();addEventListener('resize',layout);

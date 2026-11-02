@@ -257,9 +257,9 @@ high resolution 1024x1024.
 
 ---
 
-## 11. Комната
+## 11. Комната целиком — только настроение
 
-Подробное ТЗ — `main-page/ROOM-ART-BRIEF.md`. Для генератора — только настроение и предметы; слои параллакса потом нарезаем отдельно.
+Для сборки не годится (пропорции — см. §12). Подробное ТЗ — `main-page/ROOM-ART-BRIEF.md`.
 
 ```text
 Wide panoramic illustration of a calm warm room, 1310x844, front view.
@@ -276,6 +276,136 @@ nothing hanging or swinging. Matte clay-like rendering, top-left light.
 ```
 
 Ночной вариант — тот же промпт плюс: «night: dark blue sky with a moon in the window, warm lamp light inside, same room unchanged».
+
+---
+
+## 12. Комната по частям — для сборки (главное)
+
+Цельную панораму генератор в нужные пропорции не попадает: на `main-page/refs/room-panorama-v0.png` она 2,5:1 вместо 1,55:1, и в телефоне арки шире экрана, а низ уходит под кнопку. Поэтому комнату генерируем **по частям**, а я собираю её кодом по раскладке из `main-page/ROOM-ART-BRIEF.md` §2.3. Настроение и цвет — как на `room-panorama-v0.png` и `room-mood-v1.png`.
+
+**Что делаю сам, рисовать не нужно:** контактные тени, свечение лампы, флажок в поднятом положении (поворачиваю), числа и закраска в календаре, значки игр на коробках, цвет коробок, маленький конверт «придёт по почте», точка «новое», переплёт окна в нужном месте.
+
+### Блок ROOM — вставлять перед каждым промптом части
+
+```text
+Part of a calm, warm, minimal room illustration for a mobile game.
+One single object, front orthographic view, straight on, eye level,
+no perspective distortion. Soft matte clay / paper / light wood materials,
+rounded edges, single soft light from the top-left, subtle shading only.
+NO cast shadow on the ground, NO floor, NO wall behind the object.
+Isolated on a flat pure white background (#FFFFFF), object centered,
+small even margin around it. No text, no letters, no numbers, no logos.
+Palette: cream #F1E7D8, highlight #FFF9EF, warm beige #E8DCCB,
+soft seams #C6B7A5, sage mailbox #A7B39B with shade #526348 and light #E2E8D9,
+sky #E2EAF0, sun #E7BE70. Same style as the attached room reference.
+```
+
+### Размеры
+
+pt — размер в комнате (панорама 1310 × 844 pt). px — размер, в котором нужна картинка (@3x). Если генератор не умеет точный размер — главное **соотношение сторон**, масштаб подгоню я. **[предложение]** — размера в ТЗ комнаты не было, предлагаю я.
+
+| # | Часть | pt | px @3x | Соотношение | Варианты |
+|---|---|---|---|---|---|
+| 1 | Фон: стена и пол, без арок и окна | 1310 × 844 | 3930 × 2532 | 1,55 : 1 | — |
+| 2 | Ниша-арка (одна на обе зоны) | 300 × 480 | 900 × 1440 | 5 : 8 | — |
+| 3 | Рама окна с подоконником, проём пустой | 340 × 400 (проём 300 × 370) | 1020 × 1200 | 17 : 20 | — |
+| 4a | Вид за окном: небо и солнце / луна | 520 × 400 | 1560 × 1200 | 13 : 10 | день, ночь |
+| 4b | Дальние холмы | 470 × 400 | 1410 × 1200 | 47 : 40 | день, ночь |
+| 4c | Ближние холмы | 410 × 400 | 1230 × 1200 | 41 : 40 | день, ночь |
+| 5 | Почтомат без флажка, щель пустая | 220 × 230 | 660 × 690 | ≈ 1 : 1 | — |
+| 6 | Флажок почтомата | 24 × 70 **[предложение]** | 72 × 210 | 1 : 3 | — |
+| 7 | Пьедестал | 250 × 26 | 750 × 78 | ≈ 10 : 1 | — |
+| 8 | Конверт с сургучом (торчит из щели) | 120 × 80 **[предложение]** | 360 × 240 | 3 : 2 | — |
+| 9 | Раскрытый конверт с листом (у пьедестала) | 90 × 70 | 270 × 210 | 9 : 7 | — |
+| 10 | Лист календаря без чисел, со шнурком и гвоздём | 210 × 285 (лист 210 × 256) | 630 × 855 | ≈ 3 : 4 | — |
+| 11 | Тумбочка | 226 × 116 | 678 × 348 | ≈ 2 : 1 | — |
+| 12 | Сложенная записка | 80 × 50 **[предложение]** | 240 × 150 | 8 : 5 | 2 цвета бумаги |
+| 13 | Полки (доска) | 210 × 12, 190 × 12, 180 × 12 | 630 × 36 и т. д. | ≈ 16 : 1 | 3 длины |
+| 14 | Коробка игры, **белая** | 30 × 64 · 46 × 46 · 54 × 36 | 90 × 192 · 138 × 138 · 162 × 108 | 15 : 32 · 1 : 1 · 3 : 2 | 3 формы |
+| 15 | Горшок с растением (верхняя полка) | 40 × 56 **[предложение]** | 120 × 168 | 5 : 7 | — |
+| 16 | Стол | 380 × 120 **[предложение]** | 1140 × 360 | ≈ 3 : 1 | — |
+| 17 | Лампа | 70 × 130 **[предложение]** | 210 × 390 | 7 : 13 | — |
+| 18 | Ваза с веткой (между зонами) | 60 × 120 **[предложение]** | 180 × 360 | 1 : 2 | — |
+
+Очень вытянутые части (7 и 13) генератор рисует плохо — проси их на холсте шире (например, 4 : 1) с объектом посередине, я обрежу.
+
+### Промпты частей (после блока ROOM)
+
+```text
+1  Plain room background: a smooth warm cream wall (#F1E7D8) taking the upper
+   71% and a light floor (#E8DCCB fading to #F1E7D8 toward the bottom) below,
+   a soft horizontal floor line at 71% height. Gentle diagonal sunlight patch
+   from the top-left on the wall and floor. No arches, no window, no objects.
+   Wide 1.55:1. (For this one: ignore "no wall / no floor" from ROOM.)
+
+2  A tall arched wall niche, recessed into the wall: rounded semicircle top,
+   straight sides, a shallow ledge at the bottom. Inside slightly deeper warm
+   beige #E8DCCB, rim lighter #FFF9EF. Neutral cream, NOT yellow, NOT green.
+   Empty. Ratio 5:8.
+
+3  An arched window frame in light rounded wood/plaster with a deep sill.
+   The opening inside the frame is filled with flat pure magenta #FF00FF
+   (it will be cut out). Semicircle top. Ratio 17:20.
+
+4a Sky seen through a window, no frame: pale sky #E2EAF0, a soft round sun
+   #E7BE70 upper right, a few faint clouds. Ratio 13:10.
+   NIGHT: deep blue sky #3D647D, a pale moon #F3E6CA, a few small stars.
+
+4b Distant soft rolling hills, very light sage #E2E8D9, air perspective,
+   on flat pure magenta #FF00FF above the hills. Ratio 47:40.
+   NIGHT: the same hills in #526348.
+
+4c Near rolling hills, sage #A7B39B, a bit darker at the bottom, on flat
+   pure magenta #FF00FF above the hills. Ratio 41:40.
+   NIGHT: the same hills in #43523B.
+
+5  A big rounded sage mailbox (#A7B39B): rectangular body with rounded top
+   corners, a horizontal mail slot near the top (empty), an embossed
+   postage-stamp emblem with a tiny mountain, one cabinet door with a small
+   round knob, two short legs. No flag. Ratio about 1:1.
+
+6  A small mailbox flag: a short sage-dark (#526348) post with a rounded
+   rectangular flag, pivot at the bottom, shown pointing straight up.
+   Ratio 1:3.
+
+7  A low, wide, soft cream pedestal / plinth with rounded edges, very flat,
+   for a mailbox to stand on. Wide 4:1 canvas, object in the middle.
+
+8  A sealed cream envelope with a clay-red wax seal (#C78D73), tilted about
+   6 degrees, seen from the front. Ratio 3:2.
+
+9  An opened cream envelope with a letter sheet sticking out, standing
+   leaning slightly. Ratio 9:7.
+
+10 A blank wall calendar sheet: cream paper #FFF9EF with a header strip
+   #DED0BD and two small rings at the top, hanging on a short string from a
+   small nail. NO numbers, NO month name, NO grid. Ratio about 3:4.
+
+11 A small light-wood nightstand with two doors, small round handles and
+   short legs, rounded edges. Empty top. Ratio about 2:1.
+
+12 A small folded paper note, slightly thick, cream #FFF9EF, lying flat,
+   seen from the front-top. Second version in pale yellow #F3E6CA.
+   Ratio 8:5.
+
+13 A simple floating wall shelf: one light-wood board with rounded ends,
+   seen straight on. Wide 4:1 canvas, board in the middle.
+
+14 A game box standing like a book, pure WHITE body (it will be tinted),
+   matte, rounded edges, with a small lighter rounded label area on the
+   front, empty. Three versions: tall (15:32), square (1:1), wide (3:2).
+
+15 A small ceramic pot with a few soft sage leaves. Ratio 5:7.
+16 A simple light-wood desk with rounded edges, thin legs. Ratio 3:1.
+17 A small desk lamp, cream rounded shade, light-wood stand, lamp OFF
+   (glow is added separately). Ratio 7:13.
+18 A cream ceramic vase with one thin sage branch. Ratio 1:2.
+```
+
+### Что важно для всех частей
+- Один ракурс (строго спереди) и один свет (сверху слева) на всех картинках — иначе собранная комната развалится.
+- Генерировать по одной части, к каждой прикладывать `room-panorama-v0.png` как референс стиля.
+- Магента `#FF00FF` — только там, где нужна дырка или прозрачность; я её вырежу.
 
 ---
 

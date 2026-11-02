@@ -1,0 +1,1308 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Pocket Puzzle — прототип</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Source+Serif+4:opsz,wght@8..60,500&amp;display=swap">
+<style>
+body{margin:0;background:#F7F2E9}
+a{color:#3D647D}a:hover{color:#33312E}
+button{font-family:inherit}
+.btn{height:52px;border-radius:18px;padding:0 20px;font:600 15px/20px Inter,system-ui,sans-serif;border:none;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;width:100%;box-sizing:border-box;transition:transform 90ms cubic-bezier(0,0,0.58,1),background-color 90ms}
+.btn:active{transform:translateY(1px)}
+.primary{background:#526348;color:#FFF9EF;box-shadow:0 2px 3px rgba(76,57,36,0.12),0 6px 14px rgba(76,57,36,0.06),inset 0 1px 0 rgba(255,249,239,0.25)}
+.primary:active{background:#43523B}
+.secondary{background:#F1E7D8;color:#33312E;border:1px solid #756B5D}
+.secondary:active{background:#E8DCCB}
+.quiet{background:transparent;color:#33312E}
+.quiet:active{background:#F1E7D8}
+.ib{width:48px;height:48px;border-radius:12px;background:transparent;border:none;display:flex;align-items:center;justify-content:center;color:#33312E;cursor:pointer;padding:0;flex-shrink:0}
+.ib:active{background:#F1E7D8}
+.card{background:#F1E7D8;border-radius:18px;border:none;box-shadow:0 2px 3px rgba(76,57,36,0.12),0 6px 14px rgba(76,57,36,0.06),inset 0 1px 0 rgba(255,249,239,0.65);text-align:left;color:#33312E;cursor:pointer;transition:transform 90ms cubic-bezier(0,0,0.58,1)}
+.card:active{transform:translateY(1px)}
+.tag{height:28px;padding:0 8px;border-radius:14px;font:400 13px/18px Inter,system-ui,sans-serif;display:inline-flex;align-items:center;gap:4px;white-space:nowrap;box-sizing:border-box}
+.tool{background:transparent;border:none;display:flex;flex-direction:column;align-items:center;gap:4px;color:#33312E;font:400 13px/18px Inter,system-ui,sans-serif;cursor:pointer;min-width:72px;padding:6px 0;border-radius:12px}
+.tool:active{background:#E8DCCB}
+.proto{border:1.5px dashed #756B5D;background:transparent;color:#33312E;border-radius:14px;min-height:44px;padding:8px 14px;font:400 13px/18px Inter,system-ui,sans-serif;cursor:pointer}
+:focus-visible{outline:2px solid #3D647D;outline-offset:2px}
+.env-move{transition:transform 600ms cubic-bezier(0.2,0.8,0.2,1),opacity 600ms cubic-bezier(0.2,0.8,0.2,1)}
+.chev{transition:transform 180ms cubic-bezier(0.2,0.8,0.2,1)}
+@keyframes ppRise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes ppFade{from{opacity:0}to{opacity:1}}
+.rise{animation:ppRise 400ms cubic-bezier(0.2,0.8,0.2,1) both}
+.rise2{animation:ppRise 400ms cubic-bezier(0.2,0.8,0.2,1) 200ms both}
+.fade-late{animation:ppFade 300ms linear 700ms both}
+@media (prefers-reduced-motion: reduce){
+  .btn,.card,.env-move,.chev{transition:opacity 100ms linear !important}
+  .btn:active,.card:active{transform:none}
+  .rise,.rise2{animation:ppFade 100ms linear both}
+  .fade-late{animation:ppFade 100ms linear both}
+}
+</style>
+</helmet>
+
+<div onPointerDown="{{swipeStart}}" onPointerUp="{{swipeEnd}}" style="width: 390px; height: 844px; position: relative; overflow: hidden; background: #F7F2E9; color: #33312E; font-family: Inter, system-ui, sans-serif; display: flex; flex-direction: column; touch-action: pan-y;">
+
+<!-- ======================= ЗАСТАВКА ======================= -->
+<sc-if value="{{isSplash}}" hint-placeholder-val="{{ true }}">
+<button type="button" onClick="{{skipSplash}}" aria-label="Pocket Puzzle, загрузка. Нажми, чтобы продолжить" style="flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 32px; background: #F7F2E9; border: none; cursor: pointer; color: #33312E; padding: 0 20px;">
+  <div class="rise">
+    <dc-import name="Envelope" w="{{ 220 }}" slots="{{splashSlots}}" postmark="{{ false }}" date="" hint-size="220px,152px"></dc-import>
+  </div>
+  <div class="rise2" style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
+    <div style="font: 500 32px/40px 'Source Serif 4', Georgia, serif;">Pocket Puzzle</div>
+    <div style="font-size: 16px; line-height: 24px; color: #6E6459;">Каждый день — новое письмо</div>
+  </div>
+  <div class="fade-late" style="position: absolute; bottom: 64px; left: 0; right: 0; text-align: center; font-size: 13px; line-height: 18px; color: #6E6459;">{{splashLine}}</div>
+</button>
+</sc-if>
+
+<!-- ======================= ПРИВЕТСТВИЕ ======================= -->
+<sc-if value="{{isWelcome}}" hint-placeholder-val="{{ false }}">
+<div style="flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; padding: 72px 20px 40px; box-sizing: border-box;">
+  <div style="display: flex; flex-direction: column; gap: 16px;">
+    <div style="font: 500 32px/40px 'Source Serif 4', Georgia, serif;">Привет!</div>
+    <div style="font-size: 16px; line-height: 24px; color: #6E6459;">Каждый день почтальон приносит письмо с маленькими головоломками. Реши, оформи конверт и отправь — завтра придёт новое.</div>
+  </div>
+  <div style="display: flex; justify-content: center;">
+    <dc-import name="Envelope" w="{{ 290 }}" slots="{{emptySlots}}" postmark="{{ false }}" date="" hint-size="290px,200px"></dc-import>
+  </div>
+  <button type="button" class="btn primary" onClick="{{openToday}}">Открыть первое письмо</button>
+</div>
+</sc-if>
+
+<!-- ======================= ГЛАВНАЯ ======================= -->
+<sc-if value="{{isHome}}" hint-placeholder-val="{{ false }}">
+<div style="flex-grow: 1; overflow-y: auto; display: flex; flex-direction: column; padding: 0 20px 24px; box-sizing: border-box;">
+  <div style="height: 56px; display: flex; align-items: center; margin-right: -12px;">
+    <div style="flex-grow: 1; display: flex; flex-direction: column;">
+      <span style="font: 500 26px/34px Inter, system-ui, sans-serif;">Сегодня</span>
+    </div>
+    <button type="button" class="ib" aria-label="Настройки" onClick="{{goSettings}}"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></svg></button>
+  </div>
+  <div style="font-size: 13px; line-height: 18px; color: #6E6459;">{{today.full}}</div>
+
+  <div style="flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 24px; padding: 16px 0 24px;">
+    <button type="button" onClick="{{homePrimary}}" aria-label="{{homeEnvLabel}}" style="position: relative; width: 290px; height: 240px; padding: 0; margin: 0; background: transparent; border: none; cursor: pointer; border-radius: 6px; display: block;">
+      <sc-if value="{{homeOpen}}" hint-placeholder-val="{{ false }}">
+        <div style="position: absolute; left: 30px; top: 0; width: 230px; height: 150px; background: #FFF9EF; border: 1px solid #C6B7A5; border-radius: 4px; box-shadow: 0 2px 3px rgba(76,57,36,0.12); padding: 16px; box-sizing: border-box; display: flex; flex-direction: column; gap: 8px;">
+          <div style="height: 6px; width: 60%; background: #E8DCCB; border-radius: 3px;"></div>
+          <div style="height: 6px; width: 80%; background: #E8DCCB; border-radius: 3px;"></div>
+          <div style="height: 6px; width: 45%; background: #E8DCCB; border-radius: 3px;"></div>
+        </div>
+      </sc-if>
+      <div style="position: absolute; left: 0; top: 40px;">
+        <dc-import name="Envelope" w="{{ 290 }}" slots="{{todaySlots}}" postmark="{{todaySent}}" date="{{today.mark}}" hint-size="290px,200px"></dc-import>
+      </div>
+    </button>
+    <div style="display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center;">
+      <div style="font: 500 26px/34px 'Source Serif 4', Georgia, serif;">{{homeTitle}}</div>
+      <sc-if value="{{homeShowMarks}}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <sc-for list="{{todayMarks}}" as="m" hint-placeholder-count="3">
+            <div style="{{m.style}}"><sc-if value="{{m.checked}}"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FFF9EF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg></sc-if></div>
+          </sc-for>
+          <div style="font-size: 13px; line-height: 18px; color: #6E6459; margin-left: 4px;">{{todaySolvedCount}} из {{todayTotal}} решено</div>
+        </div>
+      </sc-if>
+      <div style="font-size: 16px; line-height: 24px; color: #6E6459;">{{homeBody}}</div>
+    </div>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 12px;">
+
+    <sc-if value="{{yesterdayWaiting}}" hint-placeholder-val="{{ false }}">
+      <button type="button" class="card" onClick="{{openYesterday}}" style="min-height: 56px; display: flex; align-items: center; gap: 12px; padding: 12px 16px;">
+        <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#33312E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
+        <span style="flex-grow: 1; display: flex; flex-direction: column;"><span style="font: 600 15px/20px Inter, system-ui, sans-serif;">Вчерашнее письмо ждёт</span><span style="font-size: 13px; line-height: 18px; color: #6E6459;">{{yesterdayNote}}</span></span>
+        <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6E6459" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+      </button>
+    </sc-if>
+
+
+    <sc-if value="{{canAdvanceDay}}" hint-placeholder-val="{{ false }}">
+      <button type="button" class="proto" onClick="{{advanceDay}}">Прототип: наступило завтра →</button>
+    </sc-if>
+  </div>
+</div>
+</sc-if>
+
+<!-- ======================= ПИСЬМО ======================= -->
+<sc-if value="{{isLetter}}" hint-placeholder-val="{{ false }}">
+<div style="height: 56px; flex-shrink: 0; display: flex; align-items: center; padding: 0 8px; gap: 4px;">
+  <button type="button" class="ib" aria-label="Назад" onClick="{{letterBack}}"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+  <div style="flex-grow: 1; font: 600 17px/24px Inter, system-ui, sans-serif;">Письмо</div>
+  <sc-if value="{{L.sent}}" hint-placeholder-val="{{ false }}">
+    <button type="button" class="ib" aria-label="Поделиться" onClick="{{share}}"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 8l5-5 5 5"/><path d="M5 14v6h14v-6"/></svg></button>
+  </sc-if>
+  <sc-if value="{{L.notSent}}" hint-placeholder-val="{{ true }}"><div style="width: 48px;"></div></sc-if>
+</div>
+<div style="flex-grow: 1; overflow-y: auto; padding: 8px 20px 24px; box-sizing: border-box; display: flex; flex-direction: column; gap: 20px;">
+  <div style="display: flex; flex-direction: column; gap: 4px;">
+    <div style="font: 500 26px/34px 'Source Serif 4', Georgia, serif;">{{L.title}}</div>
+    <div style="font-size: 13px; line-height: 18px; color: #6E6459;">{{L.full}} · {{L.when}}</div>
+  </div>
+
+  <sc-if value="{{L.sent}}" hint-placeholder-val="{{ false }}">
+    <div style="display: flex; justify-content: center;">
+      <dc-import name="Envelope" w="{{ 290 }}" slots="{{L.slotsView}}" postmark="{{ true }}" date="{{L.mark}}" hint-size="290px,200px"></dc-import>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{L.hasNote}}" hint-placeholder-val="{{ false }}">
+  <div style="background: #FFF9EF; border: 1px solid #C6B7A5; border-radius: 18px; box-shadow: 0 2px 3px rgba(76,57,36,0.12);">
+    <button type="button" onClick="{{toggleAtt}}" aria-expanded="{{attOpen}}" style="width: 100%; min-height: 56px; display: flex; align-items: center; gap: 12px; padding: 0 16px; background: transparent; border: none; cursor: pointer; color: #33312E; text-align: left; border-radius: 18px;">
+      <span style="flex-grow: 1; font: 600 15px/20px Inter, system-ui, sans-serif;">{{L.attTitle}}</span>
+      <svg class="chev" aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="{{chevStyle}}"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
+    <sc-if value="{{attOpen}}" hint-placeholder-val="{{ true }}">
+      <div style="padding: 0 16px 16px; font-size: 16px; line-height: 24px; white-space: pre-line;">{{L.att}}</div>
+    </sc-if>
+  </div>
+  </sc-if>
+
+  <sc-if value="{{L.chSealed}}" hint-placeholder-val="{{ true }}">
+    <div style="min-height: 76px; display: flex; align-items: center; gap: 12px; padding: 16px; border: 1.5px dashed #756B5D; border-radius: 18px; box-sizing: border-box;">
+      <div style="width: 44px; height: 44px; flex-shrink: 0; border-radius: 12px; background: #DED0BD; box-shadow: inset 0 2px 4px rgba(76,57,36,0.14); display: flex; align-items: center; justify-content: center;">
+        <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#33312E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 2px;">
+        <span style="font: 600 15px/20px Inter, system-ui, sans-serif;">Записка почтальона · запечатана</span>
+        <span style="font-size: 13px; line-height: 18px; color: #33312E;">Откроется, когда решишь все задачи письма</span>
+      </div>
+    </div>
+  </sc-if>
+  <sc-if value="{{L.chOpen}}" hint-placeholder-val="{{ false }}">
+    <button type="button" class="card" onClick="{{L.readChapter}}" style="min-height: 76px; display: flex; align-items: center; gap: 12px; padding: 16px; background: #FFF9EF; border: 1px solid #C6B7A5;">
+      <div style="width: 44px; height: 44px; flex-shrink: 0; border-radius: 12px; background: #F3E6CA; border: 1.5px solid #805617; display: flex; align-items: center; justify-content: center; font: 600 15px/20px Inter, system-ui, sans-serif; color: #805617;">{{L.chNum}}</div>
+      <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px;">
+        <span style="font: 600 15px/20px Inter, system-ui, sans-serif;">Записка почтальона · открыта</span>
+        <span style="font-size: 13px; line-height: 18px; color: #6E6459;">{{L.chHint}}</span>
+      </div>
+      <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6E6459" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+    </button>
+  </sc-if>
+
+  <div style="display: flex; align-items: baseline; justify-content: space-between;">
+    <div style="font: 600 20px/28px Inter, system-ui, sans-serif;">В письме</div>
+    <div style="font-size: 13px; line-height: 18px; color: #6E6459;">{{L.solvedCount}} из {{L.total}}</div>
+  </div>
+  <div style="display: flex; flex-direction: column; gap: 12px;">
+    <sc-for list="{{L.tasks}}" as="t" hint-placeholder-count="3">
+      <button type="button" class="card" onClick="{{t.open}}" style="min-height: 76px; display: flex; align-items: center; gap: 12px; padding: 16px;">
+        <div style="{{t.tileStyle}}">
+          <sc-if value="{{t.isAF}}"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#33312E" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></svg></sc-if>
+          <sc-if value="{{t.isPF}}"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="#33312E"><path d="M6 4h5v10h7v6H6z"/></svg></sc-if>
+          <sc-if value="{{t.isGap}}"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#33312E" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6" stroke-dasharray="2 2"/></svg></sc-if>
+          <sc-if value="{{t.isPh}}"><span style="font: 600 17px/24px Inter, system-ui, sans-serif; color: #33312E;">{{t.phNum}}</span></sc-if>
+        </div>
+        <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px;">
+          <span style="font: 600 15px/20px Inter, system-ui, sans-serif;">{{t.name}}</span>
+          <sc-if value="{{t.isNew}}" hint-placeholder-val="{{ false }}"><span style="font: 600 13px/18px Inter, system-ui, sans-serif; color: #805617;">Новая игра</span></sc-if>
+          <span style="font-size: 13px; line-height: 18px; color: #6E6459;">{{t.desc}}</span>
+        </div>
+        <span class="tag" style="{{t.tagStyle}}"><sc-if value="{{t.solved}}"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg></sc-if>{{t.status}}</span>
+      </button>
+    </sc-for>
+  </div>
+
+  <sc-if value="{{L.ready}}" hint-placeholder-val="{{ false }}">
+    <button type="button" class="btn primary" onClick="{{goDecorate}}">Оформить конверт</button>
+  </sc-if>
+  <sc-if value="{{L.sent}}" hint-placeholder-val="{{ false }}">
+    <div style="display: flex; align-items: center; gap: 8px;"><span class="tag" style="background: #E2E8D9; color: #465D3D;"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg>Отправлено</span><span style="font-size: 13px; line-height: 18px; color: #6E6459;">Задачи можно перерешать — марки не дублируются.</span></div>
+  </sc-if>
+</div>
+</sc-if>
+
+<!-- ======================= ОБОЛОЧКА ИГРЫ ======================= -->
+<sc-if value="{{isPuzzle}}" hint-placeholder-val="{{ false }}">
+<div style="height: 48px; flex-shrink: 0; display: flex; align-items: center; padding: 0 4px; gap: 4px;">
+  <button type="button" class="ib" aria-label="Выйти с сохранением" onClick="{{exitPuzzle}}"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  <div style="flex-grow: 1; display: flex; flex-direction: column; align-items: center;">
+    <span style="font: 600 15px/20px Inter, system-ui, sans-serif;">{{cur.name}}</span>
+    <span style="font-size: 13px; line-height: 18px; color: #6E6459;">{{curSub}}</span>
+  </div>
+  <button type="button" class="ib" aria-label="Правила" onClick="{{openRules}}"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .8-1 1.5v.5"/><path d="M12 17h.01"/></svg></button>
+</div>
+<div style="flex-grow: 1; display: flex; flex-direction: column; justify-content: center; gap: 20px; padding: 16px 20px; box-sizing: border-box; position: relative;">
+  <div style="background: #E8DCCB; border: 1.5px solid #756B5D; border-radius: 18px; padding: 12px; box-shadow: inset 0 2px 4px rgba(76,57,36,0.14);">
+    <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px;">
+      <sc-for list="{{cells}}" as="c" hint-placeholder-count="16">
+        <div style="{{c.style}}"></div>
+      </sc-for>
+    </div>
+  </div>
+  <sc-if value="{{hintOn}}" hint-placeholder-val="{{ false }}">
+    <div role="note" style="background: #E2EAF0; border: 2px dashed #3D647D; border-radius: 18px; padding: 12px 16px; display: flex; gap: 12px; align-items: flex-start;">
+      <span style="flex-grow: 1; font-size: 16px; line-height: 24px;">Подсказка: [следующий логический шаг для подсвеченной клетки].</span>
+      <button type="button" class="ib" aria-label="Закрыть подсказку" onClick="{{closeHint}}" style="width: 44px; height: 44px; margin: -8px -8px 0 0;"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+  </sc-if>
+  <sc-if value="{{showTutorial}}" hint-placeholder-val="{{ false }}">
+    <div role="note" style="background: #F1E7D8; border-radius: 18px; padding: 16px; display: flex; flex-direction: column; gap: 12px; box-shadow: 0 12px 28px rgba(76,57,36,0.16), inset 0 1px 0 rgba(255,249,239,0.40); border: 2px solid #3D647D;">
+      <div style="font: 600 15px/20px Inter, system-ui, sans-serif;">Первая встреча с {{cur.name}}</div>
+      <div style="font-size: 16px; line-height: 24px;">Здесь будет обучение внутри задачи: подсветка, демонстрация жеста и «Попробуй».</div>
+      <button type="button" class="btn secondary" onClick="{{closeTutorial}}" style="height: 44px;">Понятно</button>
+    </div>
+  </sc-if>
+  <sc-if value="{{noTutorial}}" hint-placeholder-val="{{ true }}">
+    <div style="font-size: 13px; line-height: 18px; color: #6E6459; text-align: center;">Здесь будет настоящее поле игры. В прототипе нажми «Решить».</div>
+  </sc-if>
+  <button type="button" class="btn primary" onClick="{{solve}}">Решить (заглушка)</button>
+</div>
+<div style="flex-shrink: 0; display: flex; justify-content: space-around; padding: 8px 20px 24px; background: #F1E7D8; border-top: 1px solid #C6B7A5;">
+  <button type="button" class="tool" onClick="{{hint}}"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.4.3.5.7.5 1.1v1h6v-1c0-.4.2-.8.5-1.1A6 6 0 0 0 12 3z"/></svg>Подсказка</button>
+  <button type="button" class="tool" onClick="{{undo}}"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14L4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg>Отменить</button>
+  <button type="button" class="tool" onClick="{{askRestart}}"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>Заново</button>
+</div>
+</sc-if>
+
+<!-- ======================= ЗАДАЧА РЕШЕНА (письмо) ======================= -->
+<sc-if value="{{isSolved}}" hint-placeholder-val="{{ false }}">
+<div style="flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; padding: 56px 20px 32px; box-sizing: border-box;">
+  <div style="display: flex; flex-direction: column; align-items: center; gap: 24px; text-align: center; padding-top: 40px;">
+    <span class="tag" style="background: #E2E8D9; color: #465D3D;"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg>Решено</span>
+    <div class="rise"><dc-import name="Stamp" game="{{cur.id}}" time="{{solvedTime}}" w="{{ 120 }}" hint-size="120px,140px"></dc-import></div>
+    <div style="display: flex; flex-direction: column; gap: 4px;">
+      <div style="font: 500 26px/34px 'Source Serif 4', Georgia, serif;">{{solvedTitle}}</div>
+      <div style="font: 600 15px/20px Inter, system-ui, sans-serif;">{{cur.name}}</div>
+      <sc-if value="{{solvedTime}}" hint-placeholder-val="{{ false }}"><div style="font-size: 13px; line-height: 18px; color: #33312E;">{{solvedMeta}}</div></sc-if>
+      <div style="font-size: 13px; line-height: 18px; color: #6E6459;">{{solvedNote}}</div>
+    </div>
+    <sc-if value="{{solvedAll}}" hint-placeholder-val="{{ false }}">
+      <span class="tag" style="background: #F3E6CA; color: #805617;"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3l2.6 5.6 6 .7-4.5 4.1 1.2 6L12 16.6 6.7 19.4l1.2-6L3.4 9.3l6-.7z"/></svg>Все задачи решены — записка почтальона открыта</span>
+    </sc-if>
+  </div>
+  <div style="display: flex; flex-direction: column; gap: 8px;">
+    <sc-if value="{{hasNext}}" hint-placeholder-val="{{ true }}"><button type="button" class="btn primary" onClick="{{nextTask}}">Следующая задача</button></sc-if>
+    <sc-if value="{{offerDecorate}}" hint-placeholder-val="{{ false }}"><button type="button" class="btn primary" onClick="{{goDecorate}}">Оформить конверт</button></sc-if>
+    <button type="button" class="btn quiet" onClick="{{goLetter}}">К письму</button>
+  </div>
+</div>
+</sc-if>
+
+<!-- ======================= ГЛАВА ======================= -->
+<sc-if value="{{isChapter}}" hint-placeholder-val="{{ false }}">
+<div style="height: 56px; flex-shrink: 0; display: flex; align-items: center; padding: 0 8px; gap: 4px;">
+  <button type="button" class="ib" aria-label="Закрыть записку" onClick="{{chapterClose}}"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  <div style="flex-grow: 1; font: 600 17px/24px Inter, system-ui, sans-serif;">Записка почтальона</div>
+  <div style="width: 48px;"></div>
+</div>
+<div style="flex-grow: 1; overflow-y: auto; padding: 8px 20px 24px; box-sizing: border-box; display: flex; flex-direction: column; gap: 20px;">
+  <sc-if value="{{chapterIsReward}}" hint-placeholder-val="{{ true }}">
+    <div style="display: flex; justify-content: center;"><span class="tag" style="background: #F3E6CA; color: #805617;"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3l2.6 5.6 6 .7-4.5 4.1 1.2 6L12 16.6 6.7 19.4l1.2-6L3.4 9.3l6-.7z"/></svg>Письмо в пути — записка открыта</span></div>
+  </sc-if>
+  <div class="rise" style="display: flex; justify-content: center;">
+    <div style="width: 120px; height: 120px; border-radius: 22px; background: #F3E6CA; border: 1.5px solid #805617; display: flex; align-items: center; justify-content: center; font: 500 48px/56px 'Source Serif 4', Georgia, serif; color: #805617; box-shadow: 0 2px 3px rgba(76,57,36,0.12), 0 6px 14px rgba(76,57,36,0.06), inset 0 1px 0 rgba(255,249,239,0.65);">{{ch.num}}</div>
+  </div>
+  <div style="display: flex; flex-direction: column; gap: 8px; text-align: center;">
+    <div style="font: 500 26px/34px 'Source Serif 4', Georgia, serif;">{{ch.title}}</div>
+    <div style="font-size: 13px; line-height: 18px; color: #6E6459;">Кусочек большого пазла · из письма {{ch.date}}</div>
+  </div>
+  <div style="background: #FFF9EF; border: 1px solid #C6B7A5; border-radius: 18px; padding: 20px; font-size: 16px; line-height: 24px; white-space: pre-line;">{{ch.text}}</div>
+  <div style="flex-grow: 1;"></div>
+  <sc-if value="{{chapterIsReward}}" hint-placeholder-val="{{ true }}">
+    <button type="button" class="btn primary" onClick="{{chapterClose}}">Дальше</button>
+    <button type="button" class="btn quiet" onClick="{{goWorld}}">Посмотреть большой пазл</button>
+  </sc-if>
+  <sc-if value="{{chapterNotReward}}" hint-placeholder-val="{{ false }}">
+    <button type="button" class="btn secondary" onClick="{{chapterClose}}">Закрыть</button>
+  </sc-if>
+</div>
+</sc-if>
+
+<!-- ======================= БОЛЬШОЙ ПАЗЛ ======================= -->
+<sc-if value="{{isWorld}}" hint-placeholder-val="{{ false }}">
+<div style="height: 56px; flex-shrink: 0; display: flex; align-items: center; padding: 0 8px; gap: 4px;">
+  <button type="button" class="ib" aria-label="Назад" onClick="{{worldBack}}"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+  <div style="flex-grow: 1; font: 600 17px/24px Inter, system-ui, sans-serif;">Записки</div>
+  <div style="width: 48px;"></div>
+</div>
+<div style="flex-grow: 1; overflow-y: auto; padding: 8px 20px 24px; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px;">
+  <div style="font-size: 13px; line-height: 18px; color: #6E6459;">Каждая записка — кусочек большой картины. Открыто: {{chaptersOpen}}.</div>
+  <div style="background: #E8DCCB; border: 1.5px solid #756B5D; border-radius: 18px; padding: 10px; box-shadow: inset 0 2px 4px rgba(76,57,36,0.14);">
+    <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px;">
+      <sc-for list="{{pieces}}" as="p" hint-placeholder-count="9">
+        <sc-if value="{{p.open}}" hint-placeholder-val="{{ false }}">
+          <button type="button" onClick="{{p.read}}" aria-label="{{p.label}}" style="{{p.style}}"><span style="font: 500 22px/28px 'Source Serif 4', Georgia, serif;">{{p.num}}</span></button>
+        </sc-if>
+        <sc-if value="{{p.closed}}" hint-placeholder-val="{{ true }}">
+          <div style="aspect-ratio: 1; border-radius: 8px; background: #DED0BD; border: 1.5px solid #756B5D; box-sizing: border-box; box-shadow: inset 0 2px 4px rgba(76,57,36,0.14), inset 0 -1px 0 rgba(255,249,239,0.75);"></div>
+        </sc-if>
+      </sc-for>
+    </div>
+  </div>
+  <div style="font-size: 13px; line-height: 18px; color: #33312E;">[Картина большого пазла — по библии мира автора: карта места или иллюстрация. Число кусочков в арке — открытый вопрос.]</div>
+</div>
+</sc-if>
+
+<!-- ======================= ОФОРМЛЕНИЕ ======================= -->
+<sc-if value="{{isDecorate}}" hint-placeholder-val="{{ false }}">
+<div style="height: 56px; flex-shrink: 0; display: flex; align-items: center; padding: 0 8px; gap: 4px;">
+  <button type="button" class="ib" aria-label="Назад" onClick="{{goLetter}}"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+  <div style="flex-grow: 1; font: 600 17px/24px Inter, system-ui, sans-serif;">Конверт</div>
+  <div style="width: 48px;"></div>
+</div>
+<div style="flex-grow: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 24px; padding: 16px 20px 24px; box-sizing: border-box;">
+  <div class="env-move" style="display: flex; justify-content: center; padding-top: 16px; {{envMoveStyle}}">
+    <dc-import name="Envelope" w="{{ 290 }}" slots="{{decorSlots}}" postmark="{{ false }}" date="" hint-size="290px,200px"></dc-import>
+  </div>
+  <div style="{{decorHintStyle}}">{{decorHint}}</div>
+  <div style="display: flex; flex-direction: column; gap: 12px;">
+    <div style="font: 600 20px/28px Inter, system-ui, sans-serif;">Твои марки</div>
+    <div style="background: #E8DCCB; border-radius: 18px; padding: 12px; min-height: 76px; display: flex; gap: 8px; overflow-x: auto; box-shadow: inset 0 2px 4px rgba(76,57,36,0.14);">
+      <sc-for list="{{tray}}" as="s" hint-placeholder-count="3">
+        <button type="button" aria-label="{{s.label}}" aria-pressed="{{s.selected}}" onClick="{{s.pick}}" style="{{s.style}}">
+          <dc-import name="Stamp" game="{{s.game}}" time="{{s.time}}" w="{{ 48 }}" hint-size="48px,56px"></dc-import>
+          <sc-if value="{{s.placed}}"><span style="position: absolute; right: 2px; top: 2px; width: 20px; height: 20px; border-radius: 10px; background: #465D3D; display: flex; align-items: center; justify-content: center;"><svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#FFF9EF" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg></span></sc-if>
+        </button>
+      </sc-for>
+      <sc-if value="{{trayEmpty}}" hint-placeholder-val="{{ false }}"><div style="align-self: center; font-size: 13px; line-height: 18px; color: #33312E;">Реши задачи письма, чтобы получить марки.</div></sc-if>
+    </div>
+  </div>
+  <div style="flex-grow: 1;"></div>
+  <button type="button" class="btn primary" onClick="{{send}}">{{sendLabel}}</button>
+</div>
+</sc-if>
+
+<!-- ======================= ОТПРАВКА / ОТПРАВЛЕНО ======================= -->
+<sc-if value="{{isSend}}" hint-placeholder-val="{{ false }}">
+<div style="height: 56px; flex-shrink: 0; display: flex; align-items: center; padding: 0 8px; gap: 4px;">
+  <button type="button" class="ib" aria-label="Назад" onClick="{{sendBack}}"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+  <div style="flex-grow: 1; font: 600 17px/24px Inter, system-ui, sans-serif;">{{sendTitle}}</div>
+  <div style="width: 48px;"></div>
+</div>
+<div style="flex-grow: 1; display: flex; flex-direction: column; padding: 16px 20px 32px; box-sizing: border-box;">
+  <sc-if value="{{L.sent}}" hint-placeholder-val="{{ false }}">
+    <div style="flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 32px; text-align: center;">
+      <div class="rise"><dc-import name="Envelope" w="{{ 290 }}" slots="{{L.slotsView}}" postmark="{{ true }}" date="{{L.mark}}" hint-size="290px,200px"></dc-import></div>
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <div style="font: 500 26px/34px 'Source Serif 4', Georgia, serif;">Отправлено</div>
+        <div style="font-size: 16px; line-height: 24px; color: #6E6459;">{{sentNote}}</div>
+      </div>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 8px;">
+      <sc-if value="{{noteUnread}}" hint-placeholder-val="{{ true }}">
+        <button type="button" class="btn primary" onClick="{{readNoteAfterSend}}">Прочитать записку почтальона</button>
+        <button type="button" class="btn quiet" onClick="{{afterSend}}">Дальше</button>
+      </sc-if>
+      <sc-if value="{{noteRead}}" hint-placeholder-val="{{ false }}">
+        <button type="button" class="btn primary" onClick="{{afterSend}}">Дальше</button>
+        <button type="button" class="btn quiet" onClick="{{goLetter}}">Посмотреть письмо</button>
+      </sc-if>
+    </div>
+  </sc-if>
+</div>
+</sc-if>
+
+<!-- ======================= НАПОМИНАНИЕ ======================= -->
+<sc-if value="{{isReminder}}" hint-placeholder-val="{{ false }}">
+<div style="flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; padding: 72px 20px 32px; box-sizing: border-box;">
+  <div style="display: flex; flex-direction: column; align-items: center; gap: 24px; text-align: center;">
+    <div style="width: 96px; height: 96px; border-radius: 28px; background: #E2E8D9; border: 1.5px solid #526348; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 3px rgba(76,57,36,0.12), 0 6px 14px rgba(76,57,36,0.06);">
+      <svg aria-hidden="true" width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#526348" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4z"/><path d="M10 20a2 2 0 0 0 4 0"/></svg>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 8px;">
+      <div style="font: 500 26px/34px 'Source Serif 4', Georgia, serif;">Напомнить про письмо?</div>
+      <div style="font-size: 16px; line-height: 24px; color: #6E6459;">Почтальон придёт завтра. Можем тихо напомнить, когда письмо будет в ящике. Один раз в день, не чаще.</div>
+    </div>
+    <div style="background: #F1E7D8; border-radius: 18px; padding: 16px; text-align: left; display: flex; gap: 12px; align-items: flex-start;">
+      <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#33312E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;"><path d="M12 3v12"/><path d="M7 8l5-5 5 5"/><path d="M5 14v6h14v-6"/></svg>
+      <div style="font-size: 13px; line-height: 18px; color: #33312E;">На iPhone напоминания работают, только если добавить Pocket Puzzle на экран «Домой»: «Поделиться» → «На экран „Домой“».</div>
+    </div>
+  </div>
+  <div style="display: flex; flex-direction: column; gap: 8px;">
+    <button type="button" class="btn primary" onClick="{{enableReminders}}">Напоминать</button>
+    <button type="button" class="btn quiet" onClick="{{skipReminders}}">Не сейчас</button>
+  </div>
+</div>
+</sc-if>
+
+<!-- ======================= ПИСЬМА (вкладка 2) ======================= -->
+<sc-if value="{{isMailbox}}" hint-placeholder-val="{{ false }}">
+<div style="height: 56px; flex-shrink: 0; display: flex; align-items: center; padding: 0 20px;">
+  <div style="font: 500 26px/34px Inter, system-ui, sans-serif;">Письма</div>
+</div>
+<div role="tablist" aria-label="Письма" style="flex-shrink: 0; margin: 4px 20px 8px; height: 44px; border-radius: 12px; background: #E8DCCB; padding: 4px; box-sizing: border-box; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px;">
+  <button type="button" role="tab" aria-selected="{{lettersTabSent}}" onClick="{{setTabSent}}" style="{{segSentStyle}}">Отправленные</button>
+  <button type="button" role="tab" aria-selected="{{lettersTabNotes}}" onClick="{{setTabNotes}}" style="{{segNotesStyle}}">Записки</button>
+</div>
+<div style="flex-grow: 1; overflow-y: auto; padding: 8px 20px 24px; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px;">
+  <sc-if value="{{lettersTabSent}}" hint-placeholder-val="{{ true }}">
+    <sc-if value="{{sentEmpty}}" hint-placeholder-val="{{ false }}">
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 16px; text-align: center; padding-top: 100px;">
+        <div style="width: 145px; height: 100px; border: 1.5px dashed #756B5D; border-radius: 6px; box-sizing: border-box;"></div>
+        <div style="font-size: 16px; line-height: 24px; color: #6E6459;">Здесь появятся отправленные письма</div>
+      </div>
+    </sc-if>
+    <sc-if value="{{sentHas}}" hint-placeholder-val="{{ true }}">
+      <div style="font-size: 13px; line-height: 18px; color: #6E6459;">Отправлено писем: {{sentCount}}</div>
+      <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px;">
+        <sc-for list="{{sentList}}" as="a" hint-placeholder-count="2">
+          <button type="button" onClick="{{a.open}}" aria-label="{{a.label}}" style="display: flex; flex-direction: column; gap: 8px; padding: 0; background: transparent; border: none; cursor: pointer; text-align: left; color: #33312E; border-radius: 6px;">
+            <dc-import name="Envelope" w="{{ 145 }}" slots="{{a.slots}}" postmark="{{ true }}" date="{{a.mark}}" hint-size="145px,100px"></dc-import>
+            <div style="display: flex; flex-direction: column; width: 145px;">
+              <span style="font: 600 15px/20px Inter, system-ui, sans-serif;">{{a.title}}</span>
+              <span style="font-size: 13px; line-height: 18px; color: #6E6459;">{{a.date}}</span>
+            </div>
+          </button>
+        </sc-for>
+      </div>
+    </sc-if>
+  </sc-if>
+  <sc-if value="{{lettersTabNotes}}" hint-placeholder-val="{{ false }}">
+    <div style="font-size: 13px; line-height: 18px; color: #6E6459;">Каждая записка — кусочек большой картины. Открыто: {{chaptersOpen}}.</div>
+    <div style="background: #E8DCCB; border: 1.5px solid #756B5D; border-radius: 18px; padding: 10px; box-shadow: inset 0 2px 4px rgba(76,57,36,0.14);">
+      <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px;">
+        <sc-for list="{{pieces}}" as="p" hint-placeholder-count="9">
+          <sc-if value="{{p.open}}" hint-placeholder-val="{{ false }}">
+            <button type="button" onClick="{{p.read}}" aria-label="{{p.label}}" style="{{p.style}}"><span style="font: 500 22px/28px 'Source Serif 4', Georgia, serif;">{{p.num}}</span></button>
+          </sc-if>
+          <sc-if value="{{p.closed}}" hint-placeholder-val="{{ true }}">
+            <div style="aspect-ratio: 1; border-radius: 8px; background: #DED0BD; border: 1.5px solid #756B5D; box-sizing: border-box; box-shadow: inset 0 2px 4px rgba(76,57,36,0.14), inset 0 -1px 0 rgba(255,249,239,0.75);"></div>
+          </sc-if>
+        </sc-for>
+      </div>
+    </div>
+    <div style="font: 600 20px/28px Inter, system-ui, sans-serif;">Записки почтальона</div>
+    <sc-if value="{{notesEmpty}}" hint-placeholder-val="{{ false }}">
+      <div style="font-size: 16px; line-height: 24px; color: #6E6459;">Первая записка откроется, когда решишь все задачи письма.</div>
+    </sc-if>
+    <sc-for list="{{chapterList}}" as="n" hint-placeholder-count="1">
+      <button type="button" class="card" onClick="{{n.read}}" style="min-height: 64px; display: flex; align-items: center; gap: 12px; padding: 12px 16px; background: #FFF9EF; border: 1px solid #C6B7A5;">
+        <div style="width: 40px; height: 40px; flex-shrink: 0; border-radius: 10px; background: #F3E6CA; border: 1.5px solid #805617; display: flex; align-items: center; justify-content: center; font: 600 15px/20px Inter, system-ui, sans-serif; color: #805617;">{{n.num}}</div>
+        <span style="flex-grow: 1; display: flex; flex-direction: column;"><span style="font: 600 15px/20px Inter, system-ui, sans-serif;">{{n.title}}</span><span style="font-size: 13px; line-height: 18px; color: #6E6459;">Из письма {{n.date}}</span></span>
+        <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6E6459" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+      </button>
+    </sc-for>
+    <div style="font-size: 13px; line-height: 18px; color: #33312E;">[Картина большого пазла и число кусочков — по библии мира. Записки от других игроков — с v2.]</div>
+  </sc-if>
+</div>
+</sc-if>
+
+<!-- ======================= ИГРЫ (вкладка 3) ======================= -->
+<sc-if value="{{isCollection}}" hint-placeholder-val="{{ false }}">
+<div style="height: 56px; flex-shrink: 0; display: flex; align-items: center; padding: 0 20px;">
+  <div style="font: 500 26px/34px Inter, system-ui, sans-serif;">Игры</div>
+</div>
+<div style="flex-grow: 1; overflow-y: auto; padding: 4px 20px 24px; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px;">
+  <div style="font-size: 13px; line-height: 18px; color: #6E6459;">Играй сколько хочешь. Задачи из писем засчитываются здесь как уровни, а марки дают только письма. Новые игры приходят по почте.</div>
+  <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px;">
+    <sc-for list="{{collection}}" as="g" hint-placeholder-count="3">
+      <button type="button" class="card" onClick="{{g.open}}" aria-label="{{g.label}}" style="{{g.cardStyle}}">
+        <div style="{{g.tileStyle}}">
+          <sc-if value="{{g.isAF}}"><svg aria-hidden="true" width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#33312E" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></svg></sc-if>
+          <sc-if value="{{g.isPF}}"><svg aria-hidden="true" width="34" height="34" viewBox="0 0 24 24" fill="#33312E"><path d="M6 4h5v10h7v6H6z"/></svg></sc-if>
+          <sc-if value="{{g.isGap}}"><svg aria-hidden="true" width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#33312E" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6" stroke-dasharray="2 2"/></svg></sc-if>
+          <sc-if value="{{g.isPh}}"><span style="font: 600 26px/34px Inter, system-ui, sans-serif; color: #33312E;">{{g.phNum}}</span></sc-if>
+        </div>
+        <span style="font: 600 15px/20px Inter, system-ui, sans-serif; text-align: center;">{{g.name}}</span>
+        <sc-if value="{{g.unlocked}}" hint-placeholder-val="{{ true }}">
+          <span style="font-size: 13px; line-height: 18px; color: #33312E;">{{g.progress}}</span>
+          <sc-if value="{{g.isNew}}" hint-placeholder-val="{{ false }}"><span class="tag" style="background: #F3E6CA; color: #805617; height: 24px;">Новая</span></sc-if>
+        </sc-if>
+        <sc-if value="{{g.locked}}" hint-placeholder-val="{{ false }}">
+          <span style="display: flex; align-items: center; gap: 6px; font-size: 13px; line-height: 18px; color: #33312E;"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#33312E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>придёт по почте</span>
+        </sc-if>
+      </button>
+    </sc-for>
+  </div>
+</div>
+</sc-if>
+
+<!-- ======================= СТРАНИЦА ИГРЫ: УРОВНИ ======================= -->
+<sc-if value="{{isLevels}}" hint-placeholder-val="{{ false }}">
+<div style="height: 56px; flex-shrink: 0; display: flex; align-items: center; padding: 0 8px; gap: 4px;">
+  <button type="button" class="ib" aria-label="Назад к играм" onClick="{{goCollection}}"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+  <div style="flex-grow: 1; text-align: center; font: 600 17px/24px Inter, system-ui, sans-serif;">{{gv.name}}</div>
+  <button type="button" class="ib" aria-label="Правила" onClick="{{openRulesFor}}"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .8-1 1.5v.5"/><path d="M12 17h.01"/></svg></button>
+</div>
+<div style="flex-grow: 1; overflow-y: auto; padding: 8px 20px 24px; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px;">
+  <div style="display: flex; flex-direction: column; gap: 8px;">
+    <div style="display: flex; justify-content: space-between; font-size: 13px; line-height: 18px; color: #33312E;"><span>Прогресс</span><span>{{gv.progressText}}</span></div>
+    <div style="height: 10px; border-radius: 5px; background: #DED0BD; box-shadow: inset 0 1px 2px rgba(76,57,36,0.14); overflow: hidden;"><div style="{{gv.barStyle}}"></div></div>
+  </div>
+  <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px;">
+    <sc-for list="{{gv.levels}}" as="lv" hint-placeholder-count="8">
+      <button type="button" onClick="{{lv.tap}}" aria-label="{{lv.label}}" style="{{lv.style}}">
+        <sc-if value="{{lv.done}}" hint-placeholder-val="{{ false }}"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#465D3D" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg></sc-if>
+        <sc-if value="{{lv.current}}" hint-placeholder-val="{{ false }}"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="#FFF9EF"><path d="M8 5l11 7-11 7z"/></svg></sc-if>
+        <span>{{lv.n}}</span>
+      </button>
+    </sc-for>
+  </div>
+  <sc-if value="{{gv.unknownTotal}}" hint-placeholder-val="{{ false }}">
+    <div style="font-size: 13px; line-height: 18px; color: #33312E;">[Всего уровней — из движка игры. Показаны ближайшие.]</div>
+  </sc-if>
+  <div style="flex-grow: 1;"></div>
+  <sc-if value="{{gv.hasNext}}" hint-placeholder-val="{{ true }}">
+    <button type="button" class="btn primary" onClick="{{gv.play}}">Играть · уровень {{gv.current}}</button>
+  </sc-if>
+  <sc-if value="{{gv.allDone}}" hint-placeholder-val="{{ false }}">
+    <div style="font-size: 16px; line-height: 24px; color: #6E6459; text-align: center;">Все доступные уровни пройдены</div>
+  </sc-if>
+</div>
+</sc-if>
+
+<!-- ======================= УРОВЕНЬ ПРОЙДЕН (свободная игра) ======================= -->
+<sc-if value="{{isFree}}" hint-placeholder-val="{{ false }}">
+<div style="flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; padding: 56px 20px 32px; box-sizing: border-box;">
+  <div style="display: flex; flex-direction: column; align-items: center; gap: 24px; text-align: center; padding-top: 40px;">
+    <span class="tag" style="background: #E2E8D9; color: #465D3D;"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg>Решено</span>
+    <div style="{{curTileBig}}">
+      <sc-if value="{{curF.isAF}}"><svg aria-hidden="true" width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#33312E" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></svg></sc-if>
+      <sc-if value="{{curF.isPF}}"><svg aria-hidden="true" width="44" height="44" viewBox="0 0 24 24" fill="#33312E"><path d="M6 4h5v10h7v6H6z"/></svg></sc-if>
+      <sc-if value="{{curF.isGap}}"><svg aria-hidden="true" width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#33312E" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6" stroke-dasharray="2 2"/></svg></sc-if>
+      <sc-if value="{{curF.isPh}}"><span style="font: 600 34px/40px Inter, system-ui, sans-serif; color: #33312E;">{{curF.phNum}}</span></sc-if>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 4px;">
+      <div style="font: 500 26px/34px 'Source Serif 4', Georgia, serif;">{{freeTitle}}</div>
+      <div style="font: 600 15px/20px Inter, system-ui, sans-serif;">{{cur.name}}</div>
+      <div style="font-size: 13px; line-height: 18px; color: #6E6459;">{{freeNote}}</div>
+    </div>
+  </div>
+  <div style="display: flex; flex-direction: column; gap: 8px;">
+    <sc-if value="{{hasMoreLevels}}" hint-placeholder-val="{{ true }}"><button type="button" class="btn primary" onClick="{{nextLevel}}">Следующий уровень</button></sc-if>
+    <button type="button" class="btn secondary" onClick="{{retryLevel}}">Повторить</button>
+    <button type="button" class="btn quiet" onClick="{{goLevels}}">К уровням</button>
+  </div>
+</div>
+</sc-if>
+
+<!-- ======================= НАСТРОЙКИ ======================= -->
+<sc-if value="{{isSettings}}" hint-placeholder-val="{{ false }}">
+<div style="height: 56px; flex-shrink: 0; display: flex; align-items: center; padding: 0 8px; gap: 4px;">
+  <button type="button" class="ib" aria-label="Назад" onClick="{{goHome}}"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+  <div style="flex-grow: 1; font: 600 17px/24px Inter, system-ui, sans-serif;">Настройки</div>
+  <div style="width: 48px;"></div>
+</div>
+<div style="flex-grow: 1; overflow-y: auto; padding: 8px 20px 24px; box-sizing: border-box; display: flex; flex-direction: column; gap: 24px;">
+  <div style="background: #F1E7D8; border-radius: 18px; overflow: hidden;">
+    <div style="min-height: 56px; padding: 0 16px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid #C6B7A5;">
+      <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16.5 9a4 4 0 0 1 0 6"/></svg>
+      <span style="flex-grow: 1; font-size: 16px; line-height: 24px;">Звук</span>
+      <button type="button" role="switch" aria-checked="{{sound}}" aria-label="Звук" onClick="{{toggleSound}}" style="width: 48px; height: 48px; padding: 0; background: transparent; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 14px;"><span style="{{soundTrack}}"><span style="{{soundThumb}}"></span></span></button>
+    </div>
+    <div style="min-height: 56px; padding: 0 16px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid #C6B7A5;">
+      <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="4" width="8" height="16" rx="2"/><path d="M4 9v6M20 9v6"/></svg>
+      <span style="flex-grow: 1; font-size: 16px; line-height: 24px;">Вибрация</span>
+      <button type="button" role="switch" aria-checked="{{vib}}" aria-label="Вибрация" onClick="{{toggleVib}}" style="width: 48px; height: 48px; padding: 0; background: transparent; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 14px;"><span style="{{vibTrack}}"><span style="{{vibThumb}}"></span></span></button>
+    </div>
+    <div style="min-height: 56px; padding: 0 16px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid #C6B7A5;">
+      <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4z"/><path d="M10 20a2 2 0 0 0 4 0"/></svg>
+      <span style="flex-grow: 1; font-size: 16px; line-height: 24px;">Напоминание о письме</span>
+      <button type="button" role="switch" aria-checked="{{remOn}}" aria-label="Напоминание о письме" onClick="{{toggleRem}}" style="width: 48px; height: 48px; padding: 0; background: transparent; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 14px;"><span style="{{remTrack}}"><span style="{{remThumb}}"></span></span></button>
+    </div>
+  </div>
+  <div style="display: flex; flex-direction: column; gap: 8px;">
+    <div style="font: 600 15px/20px Inter, system-ui, sans-serif; color: #6E6459; padding-left: 4px;">Данные</div>
+    <div style="background: #F1E7D8; border-radius: 18px; overflow: hidden;">
+      <button type="button" onClick="{{exportData}}" style="width: 100%; min-height: 56px; padding: 0 16px; display: flex; align-items: center; gap: 12px; background: transparent; border: none; cursor: pointer; color: #33312E; text-align: left;">
+        <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v12"/><path d="M7 11l5 5 5-5"/><path d="M5 20h14"/></svg>
+        <span style="flex-grow: 1; font-size: 16px; line-height: 24px;">Экспортировать прогресс</span>
+        <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6E6459" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+      </button>
+      <button type="button" onClick="{{askReset}}" style="width: 100%; min-height: 56px; padding: 0 16px; display: flex; align-items: center; gap: 12px; background: transparent; border: none; border-top: 1px solid #C6B7A5; cursor: pointer; color: #A13636; text-align: left;">
+        <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg>
+        <span style="flex-grow: 1; font-size: 16px; line-height: 24px;">Сбросить прогресс</span>
+      </button>
+    </div>
+  </div>
+  <div style="background: #F1E7D8; border-radius: 18px; overflow: hidden;">
+    <button type="button" onClick="{{goAbout}}" style="width: 100%; min-height: 56px; padding: 0 16px; display: flex; align-items: center; gap: 12px; background: transparent; border: none; cursor: pointer; color: #33312E; text-align: left;">
+      <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5h.01"/></svg>
+      <span style="flex-grow: 1; font-size: 16px; line-height: 24px;">О приложении</span>
+      <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6E6459" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+    </button>
+  </div>
+  <div style="display: flex; flex-direction: column; gap: 8px; padding-top: 8px;">
+    <div style="font-size: 13px; line-height: 18px; color: #6E6459;">Только для прототипа — системные состояния:</div>
+    <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+      <button type="button" class="proto" onClick="{{simOffline}}">Офлайн</button>
+      <button type="button" class="proto" onClick="{{simSaveError}}">Ошибка сохранения</button>
+      <button type="button" class="proto" onClick="{{simRestored}}">Прогресс восстановлен</button>
+      <button type="button" class="proto" onClick="{{simUpdate}}">Новая версия</button>
+      <button type="button" class="proto" onClick="{{simFailSend}}">{{failSendLabel}}</button>
+      <button type="button" class="proto" onClick="{{simMidnight}}">Полночь — новое письмо</button>
+    </div>
+    <button type="button" class="proto" onClick="{{resetProto}}">Начать с первого запуска</button>
+  </div>
+</div>
+</sc-if>
+
+<!-- ======================= О ПРИЛОЖЕНИИ ======================= -->
+<sc-if value="{{isAbout}}" hint-placeholder-val="{{ false }}">
+<div style="height: 56px; flex-shrink: 0; display: flex; align-items: center; padding: 0 8px; gap: 4px;">
+  <button type="button" class="ib" aria-label="Назад" onClick="{{goSettings}}"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+  <div style="flex-grow: 1; font: 600 17px/24px Inter, system-ui, sans-serif;">О приложении</div>
+  <div style="width: 48px;"></div>
+</div>
+<div style="flex-grow: 1; overflow-y: auto; padding: 24px 20px; box-sizing: border-box; display: flex; flex-direction: column; gap: 24px;">
+  <div style="display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center;">
+    <dc-import name="Envelope" w="{{ 160 }}" slots="{{splashSlots}}" postmark="{{ false }}" date="" hint-size="160px,110px"></dc-import>
+    <div style="font: 500 26px/34px 'Source Serif 4', Georgia, serif;">Pocket Puzzle</div>
+    <div style="font-size: 13px; line-height: 18px; color: #6E6459;">Версия [номер версии]</div>
+  </div>
+  <div style="background: #F1E7D8; border-radius: 18px; overflow: hidden;">
+    <div style="min-height: 56px; padding: 0 16px; display: flex; align-items: center; border-bottom: 1px solid #C6B7A5; font-size: 16px; line-height: 24px;">Конфиденциальность: [ссылка]</div>
+    <div style="min-height: 56px; padding: 0 16px; display: flex; align-items: center; border-bottom: 1px solid #C6B7A5; font-size: 16px; line-height: 24px;">Поддержка: [контакт]</div>
+    <div style="min-height: 56px; padding: 8px 16px; display: flex; align-items: center; font-size: 13px; line-height: 18px; color: #33312E;">Прогресс хранится только на этом устройстве. Чтобы не потерять его, делай экспорт в настройках.</div>
+  </div>
+</div>
+</sc-if>
+
+<!-- ======================= ПЕРЕКЛЮЧАТЕЛЬ ПАНЕЛЕЙ + ГЛАВНАЯ КНОПКА ======================= -->
+<sc-if value="{{showNav}}" hint-placeholder-val="{{ false }}">
+<div style="flex-shrink: 0; padding: 4px 20px 20px; background: #F7F2E9; display: flex; flex-direction: column; gap: 10px;">
+  <nav aria-label="Панели главной" style="display: flex; justify-content: center; gap: 4px;">
+    <button type="button" onClick="{{goMailbox}}" aria-current="{{navMailCur}}" style="{{pagerMail}}"><span style="{{dotMail}}"></span>Письма</button>
+    <button type="button" onClick="{{goHome}}" aria-current="{{navHomeCur}}" style="{{pagerHome}}"><span style="{{dotHome}}"></span>Сегодня</button>
+    <button type="button" onClick="{{goCollection}}" aria-current="{{navGamesCur}}" style="{{pagerGames}}"><span style="{{dotGames}}"></span>Игры</button>
+  </nav>
+  <button type="button" class="btn primary" onClick="{{cta}}" style="height: 56px; justify-content: space-between; padding: 0 20px;">
+    <span style="display: flex; flex-direction: column; align-items: flex-start; text-align: left;"><span style="font: 600 15px/20px Inter, system-ui, sans-serif;">{{ctaLabel}}</span><span style="font: 400 13px/18px Inter, system-ui, sans-serif; opacity: 0.85;">{{ctaSub}}</span></span>
+    <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M8 5l11 7-11 7z"/></svg>
+  </button>
+</div>
+</sc-if>
+
+<!-- ======================= ЛИСТ ПРАВИЛ ======================= -->
+<sc-if value="{{sheet}}" hint-placeholder-val="{{ false }}">
+<div style="position: absolute; inset: 0; background: rgba(51,49,46,0.24); display: flex; flex-direction: column; justify-content: flex-end;">
+  <button type="button" aria-label="Закрыть правила" onClick="{{closeSheet}}" style="flex-grow: 1; background: transparent; border: none; cursor: default;"></button>
+  <div role="dialog" aria-label="Правила" style="background: #F1E7D8; border-radius: 28px 28px 0 0; padding: 24px; display: flex; flex-direction: column; gap: 16px; box-shadow: 0 12px 28px rgba(76,57,36,0.16), inset 0 1px 0 rgba(255,249,239,0.40); max-height: 85%; overflow-y: auto; box-sizing: border-box;">
+    <div style="display: flex; align-items: center;">
+      <div style="flex-grow: 1; font: 600 20px/28px Inter, system-ui, sans-serif;">Правила · {{cur.name}}</div>
+      <button type="button" class="ib" aria-label="Закрыть" onClick="{{closeSheet}}" style="margin-right: -12px;"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+    <div style="height: 160px; background: #E8DCCB; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 13px; line-height: 18px; color: #33312E;">[Иллюстрация правила]</div>
+    <div style="display: flex; flex-direction: column; gap: 12px; font-size: 16px; line-height: 24px;">
+      <div><b>Цель.</b> [цель из движка игры]</div>
+      <div><b>Действие.</b> [что можно делать]</div>
+      <div><b>Победа.</b> [условие завершения]</div>
+    </div>
+    <button type="button" class="btn primary" onClick="{{closeSheet}}">Понятно</button>
+  </div>
+</div>
+</sc-if>
+
+<!-- ======================= МОДАЛКИ ======================= -->
+<sc-if value="{{modal}}" hint-placeholder-val="{{ false }}">
+<div style="position: absolute; inset: 0; background: rgba(51,49,46,0.24); display: flex; align-items: center; justify-content: center;">
+  <div role="dialog" aria-label="{{modalTitle}}" style="width: 350px; max-width: calc(100% - 40px); background: #F1E7D8; border-radius: 28px; padding: 24px; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px; box-shadow: 0 12px 28px rgba(76,57,36,0.16), inset 0 1px 0 rgba(255,249,239,0.40);">
+    <div style="font: 600 20px/28px Inter, system-ui, sans-serif;">{{modalTitle}}</div>
+    <div style="font-size: 16px; line-height: 24px; color: #6E6459;">{{modalBody}}</div>
+    <div style="display: flex; flex-direction: column; gap: 8px;">
+      <button type="button" class="btn primary" onClick="{{cancelModal}}">{{modalCancel}}</button>
+      <button type="button" class="btn secondary" onClick="{{confirmModal}}" style="{{modalConfirmStyle}}">{{modalConfirm}}</button>
+    </div>
+  </div>
+</div>
+</sc-if>
+
+<!-- ======================= СИСТЕМНЫЙ ЗАПРОС УВЕДОМЛЕНИЙ (имитация) ======================= -->
+<sc-if value="{{sysPrompt}}" hint-placeholder-val="{{ false }}">
+<div style="position: absolute; inset: 0; background: rgba(0,0,0,0.35); display: flex; align-items: center; justify-content: center;">
+  <div role="dialog" aria-label="Запрос уведомлений" style="width: 280px; background: #FFFFFF; border-radius: 14px; overflow: hidden; text-align: center; font-family: system-ui, sans-serif; color: #000;">
+    <div style="padding: 20px 16px 16px; display: flex; flex-direction: column; gap: 6px;">
+      <div style="font-size: 11px; line-height: 14px; color: #6E6459;">Системное окно браузера (имитация)</div>
+      <div style="font-weight: 600; font-size: 17px; line-height: 22px;">«Pocket Puzzle» хочет отправлять уведомления</div>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border-top: 1px solid #DDD;">
+      <button type="button" onClick="{{denyNotif}}" style="height: 48px; background: transparent; border: none; border-right: 1px solid #DDD; color: #1F5FA8; font-size: 17px; cursor: pointer;">Запретить</button>
+      <button type="button" onClick="{{allowNotif}}" style="height: 48px; background: transparent; border: none; color: #1F5FA8; font-weight: 600; font-size: 17px; cursor: pointer;">Разрешить</button>
+    </div>
+  </div>
+</div>
+</sc-if>
+
+<!-- ======================= БАННЕР СИСТЕМНОГО СОСТОЯНИЯ ======================= -->
+<sc-if value="{{hasBanner}}" hint-placeholder-val="{{ false }}">
+<div role="status" style="{{bannerStyle}}">
+  <span style="{{bannerDot}}">{{bannerMark}}</span>
+  <span style="flex-grow: 1; font-size: 15px; line-height: 20px;">{{bannerText}}</span>
+  <sc-if value="{{bannerHasAction}}" hint-placeholder-val="{{ false }}">
+    <button type="button" onClick="{{bannerAction}}" style="height: 44px; padding: 0 12px; border-radius: 12px; border: 1px solid #756B5D; background: #FFF9EF; color: #33312E; font: 600 13px/18px Inter, system-ui, sans-serif; cursor: pointer; flex-shrink: 0;">{{bannerActionLabel}}</button>
+  </sc-if>
+  <button type="button" aria-label="Закрыть" onClick="{{closeBanner}}" style="width: 44px; height: 44px; border: none; background: transparent; cursor: pointer; color: #33312E; flex-shrink: 0; display: flex; align-items: center; justify-content: center;"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+</div>
+</sc-if>
+
+<!-- ======================= ТОСТ ======================= -->
+<sc-if value="{{hasToast}}" hint-placeholder-val="{{ false }}">
+<div role="status" style="{{toastStyle}}">
+  <sc-if value="{{toastOk}}" hint-placeholder-val="{{ true }}"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFF9EF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg></sc-if>
+  <sc-if value="{{toastErr}}" hint-placeholder-val="{{ false }}"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFF9EF" stroke-width="2.5" stroke-linecap="round"><path d="M12 7v6M12 17h.01"/></svg></sc-if>
+  <span>{{toast}}</span>
+</div>
+</sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"startDay":{"editor":"enum","options":["1","2"],"default":"1","section":"Прототип"},"$preview":{"width":390,"height":844}}'>
+var G = {
+  af:  { id: 'af',  name: 'Arrow Flip',  desc: 'Меняй направление', light: '#E2EAF0', base: '#A5BBC8', dark: '#3D647D' },
+  pf:  { id: 'pf',  name: 'Perfect Fit', desc: 'Заполни поле',       light: '#F3DFD8', base: '#C78D73', dark: '#884C38' },
+  gap: { id: 'gap', name: 'The Gap',     desc: 'Сортируй по колбам', light: '#EAE1ED', base: '#A998AD', dark: '#66516F' },
+  g4:  { id: 'g4',  name: '[Игра 4]',    desc: '[Описание игры]',    light: '#F1E7D8', base: '#DED0BD', dark: '#6E6459', ph: '4' },
+  g5:  { id: 'g5',  name: '[Игра 5]',    desc: '[Описание игры]',    light: '#F1E7D8', base: '#DED0BD', dark: '#6E6459', ph: '5' },
+  g6:  { id: 'g6',  name: '[Игра 6]',    desc: '[Описание игры]',    light: '#F1E7D8', base: '#DED0BD', dark: '#6E6459', ph: '6' }
+};
+// Темп игр (гипотеза автора, 2026-11-01; частоту ещё тестировать): день 1 — три игры, день 2 — 4-я, через неделю — 5-я, через 2 недели — 6-я.
+var ORDER = ['af', 'pf', 'gap', 'g4', 'g5', 'g6'];
+var WD = ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'];
+var MON = ['янв.', 'февр.', 'марта', 'апр.', 'мая', 'июня', 'июля', 'авг.', 'сент.', 'окт.', 'нояб.', 'дек.'];
+var MON_G = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
+var ROMAN = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
+function dayInfo(offset) {
+  var d = new Date(); d.setHours(12, 0, 0, 0); d.setDate(d.getDate() + offset);
+  var n = d.getDate(), m = d.getMonth();
+  return { date: n + ' ' + MON[m], full: WD[d.getDay()] + ', ' + n + ' ' + MON[m] + ' ' + d.getFullYear(), mark: n + ' ' + ROMAN[m], long: n + ' ' + MON_G[m], iso: d.toISOString().slice(0, 10) };
+}
+var D1 = dayInfo(0), D2 = dayInfo(1);
+var LETTERS = {
+  l1: {
+    id: 'l1', day: 1, date: D1.date, full: D1.full, mark: D1.mark,
+    title: 'Первое письмо', attTitle: 'Вступление',
+    att: 'Привет! Я почтальон.\nКаждый день я приношу письмо с головоломками. За каждую решённую — марка. Наклей марки на конверт и отправь письмо обратно.\nКогда решишь всё, в письме откроется моя записка.\nЗавтра принесу новое.\n\n[Вступление в мир — по библии мира автора.]',
+    tasks: ['af', 'pf', 'gap'],
+    chNum: 1, chTitle: 'Записка 1',
+    chText: '[Текст записки почтальона 1 — из библии мира автора.]'
+  },
+  l2: {
+    id: 'l2', day: 2, date: D2.date, full: D2.full, mark: D2.mark,
+    title: 'Письмо от ' + D2.long, attTitle: '', att: '',
+    tasks: ['pf', 'g4'],
+    chNum: 2, chTitle: 'Записка 2',
+    chText: '[Текст записки почтальона 2 — из библии мира автора.]'
+  }
+};
+var PIECES_TOTAL = 9;
+var SHADOW_RAISED = '0 2px 3px rgba(76,57,36,0.12), 0 6px 14px rgba(76,57,36,0.06), inset 0 1px 0 rgba(255,249,239,0.65)';
+var SPLASH_MS = 1800;
+var GAME_MAX = { gap: 8 };
+var BANNERS = {
+  offline: { text: 'Офлайн · прогресс сохраняется на устройстве', mark: '○', tone: 'neutral', action: null },
+  saveError: { text: 'Не удалось сохранить', mark: '!', tone: 'error', action: 'Повторить' },
+  update: { text: 'Доступна новая версия', mark: '↻', tone: 'neutral', action: 'Обновить' },
+  newLetter: { text: 'Пришло новое письмо. Текущая задача сохранена.', mark: '✉', tone: 'neutral', action: 'На главную' }
+};
+
+function flags(id) { return { isAF: id === 'af', isPF: id === 'pf', isGap: id === 'gap', isPh: !!(G[id] && G[id].ph), phNum: (G[id] && G[id].ph) || '' }; }
+// Задача из письма = следующий непройденный уровень игры (решение автора, 2026-11-01).
+function capLevel(g, n) { return GAME_MAX[g] ? Math.min(n, GAME_MAX[g]) : n; }
+function fmtTime(sec) { if (sec == null) return ''; var m = Math.floor(sec / 60), r = sec % 60; return m + ':' + (r < 10 ? '0' : '') + r; }
+function tile(g, size, r) {
+  return 'width: ' + size + 'px; height: ' + size + 'px; flex-shrink: 0; box-sizing: border-box; border-radius: ' + r + 'px; background: ' + g.base + '; border: 1.5px solid ' + g.dark + '; display: flex; align-items: center; justify-content: center; box-shadow: ' + SHADOW_RAISED + ';';
+}
+function emptyLetter(id) { return { opened: false, solved: {}, times: {}, lv: {}, slots: LETTERS[id].tasks.map(() => null), phase: 'ready' }; }
+function initState(startDay) {
+  var day2 = String(startDay) === '2';
+  var l1 = emptyLetter('l1');
+  if (day2) { l1 = { opened: true, solved: { af: true, pf: true, gap: true }, times: {}, lv: { af: 1, pf: 1, gap: 1 }, slots: ['af', 'pf', 'gap'], phase: 'done' }; }
+  return {
+    screen: 'splash', next: 'home', day: day2 ? 2 : 1,
+    letters: { l1: l1, l2: emptyLetter('l2') },
+    lid: day2 ? 'l2' : 'l1', letterFrom: 'home',
+    cur: 'af', src: 'letter', replay: false, firstStamp: !day2,
+    level: { af: day2 ? 2 : 1, pf: day2 ? 2 : 1, gap: day2 ? 2 : 1, g4: 1, g5: 1, g6: 1 }, doneLevel: 1,
+    played: day2 ? { af: true, pf: true, gap: true } : {}, tutorialFor: null,
+    sel: null, attOpen: true, sheet: false, modal: false, toast: null, toastKind: 'ok',
+    sound: true, vib: true, reminderAsked: day2, remOn: false,
+    banner: null, failNextSend: false, sendFailed: false, hintOn: false, sysPrompt: false,
+    chSeen: day2 ? { l1: true } : {}, chId: 'l1', chReward: false, chFrom: 'letter', worldFrom: 'home',
+    lettersTab: 'sent', gameView: 'af', playLevel: null, lastFree: null
+  };
+}
+
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = initState(props && props.startDay);
+  }
+
+  componentDidMount() { this.armSplash(); }
+  componentWillUnmount() { clearTimeout(this._toastT); clearTimeout(this._sendT); clearTimeout(this._splashT); }
+
+  armSplash() {
+    clearTimeout(this._splashT);
+    this._splashT = setTimeout(() => { if (this.state.screen === 'splash') this.setState({ screen: this.state.next }); }, SPLASH_MS);
+  }
+
+  showToast(text, kind) {
+    clearTimeout(this._toastT);
+    this.setState({ toast: text, toastKind: kind || 'ok' });
+    this._toastT = setTimeout(() => this.setState({ toast: null }), 2200);
+  }
+
+  go(screen) { return () => this.setState({ screen: screen, sheet: false, modal: false }); }
+
+  todayId() { return this.state.day === 1 ? 'l1' : 'l2'; }
+
+  patchLetter(id, patch) {
+    var ls = Object.assign({}, this.state.letters);
+    ls[id] = Object.assign({}, ls[id], patch);
+    return ls;
+  }
+
+  unlocked() {
+    var st = this.state; var u = {};
+    Object.keys(LETTERS).forEach((id) => {
+      if (LETTERS[id].day <= st.day && st.letters[id].opened) LETTERS[id].tasks.forEach((g) => { u[g] = true; });
+    });
+    return u;
+  }
+
+  slotsFor(arr, interactive, times) {
+    var tm = times || {};
+    return arr.map((g, i) => ({
+      x: 218 - 56 * i, game: g || '', time: g ? fmtTime(tm[g]) : '', filled: !!g, show: interactive || !!g, inert: !interactive, sw: 48,
+      border: interactive && !g ? '1.5px dashed #756B5D' : 'none',
+      label: g ? ('Место ' + (i + 1) + ': марка ' + G[g].name + '. Нажми, чтобы снять') : ('Пустое место ' + (i + 1)),
+      tap: interactive ? () => this.tapSlot(i) : null
+    }));
+  }
+
+  // Один тап: марка из лотка встаёт на первое свободное место; тап по марке на конверте — обратно в лоток.
+  placeStamp(g) {
+    var st = this.state; var lid = st.lid; var s = st.letters[lid].slots.slice();
+    var at = s.indexOf(g);
+    if (at !== -1) s[at] = null;
+    else { var free = s.indexOf(null); if (free === -1) { this.showToast('Все места заняты — сними марку с конверта'); return; } s[free] = g; }
+    this.setState({ letters: this.patchLetter(lid, { slots: s }) });
+  }
+
+  tapSlot(i) {
+    var st = this.state; var lid = st.lid; var ls = st.letters[lid];
+    var s = ls.slots.slice();
+    if (s[i]) { s[i] = null; this.setState({ letters: this.patchLetter(lid, { slots: s }) }); return; }
+    var next = LETTERS[lid].tasks.find((g) => ls.solved[g] && s.indexOf(g) === -1);
+    if (!next) { this.showToast('Все марки уже на конверте'); return; }
+    s[i] = next; this.setState({ letters: this.patchLetter(lid, { slots: s }) });
+  }
+
+  openLetter(id, from) {
+    var patch = this.state.letters[id].opened ? {} : { opened: true };
+    this.setState({ letters: this.patchLetter(id, patch), lid: id, letterFrom: from || 'home', screen: 'letter', attOpen: true, sel: null });
+  }
+
+  openNote(id, from) {
+    var seen = Object.assign({}, this.state.chSeen); seen[id] = true;
+    this.setState({ screen: 'chapter', chId: id, chReward: from === 'sent', chFrom: from, chSeen: seen });
+  }
+
+  startPuzzle(id, src) {
+    var st = this.state;
+    var first = !st.played[id];
+    var played = Object.assign({}, st.played); played[id] = true;
+    this.setState({ cur: id, src: src, screen: 'puzzle', sheet: false, modal: false, played: played, tutorialFor: first ? id : null, hintOn: false, playLevel: src === 'free' ? (this._pl || null) : null, lastFree: src === 'free' ? id : this.state.lastFree });
+    this._pl = null; this._t0 = Date.now();
+  }
+
+  letterLevel(id, g) {
+    var ls = this.state.letters[id];
+    return (ls.lv && ls.lv[g]) || capLevel(g, this.state.level[g]);
+  }
+
+  letterView(id) {
+    var st = this.state; var meta = LETTERS[id]; var ls = st.letters[id];
+    var solvedN = meta.tasks.filter((g) => ls.solved[g]).length;
+    var sent = ls.phase === 'done';
+    var tasks = meta.tasks.map((g) => {
+      var done = !!ls.solved[g];
+      var isNew = !done && LETTERS.l1.tasks.indexOf(g) === -1 && id === 'l2';
+      return Object.assign({}, G[g], flags(g), {
+        solved: done, isNew: isNew,
+        status: done ? 'Решено' : 'Не решено',
+        tagStyle: done ? 'background: #E2E8D9; color: #465D3D;' : 'background: #E8DCCB; color: #33312E;',
+        tileStyle: tile(G[g], 44, 12), desc: 'Уровень ' + this.letterLevel(id, g) + ' · ' + G[g].desc,
+        open: () => this.startPuzzle(g, 'letter')
+      });
+    });
+    var when = meta.day === st.day ? 'сегодня' : 'вчера';
+    var allSolved = solvedN === meta.tasks.length;
+    return Object.assign({}, meta, {
+      hasNote: !!meta.att, chOpen: allSolved, chSealed: !allSolved,
+      chHint: st.chSeen[id] ? 'Нажми, чтобы перечитать' : (sent ? 'Нажми, чтобы прочитать' : 'Прочитаешь сейчас или после отправки'),
+      readChapter: () => this.openNote(id, 'letter'),
+      sent: sent, notSent: !sent, opened: ls.opened, solvedCount: solvedN, total: meta.tasks.length,
+      ready: ls.opened && solvedN === meta.tasks.length && !sent, tasks: tasks, when: when,
+      slotsView: this.slotsFor(ls.slots, false, ls.times)
+    });
+  }
+
+  renderVals() {
+    var st = this.state;
+    var todayId = this.todayId();
+    var today = this.letterView(todayId);
+    var L = this.letterView(st.lid);
+    var ls = st.letters[st.lid];
+    var cur = G[st.cur];
+    var unlocked = this.unlocked();
+    var unlockedN = ORDER.filter((g) => unlocked[g]).length;
+    var lMeta = LETTERS[st.lid];
+    var nextUnsolved = lMeta.tasks.find((g) => !ls.solved[g]);
+
+    var homeTitle, homeBody, homePrimary, homeEnvLabel;
+    if (!today.opened) {
+      homeTitle = 'Вам письмо'; homeBody = st.day === 1 ? 'Почтальон принёс первое письмо. Нажми на конверт.' : 'Новые головоломки ждут внутри.';
+      homeEnvLabel = 'Открыть письмо'; homePrimary = () => this.openLetter(todayId, 'home');
+    } else if (today.sent) {
+      homeTitle = 'Письмо отправлено';
+      homeBody = st.chSeen[todayId] ? 'Следующее придёт завтра. Пока ждёшь — загляни в игры.' : 'Следующее придёт завтра. Записка почтальона ждёт в письме.';
+      homeEnvLabel = 'Посмотреть отправленное письмо'; homePrimary = () => this.openLetter(todayId, 'home');
+    } else if (today.ready) {
+      homeTitle = 'Все задачи решены'; homeBody = 'Осталось наклеить марки и отправить.';
+      homeEnvLabel = 'Оформить конверт'; homePrimary = () => this.setState({ lid: todayId, screen: 'decorate' });
+    } else {
+      homeTitle = 'Письмо открыто'; homeBody = '';
+      homeEnvLabel = 'Открыть письмо'; homePrimary = () => this.openLetter(todayId, 'home');
+    }
+
+    var y = st.letters.l1;
+    var yesterdayWaiting = st.day === 2 && y.phase !== 'done';
+    var yesterdayNote = !y.opened ? 'Ещё не открыто' : 'Открыто, не отправлено';
+
+    var todayMarks = LETTERS[todayId].tasks.map((g) => ({
+      checked: !!st.letters[todayId].solved[g],
+      style: 'width: 20px; height: 20px; border-radius: 10px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; ' +
+        (st.letters[todayId].solved[g] ? 'background: #526348;' : 'border: 1.5px solid #756B5D;')
+    }));
+
+    var available = Object.keys(LETTERS).filter((id) => LETTERS[id].day <= st.day).reverse();
+    var sentCount = available.filter((id) => st.letters[id].phase === 'done').length;
+    var mailbox = available.map((id) => {
+      var v = this.letterView(id);
+      var status = v.sent ? 'отправлено' : (v.opened ? 'открыто' : 'новое');
+      return { when: v.when === 'сегодня' ? 'Сегодня' : 'Вчера', date: v.date, status: status, sent: v.sent, mark: v.mark,
+        slots: v.slotsView, label: 'Письмо ' + v.date + ', ' + status, open: () => this.openLetter(id, 'mailbox') };
+    });
+
+    var collection = ORDER.map((g) => {
+      var on = !!unlocked[g];
+      var done = st.level[g] - 1;
+      return Object.assign({}, G[g], flags(g), {
+        unlocked: on, locked: !on, isNew: on && !st.played[g],
+        label: on ? G[g].name : (G[g].name + ', придёт по почте'),
+        tileStyle: tile(G[g], 72, 18) + (on ? '' : ' opacity: 0.6;'),
+        cardStyle: 'min-height: 172px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding: 16px; ' + (on ? '' : 'box-shadow: none; border: 1.5px dashed #756B5D;'),
+        progress: GAME_MAX[g] ? ('Пройдено ' + done + ' из ' + GAME_MAX[g]) : ('Пройдено уровней: ' + done),
+        open: on ? (() => this.setState({ screen: 'levels', gameView: g })) : (() => this.showToast('Эта игра придёт в одном из писем'))
+      });
+    });
+    var sentIds = Object.keys(LETTERS).filter((id) => LETTERS[id].day <= st.day && st.letters[id].phase === 'done').reverse();
+    var sentList = sentIds.map((id) => ({
+      title: LETTERS[id].title, date: LETTERS[id].full, mark: LETTERS[id].mark,
+      slots: this.slotsFor(st.letters[id].slots, false, st.letters[id].times), label: 'Отправленное письмо, ' + LETTERS[id].date,
+      open: () => this.openLetter(id, 'mailbox')
+    }));
+    var navTab = st.screen === 'home' ? 'home' : (st.screen === 'mailbox' ? 'mail' : (st.screen === 'collection' ? 'games' : ''));
+    var navBase = 'display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; border: none; border-radius: 14px; cursor: pointer; font: 400 13px/18px Inter, system-ui, sans-serif; height: 52px;';
+    function navStyle(t) { return navBase + (navTab === t ? ' background: #E2E8D9; color: #526348; font-weight: 600;' : ' background: transparent; color: #6E6459;'); }
+    function pager(t) { return 'display: flex; align-items: center; gap: 6px; height: 44px; padding: 0 12px; border: none; border-radius: 22px; cursor: pointer; font: ' + (navTab === t ? '600' : '400') + ' 13px/18px Inter, system-ui, sans-serif; color: ' + (navTab === t ? '#33312E' : '#6E6459') + '; background: ' + (navTab === t ? '#E2E8D9' : 'transparent') + ';'; }
+    function dot(t) { return 'width: 8px; height: 8px; border-radius: 4px; box-sizing: border-box; ' + (navTab === t ? 'background: #526348;' : 'border: 1.5px solid #756B5D;'); }
+    var tdId = this.todayId(); var td = st.letters[tdId]; var tdMeta = LETTERS[tdId];
+    var tdNext = tdMeta.tasks.find((g) => !td.solved[g]);
+    var ctaV;
+    if (!td.opened) ctaV = { label: 'Пришло новое письмо', sub: (st.day === 1 ? 'Первое письмо · ' : '') + tdMeta.date, go: () => this.openLetter(tdId, 'home') };
+    else if (td.phase === 'done' && !st.chSeen[tdId]) ctaV = { label: 'Прочитать записку', sub: 'Записка почтальона · ' + tdMeta.date, go: () => this.openNote(tdId, 'home') };
+    else if (td.phase === 'done') {
+      var lf = st.lastFree;
+      ctaV = lf ? { label: 'Продолжить', sub: G[lf].name + ' · уровень ' + st.level[lf], go: () => { this.setState({ lid: tdId }); this.startPuzzle(lf, 'free'); } }
+                : { label: 'Письмо отправлено', sub: 'Пока ждёшь — выбери игру', go: () => this.setState({ screen: 'collection' }) };
+    }
+    else if (tdNext) ctaV = { label: 'Продолжить письмо', sub: 'Задача ' + (tdMeta.tasks.indexOf(tdNext) + 1) + ' из ' + tdMeta.tasks.length + ' · ' + G[tdNext].name, go: () => { this.setState({ lid: tdId }); this.startPuzzle(tdNext, 'letter'); } };
+    else ctaV = { label: 'Оформить конверт', sub: 'Наклеить марки и отправить', go: () => this.setState({ lid: tdId, screen: 'decorate' }) };
+    var gvId = st.gameView; var gMax = GAME_MAX[gvId]; var gCur = st.level[gvId];
+    var shown = gMax || (gCur + 8);
+    var gLevels = [];
+    for (var lvn = 1; lvn <= shown; lvn++) {
+      var isDone = lvn < gCur, isCur = lvn === gCur && (!gMax || lvn <= gMax);
+      var base2 = 'aspect-ratio: 1; border-radius: 14px; box-sizing: border-box; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; font: 600 15px/20px Inter, system-ui, sans-serif; ';
+      gLevels.push({ n: lvn, done: isDone, current: isCur,
+        label: 'Уровень ' + lvn + (isDone ? ', пройден' : (isCur ? ', следующий' : ', ещё не открыт')),
+        style: base2 + (isCur ? 'background: #526348; color: #FFF9EF; border: none; box-shadow: ' + SHADOW_RAISED + ';'
+          : (isDone ? 'background: #F1E7D8; color: #33312E; border: 1px solid #C6B7A5; box-shadow: ' + SHADOW_RAISED + ';'
+                    : 'background: #DED0BD; color: #6E6459; border: 1.5px solid #756B5D; box-shadow: inset 0 2px 4px rgba(76,57,36,0.14);')),
+        tap: (() => { var n = lvn, dn = isDone, cu = isCur; return () => {
+          if (dn || cu) { this._pl = n; this.startPuzzle(gvId, 'free'); }
+          else this.showToast('Сначала пройди уровень ' + gCur);
+        }; })() });
+    }
+    var gDone = Math.min(gCur - 1, gMax || 9999);
+    var gv = { name: G[gvId].name, levels: gLevels, current: gCur, unknownTotal: !gMax,
+      progressText: gMax ? (gDone + ' из ' + gMax) : ('Пройдено: ' + gDone),
+      barStyle: 'height: 100%; background: #526348; width: ' + (gMax ? Math.round(100 * gDone / gMax) : 0) + '%;',
+      hasNext: !gMax || gCur <= gMax, allDone: !!gMax && gCur > gMax,
+      play: () => { this._pl = gCur; this.startPuzzle(gvId, 'free'); } };
+    var segBase = 'border: none; border-radius: 9px; cursor: pointer; font: 600 15px/20px Inter, system-ui, sans-serif;';
+    function seg(on) { return segBase + (on ? ' background: #F7F2E9; color: #33312E; box-shadow: 0 2px 3px rgba(76,57,36,0.12);' : ' background: transparent; color: #33312E;'); }
+
+    var solvedTray = lMeta.tasks.filter((g) => ls.solved[g]);
+    var tray = solvedTray.map((g) => {
+      var placed = ls.slots.indexOf(g) !== -1;
+      return {
+        game: g, placed: placed, selected: false, time: fmtTime(ls.times && ls.times[g]),
+        label: 'Марка ' + G[g].name + (placed ? ', на конверте. Нажми, чтобы снять' : '. Нажми, чтобы наклеить'),
+        style: 'position: relative; width: 64px; height: 72px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; padding: 0; border-radius: 12px; cursor: pointer; background: #F1E7D8; border: 1px solid #C6B7A5;' + (placed ? ' opacity: 0.55;' : ''),
+        pick: () => this.placeStamp(g)
+      };
+    });
+    var noneSent = sentCount === 0;
+    var decorHint = noneSent ? 'Нажми на марку — она встанет на конверт. Нажми на марку на конверте — вернётся обратно.' : 'Нажми на марку, чтобы наклеить или снять.';
+    var decorHintStyle = 'font-size: 13px; line-height: 18px; text-align: center; border-radius: 12px; padding: 8px 12px; ' +
+      (noneSent ? 'background: #E2EAF0; color: #33312E; border: 2px solid #3D647D;' : 'color: #6E6459;');
+
+    var cells = [];
+    for (var c = 0; c < 16; c++) {
+      var filled = (c === 5 || c === 6 || c === 9);
+      var hinted = st.hintOn && c === 10;
+      cells.push({ style: 'aspect-ratio: 1; border-radius: 8px; box-sizing: border-box; ' +
+        (filled ? 'background: ' + cur.base + '; border: 1.5px solid ' + cur.dark + '; box-shadow: ' + SHADOW_RAISED + ';'
+          : (hinted ? 'background: #E2EAF0; border: 2px dashed #3D647D;'
+                    : 'background: #DED0BD; border: 1.5px solid #756B5D; box-shadow: inset 0 2px 4px rgba(76,57,36,0.14), inset 0 -1px 0 rgba(255,249,239,0.75);')) });
+    }
+
+    var chapterIds = Object.keys(LETTERS).filter((id) => LETTERS[id].day <= st.day && LETTERS[id].tasks.every((g) => st.letters[id].solved[g]));
+    var pieces = [];
+    for (var pi = 0; pi < PIECES_TOTAL; pi++) {
+      var cid = Object.keys(LETTERS).find((id) => LETTERS[id].chNum === pi + 1);
+      var isOpen = !!cid && chapterIds.indexOf(cid) !== -1;
+      pieces.push({
+        open: isOpen, closed: !isOpen, num: pi + 1,
+        label: isOpen ? (LETTERS[cid].chTitle + ', прочитать') : '',
+        style: 'aspect-ratio: 1; width: 100%; border-radius: 8px; box-sizing: border-box; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #805617; background: ' + (pi % 2 ? '#F3E6CA' : '#E7BE70') + '; border: 1.5px solid #805617; box-shadow: ' + SHADOW_RAISED + ';',
+        read: isOpen ? (() => { var c2 = cid; return () => this.openNote(c2, 'world'); })() : null
+      });
+    }
+
+    var maxLv = GAME_MAX[st.cur];
+    var allLevelsDone = st.src === 'free' && maxLv && st.doneLevel >= maxLv;
+    var modalTexts = st.modal === 'reset'
+      ? { t: 'Сбросить прогресс?', b: 'Удалятся все письма, марки и коллекция на этом устройстве. Отменить это нельзя. Сначала можно сделать экспорт.', c: 'Не сбрасывать', k: 'Сбросить', ks: 'color: #A13636; border-color: #A13636;' }
+      : { t: 'Начать заново?', b: 'Ходы этой попытки будут сброшены.', c: 'Продолжить игру', k: 'Начать заново', ks: '' };
+    var B = st.banner ? BANNERS[st.banner] : null;
+    var bannerBg = B && B.tone === 'error' ? 'background: #F9DCDC; color: #33312E; border: 1px solid #A13636;' : 'background: #F1E7D8; color: #33312E; border: 1px solid #756B5D;';
+    var bannerDotBg = B && B.tone === 'error' ? '#A13636' : '#526348';
+
+    function track(on) { return 'position: relative; width: 44px; height: 28px; border-radius: 14px; display: block; transition: background-color 120ms; background: ' + (on ? '#526348' : '#756B5D') + ';'; }
+    function thumb(on) { return 'position: absolute; top: 2px; left: ' + (on ? '18px' : '2px') + '; width: 24px; height: 24px; border-radius: 12px; background: #FFF9EF; box-shadow: 0 2px 3px rgba(76,57,36,0.2); transition: left 120ms cubic-bezier(0.2,0.8,0.2,1);'; }
+
+    var stampsTotal = Object.keys(st.letters).reduce((n, id) => n + Object.keys(st.letters[id].solved).length, 0);
+    var showTutorial = st.screen === 'puzzle' && st.tutorialFor === st.cur;
+
+    return {
+      isSplash: st.screen === 'splash', isWelcome: st.screen === 'welcome', isHome: st.screen === 'home',
+      isLetter: st.screen === 'letter', isPuzzle: st.screen === 'puzzle', isSolved: st.screen === 'solved',
+      isDecorate: st.screen === 'decorate', isSend: st.screen === 'send', isReminder: st.screen === 'reminder',
+      isMailbox: st.screen === 'mailbox', isCollection: st.screen === 'collection', isFree: st.screen === 'free',
+      isSettings: st.screen === 'settings', isAbout: st.screen === 'about',
+      goAbout: this.go('about'),
+      mailboxEmpty: available.every((id) => !st.letters[id].opened),
+      mailboxHas: !available.every((id) => !st.letters[id].opened),
+      collectionIntro: unlockedN === 0 ? 'Пока пусто. Игры появятся здесь, когда придут в письме.' : 'Здесь игры, которые пришли тебе по почте. Играй сколько хочешь — марки тут не выдаются.',
+      hintOn: st.hintOn, closeHint: () => this.setState({ hintOn: false }),
+      freeTitle: allLevelsDone ? 'Все доступные уровни пройдены' : ('Уровень ' + st.doneLevel + ' пройден'),
+      freeNote: allLevelsDone ? 'Новые уровни появятся позже. Марки в свободной игре не выдаются.' : 'В свободной игре марки не выдаются.',
+      hasMoreLevels: !allLevelsDone,
+      modalTitle: modalTexts.t, modalBody: modalTexts.b, modalCancel: modalTexts.c, modalConfirm: modalTexts.k, modalConfirmStyle: modalTexts.ks,
+      cancelModal: () => this.setState({ modal: false }),
+      confirmModal: () => {
+        if (st.modal === 'reset') { this.setState(Object.assign(initState('1'), { screen: 'splash' })); this.armSplash(); return; }
+        this.setState({ modal: false, hintOn: false }); this.showToast('Задача начата заново');
+      },
+      askReset: () => this.setState({ modal: 'reset' }),
+      sysPrompt: st.sysPrompt,
+      allowNotif: () => { this.setState({ sysPrompt: false, reminderAsked: true, remOn: true, screen: 'home' }); this.showToast('Напомним, когда придёт письмо'); },
+      denyNotif: () => { this.setState({ sysPrompt: false, reminderAsked: true, remOn: false, screen: 'home' }); this.showToast('Можно включить позже в настройках'); },
+      hasBanner: !!B, bannerText: B ? B.text : '', bannerMark: B ? B.mark : '',
+      bannerHasAction: !!(B && B.action), bannerActionLabel: B && B.action ? B.action : '',
+      bannerStyle: 'position: absolute; left: 12px; right: 12px; top: 8px; display: flex; align-items: center; gap: 10px; padding: 6px 4px 6px 12px; border-radius: 14px; box-shadow: 0 12px 28px rgba(76,57,36,0.16); z-index: 5; ' + bannerBg,
+      bannerDot: 'width: 24px; height: 24px; border-radius: 12px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; color: #FFF9EF; font: 600 13px/18px Inter, system-ui, sans-serif; background: ' + bannerDotBg + ';',
+      closeBanner: () => this.setState({ banner: null }),
+      bannerAction: () => {
+        if (st.banner === 'saveError') { this.setState({ banner: null }); this.showToast('Сохранено'); }
+        else if (st.banner === 'update') { this.setState({ banner: null, screen: 'splash', next: 'home' }); this.armSplash(); }
+        else if (st.banner === 'newLetter') { this.setState({ banner: null, screen: 'home', lid: 'l2' }); }
+        else this.setState({ banner: null });
+      },
+      simOffline: () => this.setState({ banner: 'offline' }),
+      simSaveError: () => this.setState({ banner: 'saveError' }),
+      simRestored: () => this.showToast('Прогресс восстановлен'),
+      simUpdate: () => this.setState({ banner: 'update' }),
+      failSendLabel: st.failNextSend ? 'Отправка упадёт: вкл' : 'Следующая отправка с ошибкой',
+      simFailSend: () => this.setState({ failNextSend: !st.failNextSend }),
+      simMidnight: () => {
+        if (st.day === 2) { this.showToast('В прототипе только два дня', 'err'); return; }
+        this.setState({ day: 2, banner: 'newLetter' });
+      },
+      toastOk: st.toastKind !== 'err', toastErr: st.toastKind === 'err',
+
+      splashSlots: this.slotsFor(['af', 'pf', 'gap'], false),
+      splashLine: (st.day === 1 && !st.letters.l1.opened) ? 'Несём первое письмо…' : 'Несём письмо…',
+      skipSplash: () => { clearTimeout(this._splashT); this.setState({ screen: st.next }); },
+      emptySlots: this.slotsFor([], false),
+      openToday: () => this.openLetter(todayId, 'home'),
+
+      today: today, todaySlots: today.slotsView, todaySent: today.sent,
+      homeOpen: today.opened && !today.sent, homeShowMarks: today.opened && !today.sent,
+      todayMarks: todayMarks, todaySolvedCount: today.solvedCount, todayTotal: today.total,
+      homeTitle: homeTitle, homeBody: homeBody, homePrimary: homePrimary, homeEnvLabel: homeEnvLabel,
+      yesterdayWaiting: yesterdayWaiting, yesterdayNote: yesterdayNote, openYesterday: () => this.openLetter('l1', 'home'),
+      mailboxNote: sentCount ? ('Отправлено: ' + sentCount) : 'Пока пусто',
+      collectionNote: unlockedN === 0 ? 'Пока пусто' : (unlockedN === 1 ? '1 игра' : unlockedN + ' игры'),
+      canAdvanceDay: st.day === 1 && today.sent,
+      advanceDay: () => { this.setState({ day: 2, next: 'home', screen: 'splash', lid: 'l2' }); this.armSplash(); },
+
+      L: L, attOpen: st.attOpen, chevStyle: st.attOpen ? 'transform: rotate(180deg);' : 'transform: none;',
+      letterBack: () => this.setState({ screen: st.letterFrom === 'mailbox' ? 'mailbox' : 'home' }),
+      toggleAtt: () => this.setState({ attOpen: !st.attOpen }),
+      goLetter: () => this.setState({ screen: 'letter' }),
+      goDecorate: () => this.setState({ screen: 'decorate' }),
+
+      cur: cur, curF: flags(st.cur), curTileBig: tile(cur, 96, 22),
+      curSub: st.src === 'letter' ? ('Задача ' + (lMeta.tasks.indexOf(st.cur) + 1) + ' из ' + lMeta.tasks.length + ' · уровень ' + this.letterLevel(st.lid, st.cur)) : ('Уровень ' + (st.playLevel || st.level[st.cur])),
+      cells: cells, showTutorial: showTutorial, noTutorial: !showTutorial,
+      closeTutorial: () => this.setState({ tutorialFor: null }),
+      solvedTitle: st.replay ? 'Марка уже у тебя' : 'Марка получена',
+      solvedNote: st.replay ? 'Повторное решение не выдаёт новую марку.' : (stampsTotal === 1 ? 'Марки копятся, а перед отправкой ты наклеишь их на конверт.' : 'Марка ждёт конверта.'),
+      solvedTime: st.src === 'letter' && !st.replay && ls.times ? fmtTime(ls.times[st.cur]) : '',
+      solvedMeta: 'Уровень ' + ((ls.lv && ls.lv[st.cur]) || '') + ' пройден · время ' + fmtTime(ls.times && ls.times[st.cur]),
+      solvedAll: !nextUnsolved && !st.replay && ls.phase !== 'done',
+      hasNext: !!nextUnsolved,
+      offerDecorate: !nextUnsolved && ls.phase !== 'done',
+      isChapter: st.screen === 'chapter', isWorld: st.screen === 'world',
+      ch: { num: LETTERS[st.chId].chNum, title: LETTERS[st.chId].chTitle, text: LETTERS[st.chId].chText, date: LETTERS[st.chId].date },
+      chapterIsReward: st.chReward, chapterNotReward: !st.chReward,
+      chapterClose: () => {
+        var f = st.chFrom;
+        if (f === 'sent') this.setState({ screen: st.reminderAsked ? 'home' : 'reminder', chReward: false });
+        else if (f === 'world') this.setState({ screen: 'mailbox', lettersTab: 'notes', chReward: false });
+        else if (f === 'home') this.setState({ screen: 'home', chReward: false });
+        else this.setState({ screen: 'letter', chReward: false });
+      },
+      piecesTotal: PIECES_TOTAL,
+      chaptersOpen: chapterIds.length,
+      pieces: pieces,
+      goWorld: () => this.setState({ screen: 'mailbox', lettersTab: 'notes', chReward: false }),
+      showNav: !!navTab,
+      pagerMail: pager('mail'), pagerHome: pager('home'), pagerGames: pager('games'),
+      dotMail: dot('mail'), dotHome: dot('home'), dotGames: dot('games'),
+      ctaLabel: ctaV.label, ctaSub: ctaV.sub, cta: ctaV.go,
+      swipeStart: (e) => { this._sx = e.clientX; this._sy = e.clientY; },
+      swipeEnd: (e) => {
+        if (!navTab || this._sx == null) return;
+        var dx = e.clientX - this._sx, dy = e.clientY - this._sy; this._sx = null;
+        if (Math.abs(dx) < 60 || Math.abs(dx) < Math.abs(dy) * 1.5) return;
+        var order = ['mailbox', 'home', 'collection']; var i = order.indexOf(st.screen);
+        var j = dx < 0 ? Math.min(2, i + 1) : Math.max(0, i - 1);
+        if (j !== i) this.setState({ screen: order[j] });
+      },
+      isLevels: st.screen === 'levels', gv: gv,
+      openRulesFor: () => this.setState({ cur: st.gameView, sheet: true }),
+      navHomeStyle: navStyle('home'), navMailStyle: navStyle('mail'), navGamesStyle: navStyle('games'),
+      navHomeFill: navTab === 'home' ? '#526348' : 'none', navHomeInner: navTab === 'home' ? '#E2E8D9' : 'currentColor',
+      navMailFill: navTab === 'mail' ? '#526348' : 'none', navMailInner: navTab === 'mail' ? '#E2E8D9' : 'currentColor',
+      navGamesFill: navTab === 'games' ? '#526348' : 'none',
+      navHomeCur: navTab === 'home' ? 'page' : 'false', navMailCur: navTab === 'mail' ? 'page' : 'false', navGamesCur: navTab === 'games' ? 'page' : 'false',
+      lettersTabSent: st.lettersTab === 'sent', lettersTabNotes: st.lettersTab === 'notes',
+      segSentStyle: seg(st.lettersTab === 'sent'), segNotesStyle: seg(st.lettersTab === 'notes'),
+      setTabSent: () => this.setState({ lettersTab: 'sent' }), setTabNotes: () => this.setState({ lettersTab: 'notes' }),
+      sentList: sentList, sentEmpty: sentList.length === 0, sentHas: sentList.length > 0,
+      chapterList: chapterIds.map((id) => ({ num: LETTERS[id].chNum, title: LETTERS[id].chTitle, date: LETTERS[id].date,
+        read: () => this.openNote(id, 'world') })),
+      notesEmpty: chapterIds.length === 0,
+      worldBack: () => this.setState({ screen: st.worldFrom === 'chapter' ? 'letter' : (st.worldFrom || 'home'), chReward: false }),
+      nextTask: () => { if (nextUnsolved) this.startPuzzle(nextUnsolved, 'letter'); },
+      doneLevel: st.doneLevel,
+
+      decorSlots: this.slotsFor(ls.slots, true, ls.times), tray: tray, trayEmpty: tray.length === 0,
+      decorHint: decorHint, decorHintStyle: decorHintStyle,
+      sendTitle: 'Отправлено',
+      sentNote: st.chSeen[st.lid] ? 'Следующее письмо придёт завтра.' : 'Следующее письмо придёт завтра. А пока — записка почтальона.',
+      noteUnread: !st.chSeen[st.lid], noteRead: !!st.chSeen[st.lid],
+      readNoteAfterSend: () => this.openNote(st.lid, 'sent'),
+      sendLabel: ls.phase === 'sending' ? 'Отправляем…' : (st.sendFailed ? 'Повторить отправку' : 'Отправить'),
+      envMoveStyle: ls.phase === 'sending' ? 'transform: translateY(260px) scale(0.5); opacity: 0;' : 'transform: none; opacity: 1;',
+      sendBack: () => this.setState({ screen: 'home' }),
+      send: () => {
+        var lid = st.lid;
+        if (ls.phase === 'sending') return;
+        if (st.failNextSend) {
+          this.setState({ failNextSend: false, sendFailed: true });
+          this.showToast('Не удалось отправить. Конверт сохранён — попробуй ещё раз', 'err');
+          return;
+        }
+        if (ls.slots.every((x) => !x)) this.showToast('Конверт без марок — тоже можно');
+        this.setState({ letters: this.patchLetter(lid, { phase: 'sending' }), sendFailed: false });
+        clearTimeout(this._sendT);
+        this._sendT = setTimeout(() => this.setState({ letters: this.patchLetter(lid, { phase: 'done' }), screen: 'send' }), 650);
+      },
+      afterSend: () => this.setState({ screen: st.reminderAsked ? 'home' : 'reminder' }),
+
+      enableReminders: () => this.setState({ sysPrompt: true }),
+      skipReminders: () => this.setState({ reminderAsked: true, screen: 'home' }),
+
+      mailbox: mailbox, sentCount: sentCount,
+      collection: collection,
+
+      goHome: this.go('home'), goMailbox: this.go('mailbox'), goCollection: this.go('collection'),
+      goSettings: this.go('settings'),
+      // экран с уровнями — v1; в MVP «Следующий уровень» и «Повторить»
+
+      exitPuzzle: () => { this.showToast('Прогресс сохранён'); this.setState({ screen: st.src === 'letter' ? 'letter' : 'levels', gameView: st.cur }); },
+      openRules: () => this.setState({ sheet: true }),
+      closeSheet: () => this.setState({ sheet: false }),
+      hint: () => this.setState({ hintOn: true }),
+      undo: () => this.showToast('Нет хода для отмены', 'err'),
+      askRestart: () => this.setState({ modal: 'restart' }),
+      solve: () => {
+        if (st.src === 'letter') {
+          var was = !!ls.solved[st.cur];
+          var solved = Object.assign({}, ls.solved); solved[st.cur] = true;
+          var times = Object.assign({}, ls.times || {});
+          var lv = Object.assign({}, ls.lv || {}); var lvl0 = Object.assign({}, st.level);
+          if (!was) {
+            times[st.cur] = Math.max(1, Math.round((Date.now() - (this._t0 || Date.now())) / 1000));
+            var n = this.letterLevel(st.lid, st.cur); lv[st.cur] = n;
+            lvl0[st.cur] = Math.max(st.level[st.cur], n + 1);
+          }
+          this.setState({ letters: this.patchLetter(st.lid, { solved: solved, times: times, lv: lv }), level: lvl0, replay: was, screen: 'solved', tutorialFor: null });
+        } else {
+          var d = st.playLevel || st.level[st.cur]; var l0 = Object.assign({}, st.level); l0[st.cur] = Math.max(st.level[st.cur], d + 1);
+          this.setState({ doneLevel: d, level: l0, screen: 'free', tutorialFor: null, playLevel: null });
+        }
+      },
+      nextLevel: () => {
+        this._pl = st.doneLevel + 1; this.startPuzzle(st.cur, 'free');
+      },
+      retryLevel: () => { this._pl = st.doneLevel; this.startPuzzle(st.cur, 'free'); },
+      goLevels: () => this.setState({ screen: 'levels', gameView: st.cur }),
+
+      share: () => this.showToast('Картинка письма 1080×1350 сохранена'),
+      sound: st.sound, vib: st.vib, remOn: st.remOn,
+      soundTrack: track(st.sound), soundThumb: thumb(st.sound), vibTrack: track(st.vib), vibThumb: thumb(st.vib),
+      remTrack: track(st.remOn), remThumb: thumb(st.remOn),
+      toggleSound: () => this.setState({ sound: !st.sound }),
+      toggleVib: () => this.setState({ vib: !st.vib }),
+      toggleRem: () => this.setState({ remOn: !st.remOn }),
+      langTap: () => this.showToast('Выбор языка — после решения, какие языки будут'),
+      exportData: () => this.showToast('Сохранено: pocket-puzzle-progress-' + D1.iso + '.json'),
+      resetProto: () => { this.setState(initState('1')); this.armSplash(); },
+
+      sheet: st.sheet, modal: st.modal,
+      hasToast: !!st.toast, toast: st.toast,
+      toastStyle: 'position: absolute; left: 20px; right: 20px; bottom: ' + (st.screen === 'puzzle' ? 116 : (navTab ? 150 : 40)) + 'px; display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; background: ' + (st.toastKind === 'err' ? '#A13636' : '#33312E') + '; color: #FFF9EF; font-size: 15px; line-height: 20px; box-shadow: 0 12px 28px rgba(76,57,36,0.16);'
+    };
+  }
+}
+</script>
+</body>
+</html>

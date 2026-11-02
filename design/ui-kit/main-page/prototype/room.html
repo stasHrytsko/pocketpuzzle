@@ -149,13 +149,7 @@ button{font:inherit;color:inherit}
         <div id="world">
           <!-- L0: view outside the window (behind the wall). Drawn wider than the brief so the ×3 demo mode never shows an edge. -->
           <svg class="layer" id="L0a" style="left:205px;top:110px" width="900" height="400" viewBox="0 0 900 400" aria-hidden="true">
-            <defs>
-              <linearGradient id="gMorning" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E2EAF0"/><stop offset="0.7" stop-color="#F3E6CA"/></linearGradient>
-              <linearGradient id="gEve" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E2EAF0"/><stop offset="0.35" stop-color="#F3E6CA"/></linearGradient>
-            </defs>
-            <g data-phase="morning"><rect width="900" height="400" fill="url(#gMorning)"/><circle cx="330" cy="236" r="58" fill="#F3E6CA"/><circle cx="330" cy="236" r="32" fill="#E7BE70"/></g>
-            <g data-phase="day"><rect width="900" height="400" fill="#E2EAF0"/><circle cx="400" cy="112" r="56" fill="#F3E6CA"/><circle cx="400" cy="112" r="34" fill="#E7BE70"/></g>
-            <g data-phase="evening"><rect width="900" height="400" fill="url(#gEve)"/><circle cx="490" cy="232" r="62" fill="#F3E6CA"/><circle cx="490" cy="232" r="34" fill="#E7BE70"/></g>
+<g data-phase="day"><rect width="900" height="400" fill="#E2EAF0"/><circle cx="400" cy="112" r="56" fill="#F3E6CA"/><circle cx="400" cy="112" r="34" fill="#E7BE70"/></g>
             <g data-phase="night"><rect width="900" height="400" fill="#3D647D"/><circle cx="470" cy="120" r="40" fill="#3D647D" stroke="#E2EAF0" stroke-opacity="0.25" stroke-width="18"/><circle cx="470" cy="120" r="24" fill="#F3E6CA"/><circle cx="480" cy="114" r="20" fill="#3D647D"/>
               <g fill="#FFF9EF"><circle cx="330" cy="70" r="2"/><circle cx="390" cy="150" r="1.5"/><circle cx="560" cy="80" r="2"/><circle cx="620" cy="170" r="1.5"/><circle cx="300" cy="190" r="1.5"/><circle cx="520" cy="200" r="1.2"/><circle cx="420" cy="40" r="1.5"/></g></g>
           </svg>
@@ -174,7 +168,7 @@ button{font:inherit;color:inherit}
               <linearGradient id="gFloor" x1="0" y1="600" x2="0" y2="700" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#E8DCCB"/><stop offset="0.6" stop-color="#F1E7D8"/></linearGradient>
               <linearGradient id="gNiche" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#DED0BD"/><stop offset="0.45" stop-color="#E8DCCB"/></linearGradient>
               <radialGradient id="gGlow"><stop offset="0" stop-color="#F3E6CA" stop-opacity="0.95"/><stop offset="1" stop-color="#F3E6CA" stop-opacity="0"/></radialGradient>
-              <clipPath id="slitClip" clipPathUnits="userSpaceOnUse"><rect x="520" y="446" width="280" height="300"/></clipPath>
+              <clipPath id="slitClip" clipPathUnits="userSpaceOnUse"><rect x="520" y="404" width="280" height="300"/></clipPath>
               <clipPath id="winClip" clipPathUnits="userSpaceOnUse"><path d="M505 500V280A150 150 0 0 1 805 280V500Z"/></clipPath>
             </defs>
             <path fill="#F1E7D8" fill-rule="evenodd" d="M0 0H1310V600H0Z M505 500V280A150 150 0 0 1 805 280V500Z"/>
@@ -200,13 +194,14 @@ button{font:inherit;color:inherit}
               <ellipse cx="474" cy="504" rx="8" ry="15" transform="rotate(46 474 504)" fill="#A7B39B"/>
             </g>
 
-            <!-- CENTER: podium + mailbox -->
-            <ellipse cx="655" cy="628" rx="200" ry="9" fill="#4C3924" opacity="0.08"/>
-            <rect x="470" y="585" width="370" height="40" rx="6" fill="#FFF9EF" stroke="#C6B7A5" stroke-width="1.5"/>
-            <rect x="470" y="579" width="370" height="12" rx="6" fill="#FFF9EF"/>
-            <ellipse cx="655" cy="586" rx="104" ry="5" fill="#4C3924" opacity="0.12"/>
+            <!-- CENTER: big green parcel locker on a small pedestal -->
+            <ellipse cx="655" cy="616" rx="150" ry="8" fill="#4C3924" opacity="0.10"/>
+            <rect x="530" y="594" width="250" height="22" rx="5" fill="#FFF9EF" stroke="#C6B7A5" stroke-width="1.5"/>
+            <rect x="530" y="590" width="250" height="8" rx="4" fill="#FFF9EF"/>
+            <rect x="562" y="578" width="14" height="16" rx="3" fill="#526348" opacity="0.55"/>
+            <rect x="734" y="578" width="14" height="16" rx="3" fill="#526348" opacity="0.55"/>
             <g id="hotProp" data-hot="prop" role="button" tabindex="-1" aria-label="Unfinished letter" class="vb">
-              <g transform="translate(762 584) rotate(-6)">
+              <g transform="translate(796 614) rotate(-6)">
                 <rect class="hot-ring" x="-6" y="-80" width="90" height="84" rx="8" fill="transparent" stroke="none"/>
                 <rect x="10" y="-72" width="58" height="50" rx="2" fill="#FFF9EF" stroke="#C6B7A5"/>
                 <path d="M18 -62H58M18 -54H52M18 -46H56" stroke="#DED0BD" stroke-width="2.5" stroke-linecap="round"/>
@@ -215,21 +210,25 @@ button{font:inherit;color:inherit}
               </g>
             </g>
             <g id="hotBox" data-hot="mailbox" role="button" tabindex="0" aria-label="Today's letter" class="vb">
-              <rect class="hot-ring" x="550" y="372" width="210" height="222" rx="20" fill="transparent"/>
-              <g id="flag" class="vb" style="transform-origin:556px 500px">
-                <rect x="553" y="440" width="6" height="62" rx="3" fill="#756B5D"/>
-                <path d="M556 440 H524 V460 H556Z" fill="#C78D73"/>
+              <rect class="hot-ring" x="532" y="336" width="246" height="248" rx="24" fill="transparent"/>
+              <g id="flag" class="vb" style="transform-origin:543px 470px">
+                <rect x="540" y="408" width="6" height="64" rx="3" fill="#756B5D"/>
+                <path d="M543 408 H509 V429 H543Z" fill="#C78D73"/>
               </g>
-              <path d="M560 585V480A95 95 0 0 1 750 480V585Z" fill="#A7B39B"/>
-              <path d="M690 393 A95 95 0 0 1 750 480 V585 H700 V480 A80 80 0 0 0 690 393Z" fill="#526348" opacity="0.16"/>
-              <path d="M568 585V484A87 87 0 0 1 600 418" fill="none" stroke="#E2E8D9" stroke-width="4" stroke-linecap="round" opacity="0.7"/>
-              <rect x="595" y="440" width="120" height="12" rx="6" fill="#756B5D"/>
-              <rect x="595" y="440" width="120" height="4" rx="2" fill="#33312E" opacity="0.35"/>
+              <path d="M545 580V378Q545 350 573 350H737Q765 350 765 378V580Z" fill="#A7B39B"/>
+              <path d="M712 350H737Q765 350 765 378V580H712Z" fill="#526348" opacity="0.16"/>
+              <path d="M553 572V380Q553 360 572 358" fill="none" stroke="#E2E8D9" stroke-width="4" stroke-linecap="round" opacity="0.7"/>
+              <rect x="590" y="398" width="130" height="12" rx="6" fill="#756B5D"/>
+              <rect x="590" y="398" width="130" height="4" rx="2" fill="#33312E" opacity="0.35"/>
               <g opacity="0.55" fill="none" stroke="#526348">
-                <rect x="638" y="508" width="34" height="40" rx="2" stroke-width="2" stroke-dasharray="2.5 3"/>
-                <rect x="644" y="514" width="22" height="28" rx="2" stroke-width="1.5"/>
+                <rect x="638" y="428" width="34" height="40" rx="2" stroke-width="2" stroke-dasharray="2.5 3"/>
+                <rect x="644" y="434" width="22" height="28" rx="2" stroke-width="1.5"/>
               </g>
-              <rect x="556" y="578" width="198" height="8" rx="3" fill="#526348" opacity="0.22"/>
+              <g fill="none" stroke="#526348" stroke-opacity="0.45" stroke-width="1.5">
+                <rect x="561" y="486" width="88" height="80" rx="4"/><rect x="661" y="486" width="88" height="80" rx="4"/>
+              </g>
+              <circle cx="640" cy="526" r="3" fill="#526348" opacity="0.6"/><circle cx="670" cy="526" r="3" fill="#526348" opacity="0.6"/>
+              <rect x="545" y="572" width="220" height="8" rx="3" fill="#526348" opacity="0.22"/>
               <g clip-path="url(#slitClip)">
                 <g id="env" class="vb" style="transform-origin:0 0">
                   <rect x="0" y="0" width="112" height="74" rx="3" fill="#FFF9EF" stroke="#756B5D"/>
@@ -242,20 +241,35 @@ button{font:inherit;color:inherit}
 
             <!-- LETTERS: wall calendar in the arch. Paper is art; grid, numbers and filled days are drawn by the engine. -->
             <g id="calendarArt" aria-hidden="true">
-              <path d="M265 206 L172 236 M265 206 L358 236" stroke="#C6B7A5" stroke-width="1.5"/>
-              <circle cx="265" cy="205" r="4" fill="#756B5D"/>
-              <rect x="164" y="238" width="210" height="256" rx="6" fill="#4C3924" opacity="0.08"/>
-              <rect x="160" y="232" width="210" height="256" rx="6" fill="#FFF9EF" stroke="#C6B7A5" stroke-width="1.5"/>
-              <rect x="160" y="232" width="210" height="20" rx="6" fill="#DED0BD"/>
-              <circle cx="215" cy="242" r="4" fill="#FFF9EF" stroke="#756B5D"/>
-              <circle cx="315" cy="242" r="4" fill="#FFF9EF" stroke="#756B5D"/>
+              <path d="M265 176 L172 206 M265 176 L358 206" stroke="#C6B7A5" stroke-width="1.5"/>
+              <circle cx="265" cy="175" r="4" fill="#756B5D"/>
+              <rect x="164" y="206" width="210" height="256" rx="6" fill="#4C3924" opacity="0.08"/>
+              <rect x="160" y="200" width="210" height="256" rx="6" fill="#FFF9EF" stroke="#C6B7A5" stroke-width="1.5"/>
+              <rect x="160" y="200" width="210" height="20" rx="6" fill="#DED0BD"/>
+              <circle cx="215" cy="210" r="4" fill="#FFF9EF" stroke="#756B5D"/>
+              <circle cx="315" cy="210" r="4" fill="#FFF9EF" stroke="#756B5D"/>
             </g>
+            <!-- cabinet with the postman's notes -->
+            <g aria-hidden="true">
+              <ellipse cx="265" cy="614" rx="120" ry="6" fill="#4C3924" opacity="0.10"/>
+              <rect x="170" y="596" width="10" height="18" rx="2" fill="#C6B7A5"/><rect x="350" y="596" width="10" height="18" rx="2" fill="#C6B7A5"/>
+              <rect x="160" y="508" width="210" height="90" rx="6" fill="#E8DCCB" stroke="#C6B7A5" stroke-width="1.5"/>
+              <rect x="152" y="498" width="226" height="12" rx="4" fill="#FFF9EF" stroke="#C6B7A5" stroke-width="1.5"/>
+              <path d="M265 514V592" stroke="#C6B7A5" stroke-width="1.5"/>
+              <rect x="168" y="516" width="91" height="74" rx="4" fill="none" stroke="#C6B7A5"/><rect x="271" y="516" width="91" height="74" rx="4" fill="none" stroke="#C6B7A5"/>
+              <circle cx="254" cy="553" r="3.5" fill="#756B5D"/><circle cx="276" cy="553" r="3.5" fill="#756B5D"/>
+            </g>
+            <g id="notesStack"></g>
             <g id="calGrid"></g>
 
-            <!-- GAMES: shelf with game boxes in the arch, desk, lamp -->
-            <rect x="913" y="368" width="226" height="6" rx="2" fill="#FFF9EF"/>
-            <rect x="913" y="374" width="226" height="12" rx="2" fill="#DED0BD" stroke="#C6B7A5"/>
-            <rect x="913" y="386" width="226" height="8" fill="#4C3924" opacity="0.07"/>
+            <!-- GAMES: three wall shelves with games, desk, lamp -->
+            <g aria-hidden="true">
+              <rect x="975" y="244" width="190" height="6" rx="2" fill="#FFF9EF"/><rect x="975" y="250" width="190" height="10" rx="2" fill="#DED0BD" stroke="#C6B7A5"/><rect x="975" y="260" width="190" height="7" fill="#4C3924" opacity="0.07"/>
+              <rect x="915" y="338" width="210" height="6" rx="2" fill="#FFF9EF"/><rect x="915" y="344" width="210" height="10" rx="2" fill="#DED0BD" stroke="#C6B7A5"/><rect x="915" y="354" width="210" height="7" fill="#4C3924" opacity="0.07"/>
+              <rect x="915" y="432" width="180" height="6" rx="2" fill="#FFF9EF"/><rect x="915" y="438" width="180" height="10" rx="2" fill="#DED0BD" stroke="#C6B7A5"/><rect x="915" y="448" width="180" height="7" fill="#4C3924" opacity="0.07"/>
+              <path d="M1150 244 C1144 228 1148 214 1158 206 C1166 216 1168 232 1162 244Z" fill="#A7B39B"/>
+              <rect x="1143" y="234" width="24" height="11" rx="3" fill="#FFF9EF" stroke="#C6B7A5"/>
+            </g>
             <g id="gameShelf"></g>
             <ellipse cx="1180" cy="520" rx="150" ry="30" fill="url(#gGlow)" opacity="0.8"/>
             <rect x="900" y="512" width="410" height="10" rx="3" fill="#FFF9EF"/>
@@ -275,6 +289,7 @@ button{font:inherit;color:inherit}
 
             <!-- Whole-zone hotspots: a tap anywhere in the zone opens its popup -->
             <rect id="hotLetters" data-hot="letters" role="button" tabindex="0" aria-label="Letters calendar" class="hot-ring" x="100" y="110" width="330" height="530" rx="20" fill="transparent"/>
+            <rect id="hotNotes" data-hot="notes" role="button" tabindex="0" aria-label="Postman's notes" class="hot-ring" x="140" y="470" width="250" height="150" rx="14" fill="transparent"/>
             <rect id="hotGames" data-hot="games" role="button" tabindex="0" aria-label="Games" class="hot-ring" x="880" y="110" width="430" height="530" rx="20" fill="transparent"/>
 
             <g id="zonesOverlay" style="display:none" pointer-events="none"><g id="zonesInner"></g></g>
@@ -323,14 +338,14 @@ button{font:inherit;color:inherit}
 
   <aside class="panel">
     <h1>Комната · главная</h1>
-    <p>Слева в арке календарь писем, в центре почта, справа полка с играми. Тап в любое место боковой зоны открывает попап поверх размытой комнаты. Арт — заглушки из простых форм в цветах токенов, тексты в телефоне на английском.</p>
+    <p>Слева в арке календарь и тумбочка с записками почтальона, в центре большой зелёный почтомат на пьедестале, справа три полки с играми. Тап в любое место боковой зоны открывает попап поверх размытой комнаты. Арт — заглушки из простых форм в цветах токенов, тексты в телефоне на английском.</p>
     <div class="card">
       <h3>Что попробовать</h3>
       <ul class="legend">
         <li>Свайп по комнате (или стрелки ← →). Отпустите на полпути: камера доедет за ~300 мс.</li>
-        <li>Тап в любое место зоны «Letters» или «Games» — попап. Закрыть: крестик, тап мимо попапа, Esc.</li>
+        <li>Тап в любое место зоны «Letters» или «Games» — попап. Тап по тумбочке открывает сразу записки. Закрыть: крестик, тап мимо попапа, Esc.</li>
         <li>Тап по ящику — письмо. Отправьте его и переключите день: в календаре закрасится новый день.</li>
-        <li>Вид за окном идёт по часам вашего устройства; в карточке «Вид за окном» можно посмотреть все четыре.</li>
+        <li>За окном день или ночь — по часам вашего устройства; в карточке «Вид за окном» можно переключить вручную.</li>
       </ul>
     </div>
     <div class="card">
@@ -345,11 +360,9 @@ button{font:inherit;color:inherit}
     </div>
     <div class="card">
       <h3>Вид за окном</h3>
-      <div class="seg" style="grid-template-columns:repeat(5,1fr)" role="group" aria-label="Время суток за окном">
+      <div class="seg" role="group" aria-label="Время суток за окном">
         <button type="button" data-ph="auto" aria-pressed="true">По часам</button>
-        <button type="button" data-ph="morning" aria-pressed="false">Утро</button>
         <button type="button" data-ph="day" aria-pressed="false">День</button>
-        <button type="button" data-ph="evening" aria-pressed="false">Вечер</button>
         <button type="button" data-ph="night" aria-pressed="false">Ночь</button>
       </div>
       <div class="muted" id="phaseNow"></div>
@@ -357,7 +370,7 @@ button{font:inherit;color:inherit}
     <div class="card">
       <h3>Сценарий дня</h3>
       <button class="pbtn" type="button" id="dNewDay">Наступил новый день<small>Флажок опускается, конверт выезжает из щели; в календаре закрашивается день, когда камера на «Letters»</small></button>
-      <button class="pbtn" type="button" id="dNewGame">Пришла новая игра<small>Коробка встаёт на полку, видно в зоне «Games»</small></button>
+      <button class="pbtn" type="button" id="dNewGame">Пришла новая игра<small>Игра встаёт на полку: сначала средняя, потом нижняя, потом верхняя</small></button>
       <button class="pbtn" type="button" id="dReset">Начать с первого запуска</button>
       <div class="flash" id="flash" role="status"></div>
     </div>
@@ -403,7 +416,7 @@ var queue=[], busy=false, running=[], moving=false, popOpen=false, screenOpen=fa
 
 function fresh(){
   state={letter:'new',noteRead:true,games:0,sent:0,notes:0,received:1,played:{},day:1,unlockedOnce:false};
-  shown={games:0,received:1};
+  shown={games:0,received:1,notes:0};
 }
 function dayDate(i){var d=new Date(START);d.setDate(d.getDate()+i);return d;}
 function fmt(d){return d.toLocaleDateString('en-US',{month:'short',day:'numeric'});}
@@ -501,10 +514,10 @@ function play(el,frames,dur,easing){
   return a.finished.catch(function(){}).then(function(){ running=running.filter(function(x){return x!==a;}); });
 }
 function el(tag,attrs,parent){var n=document.createElementNS(NS,tag);for(var a in attrs)n.setAttribute(a,attrs[a]);if(parent)parent.appendChild(n);return n;}
-function zoneOf(hot){return {mailbox:'today',prop:'today',letters:'letters',games:'games'}[hot];}
+function zoneOf(hot){return {mailbox:'today',prop:'today',letters:'letters',notes:'letters',games:'games'}[hot];}
 
 /* ---------- room rendering ---------- */
-var ENV_REST='translate(598px,428px) rotate(7deg)', ENV_HIDDEN='translate(598px,350px) rotate(0deg)';
+var ENV_REST='translate(599px,388px) rotate(6deg)', ENV_HIDDEN='translate(599px,308px) rotate(0deg)';
 function renderBox(){
   $('env').style.transform=state.letter==='new'?ENV_REST:ENV_HIDDEN;
   $('hotProp').style.display=state.letter==='open'?'':'none';
@@ -512,9 +525,9 @@ function renderBox(){
   $('flag').style.transform=state.letter==='sent'?'rotate(0deg)':'rotate(-90deg)';
   $('hotBox').setAttribute('aria-label',{new:"Today's letter, new",open:"Today's letter, in progress",sent:"Today's letter, sent"}[state.letter]);
 }
-/* window view follows the phone's clock (author's decision): morning 5–9, day 9–17, evening 17–21, night 21–5 [proposal] */
+/* window view follows the phone's clock (author's decision): day or night; day 6:00–20:59 [proposal] */
 var phase=null, phaseMode='auto';
-function phaseFor(h){ return h>=5&&h<9?'morning':h>=9&&h<17?'day':h>=17&&h<21?'evening':'night'; }
+function phaseFor(h){ return h>=6&&h<21?'day':'night'; }
 function currentPhase(){ return phaseMode==='auto'?phaseFor(new Date().getHours()):phaseMode; }
 function setPhase(ph,animate){
   var prev=phase; phase=ph;
@@ -523,7 +536,7 @@ function setPhase(ph,animate){
     n.setAttribute('opacity',on?1:0);
     if(animate&&!reduced&&(on||was)&&prev!==ph) n.animate([{opacity:was?1:0},{opacity:on?1:0}],{duration:400,easing:'linear'});
   });
-  var lbl={morning:'утро',day:'день',evening:'вечер',night:'ночь'}[ph];
+  var lbl={day:'день',night:'ночь'}[ph];
   var pe=document.getElementById('phaseNow'); if(pe) pe.textContent='Сейчас за окном: '+lbl+(phaseMode==='auto'?' (по часам: '+new Date().toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'})+')':'');
 }
 setInterval(function(){ if(phaseMode==='auto'){ var ph=currentPhase(); if(ph!==phase) setPhase(ph,true); else setPhase(ph,false);} },30000);
@@ -532,13 +545,13 @@ function renderCalendar(animNewest){
   var host=$('calGrid'); host.innerHTML='';
   var m0=new Date(START.getFullYear(),START.getMonth(),1), days=new Date(START.getFullYear(),START.getMonth()+1,0).getDate();
   var lead=(m0.getDay()+6)%7;
-  var t=el('text',{x:265,y:274,'text-anchor':'middle','font-family':'Inter, system-ui, sans-serif','font-size':14,'font-weight':600,fill:'#33312E'},host);
+  var t=el('text',{x:265,y:242,'text-anchor':'middle','font-family':'Inter, system-ui, sans-serif','font-size':14,'font-weight':600,fill:'#33312E'},host);
   t.textContent=m0.toLocaleDateString('en-US',{month:'long'});
-  ['M','T','W','T','F','S','S'].forEach(function(w,i){var tt=el('text',{x:176+i*28+11,y:294,'text-anchor':'middle','font-family':'Inter, system-ui, sans-serif','font-size':9,'font-weight':600,fill:'#6E6459'},host);tt.textContent=w;});
+  ['M','T','W','T','F','S','S'].forEach(function(w,i){var tt=el('text',{x:176+i*28+11,y:262,'text-anchor':'middle','font-family':'Inter, system-ui, sans-serif','font-size':9,'font-weight':600,fill:'#6E6459'},host);tt.textContent=w;});
   var got={}; for(var i=0;i<shown.received;i++){var d=dayDate(i); if(d.getMonth()===START.getMonth()) got[d.getDate()]=i;}
   var todayN=todayDate().getMonth()===START.getMonth()?todayDate().getDate():-1, newest=null;
   for(var n=1;n<=days;n++){
-    var c=lead+n-1, col=c%7, row=Math.floor(c/7), x=176+col*28, y=302+row*28;
+    var c=lead+n-1, col=c%7, row=Math.floor(c/7), x=176+col*28, y=270+row*28;
     if(got[n]!==undefined){
       var r=el('rect',{x:x,y:y,width:22,height:22,rx:5,fill:'#A7B39B',class:'vb',style:'transform-origin:'+(x+11)+'px '+(y+11)+'px'},host);
       if(got[n]===shown.received-1) newest=r;
@@ -557,30 +570,47 @@ function gameSymbol(gm,host,cx,cy){
   else if(gm.id==='gap') el('path',{d:'M'+(cx-3)+' '+(cy-8)+'v5l-5 8a1.6 1.6 0 0 0 1.4 2.4h13.2a1.6 1.6 0 0 0 1.4-2.4l-5-8v-5',stroke:'#33312E','stroke-width':1.8,fill:'none','stroke-linejoin':'round'},host);
   else { var t=el('text',{x:cx,y:cy+5,'text-anchor':'middle','font-family':'Inter, system-ui, sans-serif','font-size':14,'font-weight':600,fill:'#33312E'},host); t.textContent=gm.ph; }
 }
+/* games: middle shelf first (eye level), then bottom, then top; three box shapes from one template */
+var SLOTS=[[948,338],[1008,338],[1072,338],[948,432],[1008,432],[1066,432],[1012,244],[1072,244],[1118,244]];
+var SHAPES=[[30,64],[46,46],[54,36]];
 function renderShelf(animNewest){
   var host=$('gameShelf'); host.innerHTML=''; var newest=null;
   for(var i=0;i<shown.games;i++){
-    var gm=GAMES[i], h=BOX_H[i], x=921+i*35, y=368-h;
+    var gm=GAMES[i], sh=SHAPES[i%3], w=sh[0], h=sh[1], x=SLOTS[i][0]-w/2, y=SLOTS[i][1]-h;
     var bx=el('g',{class:'vb',style:'transform:translate('+x+'px,'+y+'px)'},host);
-    el('rect',{x:0,y:0,width:31,height:h,rx:3,fill:gm.base,stroke:'#33312E','stroke-opacity':0.25},bx);
-    el('rect',{x:3,y:8,width:25,height:25,rx:4,fill:'#FFF9EF',opacity:0.9},bx);
-    gameSymbol(gm,bx,15.5,20.5);
-    el('path',{d:'M3 '+(h-12)+'H28',stroke:'#FFF9EF','stroke-width':1.5,opacity:0.5},bx);
-    newest={g:bx,x:x,y:y};
+    el('rect',{x:0,y:0,width:w,height:h,rx:4,fill:gm.base,stroke:'#33312E','stroke-opacity':0.25},bx);
+    var pl=Math.min(24,w-8); el('rect',{x:(w-pl)/2,y:5,width:pl,height:pl,rx:4,fill:'#FFF9EF',opacity:0.92},bx);
+    var g2=el('g',{transform:'translate('+(w/2)+' '+(5+pl/2)+') scale('+(pl/26)+') translate(-15.5 -20.5)'},bx); gameSymbol(gm,g2,15.5,20.5);
+    newest={g:bx,x:x,y:y,w:w};
   }
-  if(shown.games<GAMES.length){
-    var ex=921+shown.games*35+2;
-    var w=el('g',{transform:'translate('+ex+' 368) rotate(-8)'},host);
-    el('rect',{x:0,y:-24,width:34,height:24,rx:2,fill:'#FFF9EF',stroke:'#756B5D','stroke-dasharray':'3 2'},w);
-    el('path',{d:'M0 -24 L17 -12 L34 -24',fill:'none',stroke:'#C6B7A5'},w);
+  if(shown.games<GAMES.length&&shown.games<SLOTS.length){
+    var sl=SLOTS[shown.games];
+    var wv=el('g',{transform:'translate('+(sl[0]-17)+' '+sl[1]+') rotate(-8)'},host);
+    el('rect',{x:0,y:-24,width:34,height:24,rx:2,fill:'#FFF9EF',stroke:'#756B5D','stroke-dasharray':'3 2'},wv);
+    el('path',{d:'M0 -24 L17 -12 L34 -24',fill:'none',stroke:'#C6B7A5'},wv);
   }
   var unplayed=GAMES.slice(0,shown.games).some(function(gm){return !state.played[gm.id];});
-  if(newest&&unplayed) el('circle',{cx:newest.x+29,cy:newest.y+2,r:7,fill:'#E7BE70',stroke:'#805617','stroke-width':1.5},host);
+  if(newest&&unplayed) el('circle',{cx:newest.x+newest.w-2,cy:newest.y+2,r:7,fill:'#E7BE70',stroke:'#805617','stroke-width':1.5},host);
   $('hotGames').setAttribute('aria-label','Games, '+state.games+' arrived'+(unplayed?', new':''));
   if(animNewest&&newest) return play(newest.g,[{opacity:0,transform:'translate('+newest.x+'px,'+(newest.y-10)+'px)'},{opacity:1,transform:'translate('+newest.x+'px,'+newest.y+'px)'}],220);
   return Promise.resolve();
 }
-function renderAll(){ renderBox(); renderCalendar(false); renderShelf(false); renderCTA(); }
+/* postman's notes lie on the cabinet: one sheet per opened note */
+function renderNotes(animNewest){
+  var host=$('notesStack'); host.innerHTML=''; var top=null, n=Math.min(shown.notes,8);
+  for(var i=0;i<n;i++){
+    var x=222+(i%2?5:-4), y=488-i*7;
+    var sh=el('g',{class:'vb',style:'transform:translate('+x+'px,'+y+'px)'},host);
+    el('rect',{x:0,y:0,width:86,height:10,rx:2,fill:i%2?'#FFF9EF':'#F3E6CA',stroke:'#C6B7A5','stroke-width':1.2},sh);
+    el('path',{d:'M6 5H60',stroke:'#C6B7A5','stroke-width':1.2,opacity:0.7},sh);
+    top={g:sh,x:x,y:y};
+  }
+  if(top) el('circle',{cx:top.x+72,cy:top.y+5,r:5,fill:'#C78D73',stroke:'#884C38','stroke-width':1},host);
+  $('hotNotes').setAttribute('aria-label',"Postman's notes, "+state.notes);
+  if(animNewest&&top) return play(top.g,[{opacity:0,transform:'translate('+top.x+'px,'+(top.y-10)+'px)'},{opacity:1,transform:'translate('+top.x+'px,'+top.y+'px)'}],220);
+  return Promise.resolve();
+}
+function renderAll(){ renderBox(); renderCalendar(false); renderShelf(false); renderNotes(false); renderCTA(); }
 
 /* ---------- event queue: one at a time, only when its zone is on screen ---------- */
 function enqueue(zone,fn){ queue.push({zone:zone,fn:fn}); processQueue(); }
@@ -608,6 +638,7 @@ function activate(hot){
   if(z!==ZONES[stopIdx]){ settleTo(ZONES.indexOf(z)); return; }
   if(hot==='mailbox'||hot==='prop') openLetter();
   else if(hot==='letters') openPop('letters','calendar');
+  else if(hot==='notes') openPop('letters','notes');
   else if(hot==='games') openPop('games');
 }
 function openLetter(){
@@ -620,7 +651,7 @@ function openLetter(){
     }
     renderLetter(); openScreen('scrLetter'); renderCTA();
   };
-  if(first&&!reduced) play($('env'),[{transform:ENV_REST},{transform:'translate(598px,418px) rotate(4deg)'}],120).then(go);
+  if(first&&!reduced) play($('env'),[{transform:ENV_REST},{transform:'translate(599px,378px) rotate(3deg)'}],120).then(go);
   else go();
 }
 function tileHTML(gm,small){
@@ -649,7 +680,7 @@ function openNote(){
   var n=state.notes+1;
   $('noteBody').innerHTML='<span class="tag-new" style="align-self:center">The letter is on its way — the note is open</span><h2 class="serif" style="text-align:center">Note '+n+'</h2><div class="muted" style="text-align:center">From the letter of '+fmt(todayDate())+'</div><div class="note-card">[Text of the postman\'s note '+n+' — from the world bible.]</div><button class="btn primary" type="button" id="btnNoteDone">Continue</button>';
   $('btnNoteDone').onclick=closeScreens;
-  if(!state.noteRead){ state.noteRead=true; state.notes=Math.min(9,state.notes+1); }
+  if(!state.noteRead){ state.noteRead=true; state.notes=Math.min(9,state.notes+1); enqueue('letters',function(){ shown.notes++; return renderNotes(true); }); }
   openScreen('scrNote'); renderCTA();
 }
 function renderCTA(){
@@ -747,7 +778,7 @@ $('dNewDay').addEventListener('click',function(){
 });
 $('dNewGame').addEventListener('click',function(){
   if(!state.unlockedOnce){ flash('Первые три игры приходят с первым письмом — откройте его.'); return; }
-  if(state.games>=6){ flash('Все шесть игр уже пришли.'); return; }
+  if(state.games>=6){ flash('Все шесть игр уже пришли. На полках есть места ещё для трёх.'); return; }
   state.games++; enqueue('games',function(){ shown.games++; return renderShelf(true); });
   flash(stopIdx===2?'Коробка встаёт на полку.':'Событие ждёт зону «Games» — свайпните вправо.');
 });

@@ -1,0 +1,258 @@
+<title>Pocket Puzzle Room Art</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,600&display=swap">
+<style>
+/* Layout: phone preview on the left, control card on the right; one deliberate light theme (the app is light-only in MVP). Room geometry from ROOM-ART-BRIEF.md §2, colours from the tokens. */
+:root{
+  --paper:#F7F2E9; --panel:#F1E7D8; --board:#E8DCCB; --slot:#DED0BD; --stroke-soft:#C6B7A5; --stroke:#756B5D;
+  --ink:#33312E; --ink-2:#6E6459; --hi:#FFF9EF; --action:#526348; --action-p:#43523B; --focus:#3D647D;
+  --sage-l:#E2E8D9; --sage:#A7B39B; --sun:#E7BE70; --sun-l:#F3E6CA; --clay:#C78D73; --clay-d:#884C38;
+  --sans:Inter, system-ui, -apple-system, "Segoe UI", sans-serif; --serif:"Source Serif 4", Georgia, serif;
+  --raised:0 2px 3px rgba(76,57,36,.12), 0 6px 14px rgba(76,57,36,.06);
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:#E9DFD0;color:var(--ink);font:400 15px/22px var(--sans);
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 32px}
+.layout{max-width:1100px;margin:0 auto;display:flex;flex-wrap:wrap;gap:28px;align-items:flex-start;justify-content:center}
+.phone-col{display:flex;flex-direction:column;align-items:center;gap:10px}
+.device{border-radius:46px;background:#2b2a28;padding:12px;box-shadow:0 24px 60px rgba(60,40,20,.25)}
+.screen{position:relative;overflow:hidden;border-radius:36px;background:var(--paper);touch-action:pan-y;user-select:none;-webkit-user-select:none;cursor:grab}
+.screen.drag{cursor:grabbing}
+.scaler{position:absolute;left:0;top:0;transform-origin:0 0}
+.world{position:absolute;left:0;top:0;width:1310px;height:844px;will-change:transform}
+.world img,.world .p{position:absolute;display:block}
+.world img{pointer-events:none;-webkit-user-drag:none}
+.bg{left:0;top:0;width:1310px;height:844px}
+/* window view: clipped to the arched opening */
+.view{position:absolute;left:503px;top:128px;width:304px;height:388px;border-radius:152px 152px 0 0;overflow:hidden;background:#E2EAF0}
+.view svg{position:absolute;top:0;height:388px}
+.shadow{position:absolute;border-radius:50%;background:radial-gradient(closest-side,rgba(76,57,36,.22),rgba(76,57,36,0));pointer-events:none}
+/* code-drawn placeholders */
+.ph{outline:0 dashed transparent}
+.show-ph .ph{outline:2px dashed #D0558A;outline-offset:2px}
+.pedestal{left:530px;top:606px;width:250px;height:28px;border-radius:14px;background:linear-gradient(#FFF9EF,#EFE4D3);box-shadow:inset 0 -3px 0 rgba(198,183,165,.6),0 1px 0 rgba(255,249,239,.8)}
+.cal{left:160px;top:186px;width:210px;height:256px;border-radius:10px;background:var(--hi);box-shadow:0 3px 6px rgba(76,57,36,.12),0 10px 20px rgba(76,57,36,.06);padding:0 14px 12px;display:flex;flex-direction:column;font-family:var(--sans)}
+.cal .head{height:30px;margin:0 -14px 8px;border-radius:10px 10px 0 0;background:var(--slot);position:relative}
+.cal .head::before,.cal .head::after{content:"";position:absolute;top:-8px;width:8px;height:18px;border-radius:4px;background:#C9B79F}
+.cal .head::before{left:52px}.cal .head::after{right:52px}
+.cal .m{font:600 12px/16px var(--sans);letter-spacing:.14em;text-align:center;color:var(--ink);margin-bottom:6px}
+.cal .g{display:grid;grid-template-columns:repeat(7,1fr);gap:3px 0;text-align:center;font:500 10px/22px var(--sans);color:var(--ink);font-variant-numeric:tabular-nums}
+.cal .g .dh{font-weight:600;color:var(--ink-2);line-height:14px;padding-bottom:3px}
+.cal .g span{border-radius:5px;margin:0 2px}
+.cal .g .got{background:var(--sage)}
+.cal .g .today{box-shadow:inset 0 0 0 1.5px var(--action)}
+.string{left:203px;top:160px;width:124px;height:34px}
+.cabinet{left:152px;top:486px;width:226px;height:112px}
+.cabinet .top{position:absolute;left:0;top:0;width:226px;height:14px;border-radius:7px;background:linear-gradient(#FBF1E2,#EADBC6);box-shadow:0 2px 3px rgba(76,57,36,.12)}
+.cabinet .body{position:absolute;left:8px;top:12px;width:210px;height:88px;border-radius:0 0 10px 10px;background:linear-gradient(#F4E8D6,#E9DAC4);display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:10px}
+.cabinet .door{border-radius:6px;box-shadow:inset 0 0 0 1.5px rgba(198,183,165,.8);position:relative}
+.cabinet .door::after{content:"";position:absolute;top:50%;width:7px;height:7px;border-radius:50%;background:#CDBBA2;transform:translateY(-50%)}
+.cabinet .door:first-child::after{right:8px}.cabinet .door:last-child::after{left:8px}
+.cabinet .leg{position:absolute;bottom:0;width:12px;height:14px;border-radius:0 0 5px 5px;background:#E2D2BB}
+.notes{left:228px;top:466px;width:84px;height:24px}
+.notes i{position:absolute;left:0;width:84px;height:9px;border-radius:3px;background:#FFF9EF;box-shadow:0 1px 1px rgba(76,57,36,.18)}
+.notes b{position:absolute;left:36px;top:-3px;width:12px;height:12px;border-radius:50%;background:var(--clay);box-shadow:inset 0 -2px 0 var(--clay-d)}
+.shelf{height:12px;border-radius:6px;background:linear-gradient(#FBF1E2,#E6D5BD);box-shadow:0 3px 4px rgba(76,57,36,.14)}
+.gbox{border-radius:8px;box-shadow:inset 0 1px 0 rgba(255,255,255,.35),inset 0 -3px 0 rgba(0,0,0,.08),0 2px 3px rgba(76,57,36,.16);display:grid;place-items:center;color:var(--ink)}
+.gbox svg{width:50%;height:50%}
+.envnext{width:40px;height:28px;border-radius:4px;background:var(--hi);box-shadow:inset 0 0 0 1.5px var(--stroke-soft)}
+.envnext::after{content:"";position:absolute;inset:3px 3px auto;height:14px;border-bottom:1.5px solid var(--stroke-soft);border-left:0;clip-path:polygon(0 0,100% 0,50% 100%);background:linear-gradient(135deg,transparent 48%,var(--stroke-soft) 49% 51%,transparent 52%),linear-gradient(225deg,transparent 48%,var(--stroke-soft) 49% 51%,transparent 52%)}
+.slot-env{left:588px;top:356px;width:120px;height:72px;transform:rotate(-6deg);transform-origin:50% 0}
+.flag{left:768px;top:452px;width:28px;height:80px;transform-origin:6px 74px;transition:transform 400ms cubic-bezier(.2,.8,.2,1)}
+.flag.up{transform:rotate(0)}.flag.down{transform:rotate(90deg)}
+.openprop{left:740px;top:560px;width:76px;height:56px}
+/* overlay: safe zones */
+.zones{position:absolute;inset:0;pointer-events:none;display:none}
+.show-zones .zones{display:block}
+.zones .top{position:absolute;left:0;right:0;top:0;height:110px;background:rgba(61,100,125,.18);border-bottom:1px dashed var(--focus)}
+.zones .bot{position:absolute;left:0;right:0;top:660px;bottom:0;background:rgba(61,100,125,.18);border-top:1px dashed var(--focus)}
+.zones .col{position:absolute;top:110px;height:550px;width:300px;border-left:1px dashed #D0558A;border-right:1px dashed #D0558A}
+/* UI over the room (in screen pt, scaled with the room) */
+.ui{position:absolute;left:0;top:0;width:var(--vw);height:844px;pointer-events:none}
+.ui>*{pointer-events:auto}
+.settings{position:absolute;right:16px;top:58px;width:44px;height:44px;border:0;border-radius:14px;background:rgba(255,249,239,.85);display:grid;place-items:center;color:var(--ink);box-shadow:var(--raised);cursor:pointer}
+.bottom{position:absolute;left:20px;right:20px;bottom:34px;display:flex;flex-direction:column;gap:10px}
+.pager{display:flex;justify-content:center;gap:4px}
+.pager button{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:7px;height:44px;padding:0 14px;border-radius:22px;font:400 13px/18px var(--sans);color:var(--ink-2)}
+.pager button::before{content:"";width:8px;height:8px;border-radius:50%;box-shadow:inset 0 0 0 1.5px var(--stroke)}
+.pager button[aria-current="true"]{background:var(--sage-l);color:var(--ink);font-weight:600}
+.pager button[aria-current="true"]::before{background:var(--action);box-shadow:none}
+.pager button:focus-visible,.cta:focus-visible,.settings:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+.cta{all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:14px;height:56px;padding:0 18px 0 20px;border-radius:18px;background:var(--action);color:#FFF9EF;box-shadow:var(--raised)}
+.cta .t{display:flex;flex-direction:column;flex:1}.cta b{font:600 15px/20px var(--sans)}.cta small{font:400 13px/18px var(--sans);opacity:.85}
+/* controls */
+.card{background:var(--hi);border-radius:24px;padding:20px;box-shadow:var(--raised);display:flex;flex-direction:column;gap:16px;max-width:400px;min-width:0;flex:1 1 300px}
+h1{font:600 26px/32px var(--serif);margin:0}
+h2{font:600 12px/16px var(--sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2);margin:0 0 8px}
+p{margin:0}.note{font-size:13px;line-height:18px;color:var(--ink-2)}
+.seg{display:flex;flex-wrap:wrap;background:var(--board);border-radius:12px;padding:3px;gap:2px}
+.seg button{all:unset;cursor:pointer;flex:1;text-align:center;font:600 13px/18px var(--sans);padding:9px 8px;border-radius:9px;color:var(--ink-2);min-width:64px}
+.seg button[aria-pressed="true"]{background:#fff;color:var(--ink);box-shadow:var(--raised)}
+.seg button:focus-visible{outline:3px solid var(--focus)}
+label.check{display:flex;gap:10px;align-items:center;font-size:14px;cursor:pointer}
+label.check input{width:18px;height:18px;accent-color:var(--action)}
+.list{margin:0;padding-left:18px;font-size:13px;line-height:19px;color:var(--ink-2)}
+.list b{color:var(--ink);font-weight:600}
+.readout{font:500 12px/16px var(--sans);color:var(--ink-2);font-variant-numeric:tabular-nums}
+@media (prefers-reduced-motion:reduce){.world,.flag{transition:none!important}}
+</style>
+
+<div class="layout">
+  <div class="phone-col">
+    <div class="device"><div class="screen" id="screen" aria-label="Room preview">
+      <div class="scaler" id="scaler">
+        <div class="world" id="world">
+          <img class="bg" src="art/background.jpg" alt="">
+          <div class="view" id="view" aria-hidden="true">
+            <svg id="Lsky" width="520" viewBox="0 0 520 388"></svg>
+            <svg id="Lfar" width="470" viewBox="0 0 470 388"></svg>
+            <svg id="Lnear" width="410" viewBox="0 0 410 388"></svg>
+          </div>
+          <img src="art/window-frame.png" alt="" style="left:479px;top:103px;width:355px">
+          <!-- left zone -->
+          <img src="art/niche.png" alt="" style="left:115px;top:127px;width:300px">
+          <svg class="p ph string" viewBox="0 0 124 34" aria-hidden="true"><path d="M8 32 62 4 116 32" fill="none" stroke="#B9A78F" stroke-width="1.5"/><circle cx="62" cy="4" r="3.5" fill="#9C8B75"/></svg>
+          <div class="p ph cal" id="cal" aria-hidden="true"></div>
+          <div class="shadow" style="left:150px;top:588px;width:232px;height:20px"></div>
+          <div class="p ph cabinet" aria-hidden="true"><div class="top"></div><div class="body"><div class="door"></div><div class="door"></div></div><div class="leg" style="left:22px"></div><div class="leg" style="right:22px"></div></div>
+          <div class="p ph notes" id="notes" aria-hidden="true"></div>
+          <!-- centre -->
+          <div class="shadow" style="left:500px;top:618px;width:310px;height:26px"></div>
+          <div class="p ph pedestal" aria-hidden="true"></div>
+          <svg class="p ph flag down" id="flag" viewBox="0 0 28 80" aria-hidden="true"><rect x="3" y="10" width="6" height="66" rx="3" fill="#526348"/><rect x="6" y="6" width="22" height="16" rx="4" fill="#C78D73"/></svg>
+          <img src="art/mailbox.png" alt="" id="mailbox" style="left:545px;top:339px;width:220px">
+          <svg class="p ph slot-env" id="slotEnv" viewBox="0 0 120 72" aria-hidden="true"><rect x="1" y="1" width="118" height="70" rx="4" fill="#FFF9EF" stroke="#C6B7A5"/><path d="M2 3 60 40 118 3" fill="#F1E7D8" stroke="#C6B7A5"/><circle cx="60" cy="40" r="9" fill="#C78D73"/><circle cx="60" cy="40" r="5.5" fill="none" stroke="#884C38" stroke-opacity=".6"/></svg>
+          <svg class="p ph openprop" id="openProp" viewBox="0 0 76 56" aria-hidden="true" style="display:none"><rect x="14" y="2" width="48" height="40" rx="3" fill="#FFF9EF" stroke="#C6B7A5"/><path d="M22 12h30M22 20h26M22 28h22" stroke="#C6B7A5" stroke-width="2" stroke-linecap="round"/><path d="M2 24h72v30H2z" fill="#F1E7D8" stroke="#C6B7A5"/><path d="M2 24 38 44 74 24" fill="none" stroke="#C6B7A5"/></svg>
+          <!-- right zone -->
+          <img src="art/niche.png" alt="" style="left:895px;top:127px;width:300px">
+          <div class="p ph shelf" style="left:975px;top:244px;width:190px"></div>
+          <div class="p ph shelf" style="left:915px;top:338px;width:210px"></div>
+          <div class="p ph shelf" style="left:915px;top:432px;width:180px"></div>
+          <div class="p ph gbox" style="left:935px;top:274px;width:30px;height:64px;background:#A5BBC8"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 10h11.5V5.5L22 12l-7.5 6.5V14H3z"/></svg></div>
+          <div class="p ph gbox" style="left:985px;top:292px;width:46px;height:46px;background:#C78D73"><svg viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="3" width="8" height="8" rx="1.6"/><rect x="3" y="13" width="8" height="8" rx="1.6"/><rect x="13" y="13" width="8" height="8" rx="1.6"/></svg></div>
+          <div class="p ph gbox" style="left:1050px;top:302px;width:54px;height:36px;background:#A998AD"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 3h6v2h-1v4.5l5.6 9.2A2 2 0 0 1 17.9 22H6.1a2 2 0 0 1-1.7-3.3L10 9.5V5H9z"/></svg></div>
+          <div class="p ph envnext" style="left:935px;top:404px" title="Next game arrives by mail"></div>
+          <div class="zones" aria-hidden="true"><div class="top"></div><div class="bot"></div><div class="col" style="left:115px"></div><div class="col" style="left:505px"></div><div class="col" style="left:895px"></div></div>
+        </div>
+        <div class="ui" id="ui">
+          <button class="settings" type="button" aria-label="Settings"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg></button>
+          <div class="bottom">
+            <div class="pager" id="pager" role="group" aria-label="Room zones">
+              <button type="button" data-z="0" aria-current="false">Letters</button><button type="button" data-z="1" aria-current="true">Today</button><button type="button" data-z="2" aria-current="false">Games</button>
+            </div>
+            <button class="cta" type="button" id="cta"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5z"/></svg><span class="t"><b id="ctaB">New letter</b><small id="ctaS">From the postman</small></span></button>
+          </div>
+        </div>
+      </div>
+    </div></div>
+    <span class="readout" id="readout"></span>
+  </div>
+
+  <div class="card">
+    <div><h1>Room from parts</h1><p class="note" style="margin-top:6px">AI art for the wall, niche, window frame and mailbox, placed by the layout in ROOM-ART-BRIEF.md §2.3. Swipe the room or use the zone labels and the arrow keys.</p></div>
+    <div><h2>Screen</h2><div class="seg" role="group" aria-label="Screen size" id="devSeg">
+      <button type="button" data-w="390" data-h="844" aria-pressed="true">390 × 844</button>
+      <button type="button" data-w="375" data-h="667" aria-pressed="false">375 × 667</button>
+      <button type="button" data-w="412" data-h="915" aria-pressed="false">412 × 915</button>
+    </div></div>
+    <div><h2>Mailbox</h2><div class="seg" role="group" aria-label="Mailbox state" id="boxSeg">
+      <button type="button" data-s="1" aria-pressed="true">Letter came</button>
+      <button type="button" data-s="2" aria-pressed="false">Opened</button>
+      <button type="button" data-s="3" aria-pressed="false">Sent</button>
+    </div></div>
+    <div><h2>Outside</h2><div class="seg" role="group" aria-label="Time of day" id="todSeg">
+      <button type="button" data-t="auto" aria-pressed="true">By clock</button>
+      <button type="button" data-t="day" aria-pressed="false">Day</button>
+      <button type="button" data-t="night" aria-pressed="false">Night</button>
+    </div></div>
+    <div class="stack" style="display:flex;flex-direction:column;gap:8px">
+      <label class="check"><input type="checkbox" id="optZones"> Safe zones and 300 pt columns</label>
+      <label class="check"><input type="checkbox" id="optPh"> Outline parts still drawn in code</label>
+      <label class="check"><input type="checkbox" id="optUi" checked> Show interface</label>
+    </div>
+    <div><h2>Still missing as art</h2>
+      <ul class="list">
+        <li><b>Sky and hills</b>, day and night — now code</li>
+        <li><b>Pedestal, flag, envelopes</b> — now code</li>
+        <li><b>Calendar sheet, nightstand, notes</b> — now code</li>
+        <li><b>Shelves, game boxes, desk, lamp</b> — now code or missing</li>
+      </ul>
+    </div>
+    <p class="note">The wall art is slightly warmer than the token wall. Floor line sits at y 621.</p>
+  </div>
+</div>
+
+<script>
+(function(){
+const $=id=>document.getElementById(id);
+const STOPS=[265,655,1045], K={sky:.75,far:.82,near:.9};
+let zone=1, cam=655, dev={w:390,h:844}, tod='auto', dragging=null;
+
+/* window view */
+function drawView(night){
+  const c=night?{sky1:'#2F5068',sky2:'#3D647D',far:'#526348',near:'#43523B',orb:'#F3E6CA'}:{sky1:'#D5E3EC',sky2:'#EEF2F1',far:'#C9D5C2',near:'#A7B39B',orb:'#E7BE70'};
+  $('Lsky').innerHTML=`<defs><linearGradient id="gs" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${c.sky1}"/><stop offset="1" stop-color="${c.sky2}"/></linearGradient></defs><rect width="520" height="388" fill="url(#gs)"/>`+
+    (night?`<circle cx="330" cy="92" r="24" fill="${c.orb}"/><circle cx="318" cy="86" r="22" fill="${c.sky1}"/>`+[[180,60],[240,120],[400,70],[150,150],[420,160],[290,40]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="1.6" fill="#FFF9EF"/>`).join('')
+      :`<circle cx="340" cy="96" r="30" fill="${c.orb}"/><circle cx="340" cy="96" r="44" fill="${c.orb}" opacity=".18"/>`);
+  $('Lfar').innerHTML=`<path d="M0 250C70 214 140 206 210 222S350 196 470 230V388H0Z" fill="${c.far}"/>`;
+  $('Lnear').innerHTML=`<path d="M0 300C60 266 130 262 200 284S330 270 410 286V388H0Z" fill="${c.near}"/>`;
+}
+function isNight(){if(tod==='day')return false;if(tod==='night')return true;const h=new Date().getHours();return h>=21||h<6}
+
+/* calendar */
+(function(){const now=new Date(),y=now.getFullYear(),m=now.getMonth();const first=(new Date(y,m,1).getDay()+6)%7,days=new Date(y,m+1,0).getDate();
+ const MN=['JANUARY','FEBRUARY','MARCH','APRIL','MAY','JUNE','JULY','AUGUST','SEPTEMBER','OCTOBER','NOVEMBER','DECEMBER'];
+ let s=`<div class="head"></div><div class="m">${MN[m]}</div><div class="g">`+['M','T','W','T','F','S','S'].map(d=>`<span class="dh">${d}</span>`).join('');
+ for(let i=0;i<first;i++)s+='<span></span>';
+ for(let d=1;d<=days;d++){const got=d<=now.getDate()&&(d===now.getDate()||d%3!==0);s+=`<span class="${got?'got':''}${d===now.getDate()?' today':''}">${d}</span>`}
+ $('cal').innerHTML=s+'</div>';
+ $('notes').innerHTML=[0,1,2].map(i=>`<i style="top:${14-i*5}px;left:${(i%2?3:-2)}px"></i>`).join('')+'<b></b>';})();
+
+/* layout */
+function visW(){return 844*dev.w/dev.h}
+function layout(){
+  const maxH=Math.min(innerHeight-120,760), scale=Math.min(maxH/dev.h,(Math.min(innerWidth-56,430))/dev.w);
+  const sw=dev.w*scale, sh=dev.h*scale; const sc=$('screen'); sc.style.width=sw+'px'; sc.style.height=sh+'px';
+  const s=sh/844; $('scaler').style.transform=`scale(${s})`; $('scaler').style.width=visW()+'px'; $('scaler').style.height='844px';
+  document.documentElement.style.setProperty('--vw',visW()+'px');
+  apply(false);
+}
+function apply(anim){
+  const vw=visW(), x=-(cam-vw/2);
+  const w=$('world'); w.style.transition=anim?'transform 300ms cubic-bezier(.2,.8,.2,1)':'none'; w.style.transform=`translateX(${x}px)`;
+  const d=cam-655, set=(id,k,wid)=>{const el=$(id);el.style.transition=w.style.transition;el.style.left=((304-wid)/2)+'px';el.style.transform=`translateX(${(1-k)*d}px)`};
+  set('Lsky',K.sky,520);set('Lfar',K.far,470);set('Lnear',K.near,410);
+  [...$('pager').children].forEach((b,i)=>b.setAttribute('aria-current',i===zone?'true':'false'));
+  $('readout').textContent=`${dev.w}×${dev.h} · visible ${Math.round(vw)} pt · camera ${Math.round(cam)}`;
+}
+function go(z){zone=Math.max(0,Math.min(2,z));cam=STOPS[zone];apply(!matchMedia('(prefers-reduced-motion: reduce)').matches)}
+
+/* gesture */
+const sc=$('screen');
+sc.addEventListener('pointerdown',e=>{if(e.target.closest('button'))return;dragging={x:e.clientX,cam,moved:0};sc.classList.add('drag');sc.setPointerCapture(e.pointerId)});
+sc.addEventListener('pointermove',e=>{if(!dragging)return;const s=sc.clientHeight/844;let c=dragging.cam-(e.clientX-dragging.x)/s;
+  const lo=STOPS[0],hi=STOPS[2]; if(c<lo)c=lo-Math.min(24,(lo-c)*.3); if(c>hi)c=hi+Math.min(24,(c-hi)*.3); cam=c; dragging.moved=Math.abs(e.clientX-dragging.x); apply(false)});
+const end=()=>{if(!dragging)return;sc.classList.remove('drag');const dz=cam-STOPS[zone];
+  if(Math.abs(dz)>60) go(zone+(dz>0?1:-1)); else go(zone); dragging=null};
+sc.addEventListener('pointerup',end);sc.addEventListener('pointercancel',end);
+$('pager').addEventListener('click',e=>{const b=e.target.closest('button');if(b)go(+b.dataset.z)});
+addEventListener('keydown',e=>{if(e.key==='ArrowLeft')go(zone-1);if(e.key==='ArrowRight')go(zone+1)});
+
+/* controls */
+function segs(id,fn){$(id).addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;[...$(id).children].forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));fn(b)})}
+segs('devSeg',b=>{dev={w:+b.dataset.w,h:+b.dataset.h};cam=STOPS[zone];layout()});
+const CTA={1:['New letter','From the postman'],2:['Continue letter','Task 2 of 3'],3:['Read the note','The letter is on its way']};
+segs('boxSeg',b=>{const s=+b.dataset.s;$('slotEnv').style.display=s===1?'':'none';$('openProp').style.display=s===2?'':'none';
+  $('flag').classList.toggle('up',s===3);$('flag').classList.toggle('down',s!==3);$('ctaB').textContent=CTA[s][0];$('ctaS').textContent=CTA[s][1]});
+segs('todSeg',b=>{tod=b.dataset.t;drawView(isNight())});
+$('optZones').addEventListener('change',e=>sc.classList.toggle('show-zones',e.target.checked));
+$('optPh').addEventListener('change',e=>sc.classList.toggle('show-ph',e.target.checked));
+$('optUi').addEventListener('change',e=>{$('ui').style.display=e.target.checked?'':'none'});
+
+drawView(isNight());layout();addEventListener('resize',layout);
+})();
+</script>

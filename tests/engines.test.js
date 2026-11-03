@@ -34,7 +34,7 @@ const check = (name, ok, extra) => { console.log((ok ? 'ok   ' : 'FAIL ') + name
 // Outgrow / Paint Ladder / One Each / Shadow Step
 { const O = E['outgrow']; let own = O.fresh(), ok = true; O.SOL.forEach(t => { const n = O.click(own, t); if (!n) ok = false; else own = n; }); check('outgrow solution', ok && O.won(own) && !O.over(own)); }
 { const L = E['paint-ladder']; let s = L.fresh(); [null, 2, null, 2, 2, null, 1].forEach(x => { s = L.step(s, x); }); check('paint-ladder solution', L.matches(s)); }
-check('one-each solution', E['one-each'].solved(E['one-each'].KEEP));
+{ const X = E['one-each'], s = X.fresh(); let ok = !X.won(s); X.SOL.forEach(([i, j]) => { if (!X.move(s, i, j)) ok = false; }); check('one-each solution (' + X.SOL.length + ' moves)', ok && X.won(s)); }
 { const W = E['shadow-step'], s = W.fresh(); let ok = true; W.SOL.forEach(([c, d]) => { if (!W.play(s, c, d)) ok = false; }); check('shadow-step solution', ok && s.status === 'won'); }
 // Streams: DFS finds full cover within budget
 { const R = E['streams'], seen = new Set(); let sol = null; const key = s => Object.keys(s.vis).sort().join(';') + '|' + s.trunk.length + '|' + s.b1.slice(-1) + '|' + s.b2.slice(-1) + '|' + s.budget + '|' + s.forked;

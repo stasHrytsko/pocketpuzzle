@@ -1,28 +1,48 @@
 (function () {
-  var BOARD = ['B B G', '. . R', 'R G .'].map(function (r) { return r.split(' '); });
-  var COL = { B: COLORS.blue, G: COLORS.sage, R: COLORS.apr }, KEEP = [[0, 0], [1, 2], [2, 1]];
-  function conflicts(a, b) { return a[0] === b[0] || a[1] === b[1] || BOARD[a[0]][a[1]] === BOARD[b[0]][b[1]]; }
-  function solved(sel) { if (sel.length !== 3) return false; for (var i = 0; i < 3; i++) for (var j = i + 1; j < 3; j++) if (conflicts(sel[i], sel[j])) return false; return true; }
-  var engine = { BOARD: BOARD, KEEP: KEEP, conflicts: conflicts, solved: solved };
+  /* One Each — sliding marbles (like the 15-puzzle). Win: in every row and every column no colour repeats. */
+  var N = 3, START = [0, 1, 1, 2, 3, 1, 2, 2, 0], SOL = [[1, 0], [4, 1], [3, 4], [0, 3], [1, 0], [2, 1], [5, 8], [4, 5], [5, 2], [7, 4]];
+  var COL = { 1: COLORS.blue, 2: COLORS.apr, 3: COLORS.sage }, SH = { 1: 'o', 2: 't', 3: 's' };
+  function fresh() { return START.slice(); }
+  function adjacent(i, j) { var r1 = Math.floor(i / N), c1 = i % N, r2 = Math.floor(j / N), c2 = j % N; return Math.abs(r1 - r2) + Math.abs(c1 - c2) === 1; }
+  function move(s, i, j) { if (!s[i] || s[j] || !adjacent(i, j)) return false; s[j] = s[i]; s[i] = 0; return true; }
+  function lines() { var L = []; for (var r = 0; r < N; r++) { var a = [], b = []; for (var c = 0; c < N; c++) { a.push(r * N + c); b.push(c * N + r); } L.push(a, b); } return L; }
+  var LINES = lines();
+  function conflicts(s) { var bad = {}; LINES.forEach(function (L) { var seen = {}; L.forEach(function (i) { if (!s[i]) return; (seen[s[i]] = seen[s[i]] || []).push(i); }); Object.keys(seen).forEach(function (k) { if (seen[k].length > 1) seen[k].forEach(function (i) { bad[i] = 1; }); }); }); return bad; }
+  function won(s) { return Object.keys(conflicts(s)).length === 0; }
+  var engine = { fresh: fresh, move: move, won: won, conflicts: conflicts, SOL: SOL, START: START, N: N };
   Games.register({ id: 'one-each', name: 'One Each', color: COLORS.blue, icon: 'o', engine: engine,
-    rules: '<b>Tap marbles to keep them.</b> Keep exactly 3: one in every row, one in every column and one of every colour. Marbles that clash with a kept one fade.',
+    rules: '<b>Drag a marble</b> into a free neighbouring cell (like the 15-puzzle; a tap also works when only one cell is free). Arrange them so <b>no colour repeats in any row or column</b>. Marbles that still clash are outlined.',
     mount: function (root, api) {
-      var sel = [], msg = h('div', { class: 'msg' }), grid = h('div', { class: 'grid', style: 'grid-template-columns:repeat(3,1fr);max-width:260px;gap:8px' });
-      root.appendChild(grid); root.appendChild(msg);
-      function has(r, c) { return sel.some(function (p) { return p[0] === r && p[1] === c; }); }
+      var s = fresh(), hist = [], moves = 0, msg = h('div', { class: 'msg' }), stat = h('div', { class: 'stat' });
+      var grid = h('div', { class: 'grid', style: 'grid-template-columns:repeat(3,1fr);max-width:270px;gap:8px;touch-action:none' });
+      root.appendChild(stat); root.appendChild(grid); root.appendChild(msg);
+      root.appendChild(h('div', { class: 'row' }, [h('button', { class: 'btn o s', onclick: function () { if (hist.length) { s = hist.pop(); moves--; msg.textContent = ''; draw(); } } }, ['Undo'])]));
+      function empties(i) { var r = Math.floor(i / N), c = i % N, out = []; [[1, 0], [-1, 0], [0, 1], [0, -1]].forEach(function (d) { var rr = r + d[0], cc = c + d[1]; if (rr >= 0 && cc >= 0 && rr < N && cc < N && !s[rr * N + cc]) out.push(rr * N + cc); }); return out; }
+      function go(i, j, cell) {
+        var prev = s.slice(); if (!move(s, i, j)) { if (cell) shake(cell); msg.textContent = 'Drag it into a free cell next to it.'; return; }
+        hist.push(prev); moves++; msg.textContent = ''; draw(); if (won(s)) api.win('No repeats in any row or column — ' + moves + ' moves');
+      }
       function draw() {
-        grid.innerHTML = '';
-        for (var r = 0; r < 3; r++) for (var c = 0; c < 3; c++) (function (r, c) {
-          var v = BOARD[r][c], kept = has(r, c), dim = v !== '.' && !kept && sel.some(function (p) { return conflicts(p, [r, c]); });
-          var cell = h('div', { class: 'cell' + (dim ? ' dim' : ''), style: kept ? 'border-color:var(--ink);border-width:3px' : '', html: v === '.' ? '' : '<span class="dot" style="width:64%;height:64%;background:' + COL[v] + ';border:2px solid #2f3a26"></span>' });
-          if (v !== '.') cell.addEventListener('click', function () {
-            if (kept) sel = sel.filter(function (p) { return !(p[0] === r && p[1] === c); }); else sel.push([r, c]);
-            draw(); var bad = sel.length > 1 && sel.some(function (a, i) { return sel.some(function (b, j) { return i < j && conflicts(a, b); }); });
-            msg.className = 'msg' + (bad ? ' bad' : ''); msg.textContent = bad ? 'Two kept marbles share a row, column or colour.' : '';
-            if (solved(sel)) api.win('One of each — row, column and colour');
-          });
+        stat.innerHTML = '<span>Moves <b>' + moves + '</b></span>'; grid.innerHTML = ''; var bad = conflicts(s);
+        for (var i = 0; i < N * N; i++) (function (i) {
+          var v = s[i], cell = h('div', { class: 'cell', 'data-i': i });
+          if (v) {
+            var m = h('div', { style: 'width:82%;height:82%;border-radius:50%;display:grid;place-items:center;cursor:grab;touch-action:none;background:' + COL[v] + ';border:2.5px solid ' + (bad[i] ? '#b0603a' : '#2f3a26'), html: shape(SH[v], 'none') });
+            var sx, sy, on = false;
+            m.addEventListener('pointerdown', function (e) { sx = e.clientX; sy = e.clientY; on = true; m.style.zIndex = 5; try { m.setPointerCapture(e.pointerId); } catch (x) {} e.preventDefault(); });
+            m.addEventListener('pointermove', function (e) { if (!on) return; m.style.transform = 'translate(' + (e.clientX - sx) + 'px,' + (e.clientY - sy) + 'px)'; });
+            function end(e) {
+              if (!on) return; on = false; m.style.transform = ''; m.style.zIndex = '';
+              var dx = e.clientX - sx, dy = e.clientY - sy, d = Math.max(Math.abs(dx), Math.abs(dy)), r = Math.floor(i / N), c = i % N;
+              if (d < 10) { var em = empties(i); if (em.length === 1) go(i, em[0], cell); else { shake(cell); msg.textContent = em.length ? 'Drag it to the free cell you want.' : 'No free cell next to it.'; } return; }
+              var j = Math.abs(dx) >= Math.abs(dy) ? (dx > 0 ? (c < N - 1 ? i + 1 : -1) : (c > 0 ? i - 1 : -1)) : (dy > 0 ? (r < N - 1 ? i + N : -1) : (r > 0 ? i - N : -1));
+              if (j < 0) { shake(cell); return; } go(i, j, cell);
+            }
+            m.addEventListener('pointerup', end); m.addEventListener('pointercancel', function () { on = false; m.style.transform = ''; });
+            cell.appendChild(m);
+          }
           grid.appendChild(cell);
-        })(r, c);
+        })(i);
       }
       draw();
     } });

@@ -7,7 +7,7 @@
   function addRect(rects, rect) { return rects.filter(function (x) { return !inter(x, rect); }).concat([rect]); }
   function solved(rects) { var cov = 0; rects.forEach(function (x) { cov += x[2] * x[3]; }); return cov === 36 && rects.every(ok); }
   var engine = { BOARD: BOARD, SOL: SOL, ok: ok, addRect: addRect, solved: solved };
-  Games.register({ id: 'pair-up', name: 'Pair Up', color: COLORS.sage, icon: 'o', engine: engine,
+  Games.register({ id: 'pair-up', total: 1, playable: 1, name: 'Pair Up', color: COLORS.sage, icon: 'o', engine: engine,
     rules: '<b>Drag</b> across the board to draw a rectangle. Cover the whole board with rectangles, each holding <b>exactly one black and one white dot</b>. A new rectangle replaces any it overlaps; <b>tap</b> a rectangle to remove it.',
     mount: function (root, api) {
       var rects = [], prev = null, msg = h('div', { class: 'msg' });

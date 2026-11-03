@@ -10,7 +10,7 @@
   function conflicts(s) { var bad = {}; LINES.forEach(function (L) { var seen = {}; L.forEach(function (i) { if (!s[i]) return; (seen[s[i]] = seen[s[i]] || []).push(i); }); Object.keys(seen).forEach(function (k) { if (seen[k].length > 1) seen[k].forEach(function (i) { bad[i] = 1; }); }); }); return bad; }
   function won(s) { return Object.keys(conflicts(s)).length === 0; }
   var engine = { fresh: fresh, move: move, won: won, conflicts: conflicts, SOL: SOL, START: START, N: N };
-  Games.register({ id: 'one-each', name: 'One Each', color: COLORS.blue, icon: 'o', engine: engine,
+  Games.register({ id: 'one-each', total: 1, playable: 1, name: 'One Each', color: COLORS.blue, icon: 'o', engine: engine,
     rules: '<b>Drag a marble</b> into a free neighbouring cell (like the 15-puzzle; a tap also works when only one cell is free). Arrange them so <b>no colour repeats in any row or column</b>. Marbles that still clash are outlined.',
     mount: function (root, api) {
       var s = fresh(), hist = [], moves = 0, msg = h('div', { class: 'msg' }), stat = h('div', { class: 'stat' });

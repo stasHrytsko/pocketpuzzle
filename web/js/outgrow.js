@@ -14,7 +14,7 @@
   function total() { var n = 0; MAP.forEach(function (r) { r.forEach(function (v) { if (v !== '#') n++; }); }); return n; }
   function won(own) { var c = counts(own); return Object.keys(own).length === total() && Object.keys(SIZE).every(function (t) { return c[t] === SIZE[t]; }); }
   var engine = { fresh: fresh, click: click, counts: counts, over: over, won: won, SOL: SOL, SIZE: SIZE };
-  Games.register({ id: 'outgrow', name: 'Outgrow', color: COLORS.sage, icon: 'o', engine: engine,
+  Games.register({ id: 'outgrow', total: 1, playable: 1, name: 'Outgrow', color: COLORS.sage, icon: 'o', engine: engine,
     rules: '<b>Tap a territory</b> and it grows one full layer into every free neighbouring cell. Each must end up exactly its target size (shown as <i>now / need</i>) with no free cells left. Territories and walls stop growth — grow one to keep another from overgrowing.',
     mount: function (root, api) {
       var own = fresh(), hist = [], msg = h('div', { class: 'msg' });

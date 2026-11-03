@@ -27,17 +27,15 @@
   var LEVELS = [NUM, PAIRS];
   LEVELS.forEach(function (L) { L.anyMove = function (g) { return anyFrame(g, L.valid); }; });
   var engine = { levels: LEVELS };
-  var current = 0;
 
-  Games.register({ id: 'parcels', name: 'Parcels', color: COLORS.blue, icon: 's', engine: engine, levelCount: 2,
+  Games.register({ id: 'parcels', total: 2, playable: 2, name: 'Parcels', color: COLORS.blue, icon: 's', engine: engine,
     rules: '',
     mount: function (root, api) {
-      var L = LEVELS[current], g = copy(L.START), hist = [], prev = null;
-      var tabs = h('div', { class: 'chips', style: 'margin-bottom:8px' }), rulesEl = h('div', { class: 'rules', html: L.rules }), msg = h('div', { class: 'msg' });
+      var L = LEVELS[api.level || 0], g = copy(L.START), hist = [], prev = null;
+      var rulesEl = h('div', { class: 'rules', html: L.rules }), msg = h('div', { class: 'msg' });
       var n = g.length, m = g[0].length;
       var grid = h('div', { class: 'grid', style: 'grid-template-columns:repeat(' + m + ',1fr);max-width:' + (m === 5 ? 320 : 340) + 'px;gap:' + (L.gap) + 'px' });
-      LEVELS.forEach(function (x, i) { tabs.appendChild(h('button', { class: 'chip' + (i === current ? ' on' : ''), style: 'padding:0 14px', onclick: function () { if (i === current) return; current = i; root.innerHTML = ''; api.remount(); } }, ['Level ' + (i + 1)])); });
-      root.appendChild(tabs); root.appendChild(rulesEl); root.appendChild(grid); root.appendChild(msg);
+      root.appendChild(rulesEl); root.appendChild(grid); root.appendChild(msg);
       root.appendChild(h('div', { class: 'row' }, [h('button', { class: 'btn o s', onclick: function () { if (hist.length) { g = hist.pop(); msg.textContent = ''; msg.className = 'msg'; draw(); } } }, ['Undo'])]));
       function draw() {
         grid.innerHTML = '';

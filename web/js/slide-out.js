@@ -30,7 +30,7 @@
     activate(s); return true;
   }
   var engine = { fresh: fresh, move: move, N: N };
-  Games.register({ id: 'slide-out', name: 'Slide Out', color: COLORS.blue, icon: 's', engine: engine,
+  Games.register({ id: 'slide-out', total: 10, playable: 1, name: 'Slide Out', color: COLORS.blue, icon: 's', engine: engine,
     rules: '<b>Swipe a tile</b> into a neighbouring empty cell. When a tile stands on the edge cell next to a waiting goal of its colour, it slides out. Every move ticks all other goals down — don’t let one reach 0.',
     mount: function (root, api) {
       var s = fresh(), stat = h('div', { class: 'stat' }), msg = h('div', { class: 'msg' });

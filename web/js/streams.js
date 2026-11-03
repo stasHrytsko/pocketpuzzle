@@ -29,7 +29,7 @@
   function won(s) { return Object.keys(s.vis).length === N * N && s.b1.length && eq(s.b1[s.b1.length - 1], F1) && s.b2.length && eq(s.b2[s.b2.length - 1], F2); }
   var engine = { fresh: fresh, extend: extend, won: won, BUDGET: BUDGET };
   var C1 = '#E8B093', C2 = '#AECAD1';
-  Games.register({ id: 'streams', name: 'Streams', color: COLORS.blue, icon: 't', engine: engine,
+  Games.register({ id: 'streams', total: 1, playable: 1, name: 'Streams', color: COLORS.blue, icon: 't', engine: engine,
     rules: '<b>Tap the next cell</b> to extend the line from the start <b>S</b> to the fork <b>P</b>, then grow both branches (the arrows show where each begins) to their own finish ring. Cover <b>every cell</b>. One shared budget of moves; each step costs 1, a <b>+N</b> drop gives N back. Branches can be advanced in any order — you will need to alternate.',
     mount: function (root, api) {
       var s = fresh(), hist = [], stat = h('div', { class: 'stat' }), msg = h('div', { class: 'msg' });

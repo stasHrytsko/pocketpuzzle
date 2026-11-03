@@ -6,6 +6,7 @@ var ICONS = {
   grid: '<rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/>',
   redo: '<path d="M20 12a8 8 0 11-3-6.2M20 4v5h-5"/>',
   help: '<circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 115 0c0 1.8-2.5 2-2.5 4M12 17v.3"/>',
+  back: '<path d="M19 12H5M11 6l-6 6 6 6"/>',
   undo: '<path d="M4 12a8 8 0 108-8M4 4v5h5"/>'
 };
 function ic(n) { return '<svg viewBox="0 0 24 24">' + ICONS[n] + '</svg>'; }

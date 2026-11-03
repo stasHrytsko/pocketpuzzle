@@ -28,7 +28,7 @@
   }
   var engine = { fresh: fresh, swipe: swipe, tapFlask: tapFlask, won: won, LV: LV };
   var CN = { 1: COLORS.blue, 2: COLORS.apr }, SH = { 1: 'o', 2: 't' };
-  Games.register({ id: 'the-gap', name: 'The Gap', color: COLORS.butter, icon: 't', engine: engine,
+  Games.register({ id: 'the-gap', total: 8, playable: 1, name: 'The Gap', color: COLORS.butter, icon: 't', engine: engine,
     rules: '<b>Swipe a square</b> — it slides until it hits something. A square reaching an exit cell and moving toward the gap drops into that numbered flask. <b>Tap a flask</b> to take its top square back out (the exit cell must be free). Sort so every colour sits alone in one flask.',
     mount: function (root, api) {
       var s = fresh(), stat = h('div', { class: 'stat' }), msg = h('div', { class: 'msg' });

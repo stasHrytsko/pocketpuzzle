@@ -15,7 +15,7 @@
   }
   function boardFrom(map) { return map.map(function (row) { return row.split('').map(function (ch) { return ch === '.' ? 0 : -1; }); }); }
   var engine = { connected: connected, place: place, boardFrom: boardFrom, MAP: MAP, NUMS: NUMS };
-  Games.register({ id: 'perfect-fit', name: 'Perfect Fit', color: COLORS.sage, icon: 'o', engine: engine,
+  Games.register({ id: 'perfect-fit', total: 50, playable: 1, name: 'Perfect Fit', color: COLORS.sage, icon: 'o', engine: engine,
     rules: '<b>Pick a number</b>, tap that many squares in the builder (they must touch), then <b>tap a board cell</b> to drop the piece (its first square lands there). Numbers add up to the board exactly — fill it.',
     mount: function (root, api) {
       var board = boardFrom(MAP), used = NUMS.map(function () { return false; }), sel = -1, built = {}, msg = h('div', { class: 'msg' });

@@ -14,7 +14,7 @@
   }
   function anyFit(board, rs, p) { return board.some(function (x, i) { return !x && fits(rs[i], p); }); }
   var engine = { LINES: LINES, fits: fits, placeAt: placeAt, rules: rules, anyFit: anyFit, rng: rng, piece: piece };
-  Games.register({ id: 'tight-shelf', name: 'Tight Shelf', color: COLORS.apr, icon: 'o', engine: engine,
+  Games.register({ id: 'tight-shelf', total: 10, playable: 1, name: 'Tight Shelf', color: COLORS.apr, icon: 'o', engine: engine,
     rules: '<b>Tap an empty cell</b> that accepts the current piece: a colour-ringed cell wants that colour, a shape cell wants that shape, a plain cell takes anything. Three in a row (any direction) with one colour <i>or</i> one shape vanish. Clear <b>5 lines</b> — no clock, take your time.',
     mount: function (root, api) {
       var r = rng(26), queue = [piece(r), piece(r), piece(r), piece(r)], board = []; for (var i = 0; i < 16; i++) board.push(null);

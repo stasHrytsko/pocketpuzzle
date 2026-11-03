@@ -34,7 +34,7 @@
     return true;
   }
   var engine = { fresh: fresh, play: play, dests: dests, HAND: HAND, SOL: SOL };
-  Games.register({ id: 'shadow-step', name: 'Shadow Step', color: COLORS.butter, icon: 'o', engine: engine,
+  Games.register({ id: 'shadow-step', total: 1, playable: 1, name: 'Shadow Step', color: COLORS.butter, icon: 'o', engine: engine,
     rules: '<b>Pick a card, then a cell</b> for the blue piece. Reach the crystal before the cards run out. After every move the <b>red piece makes the same move</b>, choosing the cell closest to you. If red lands on you, you lose. Each card works once; pieces can be jumped over.',
     mount: function (root, api) {
       var s = fresh(), sel = null, msg = h('div', { class: 'msg' });

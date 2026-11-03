@@ -7,7 +7,7 @@
   function step(s, swap) { var c = s.chips.slice(); if (swap !== null && swap !== undefined) { var t = c[swap]; c[swap] = c[swap + 1]; c[swap + 1] = t; } var row = s.row + 1; for (var l = 0; l < 4; l++) if (PAINT[row][l]) c[l] = PAINT[row][l]; return { chips: c, row: row }; }
   function matches(s) { return s.chips.every(function (c, i) { return c === GOAL[i]; }); }
   var engine = { fresh: fresh, step: step, matches: matches, MOVES: MOVES, PAINT: PAINT, GOAL: GOAL, START: START };
-  Games.register({ id: 'paint-ladder', name: 'Paint Ladder', color: COLORS.apr, icon: 't', engine: engine,
+  Games.register({ id: 'paint-ladder', total: 1, playable: 1, name: 'Paint Ladder', color: COLORS.apr, icon: 't', engine: engine,
     rules: '<b>Before each move</b> you may swap two neighbouring chips (pick a swap, or none), then press <b>Forward</b>: every chip climbs one row and takes the colour of any paint it lands on. After 7 moves each lane must match the colour on top.',
     mount: function (root, api) {
       var s = fresh(), hist = [], pick = null, msg = h('div', { class: 'msg' });

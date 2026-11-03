@@ -28,7 +28,7 @@
   function hasMove(s) { return s.blocks.some(function (b) { var c = JSON.parse(JSON.stringify(s)); return tap(c, b.id) !== null; }); }
   var engine = { fresh: fresh, tap: tap, hasMove: hasMove, LEVEL: LEVEL };
 
-  Games.register({ id: 'arrow-flip', name: 'Arrow Flip', color: COLORS.apr, icon: 's', engine: engine,
+  Games.register({ id: 'arrow-flip', total: 25, playable: 1, name: 'Arrow Flip', color: COLORS.apr, icon: 's', engine: engine,
     rules: '<b>Tap a block</b> and it slides where its arrow points. Every block it brushes past turns 90° clockwise. Send all blocks off the board.',
     mount: function (root, api) {
       var s = fresh(), msg = h('div', { class: 'msg' }), stat = h('div', { class: 'stat' });

@@ -1,0 +1,211 @@
+<title>Pocket Puzzle Home</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,500;8..60,600&display=swap">
+<style>
+/* Layout: a phone-sized strip of three panels (Letters · Today · Games) over two slow background layers; one deliberate light theme (MVP is light-only). Colours from design/pocket-puzzle-tokens.json. */
+:root{
+  --paper:#F7F2E9; --panel:#F1E7D8; --board:#E8DCCB; --slot:#DED0BD; --line:#C6B7A5; --stroke:#756B5D;
+  --ink:#33312E; --ink-2:#6E6459; --hi:#FFF9EF; --action:#526348; --action-p:#43523B; --focus:#3D647D;
+  --sage-l:#E2E8D9; --sage:#A7B39B; --sun:#E7BE70; --sun-l:#F3E6CA; --clay:#C78D73; --blue:#A5BBC8; --plum:#A998AD;
+  --sans:Inter, system-ui, -apple-system, "Segoe UI", sans-serif; --serif:"Source Serif 4", Georgia, serif;
+  --raised:0 1px 2px rgba(76,57,36,.10), 0 4px 12px rgba(76,57,36,.06);
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:#E9DFD0;color:var(--ink);font:400 15px/22px var(--sans);display:grid;place-items:center;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:16px}
+.phone{position:relative;width:min(390px,100%);height:min(844px,calc(100vh - 32px));min-height:600px;background:var(--paper);border-radius:36px;overflow:hidden;box-shadow:0 20px 50px rgba(60,40,20,.18);touch-action:pan-y;user-select:none;-webkit-user-select:none}
+@media (max-width:430px){body{padding:0;background:var(--paper)}.phone{width:100%;height:100%;border-radius:0;box-shadow:none;min-height:0}}
+
+/* parallax layers: far moves slowest */
+.layer{position:absolute;top:0;left:0;height:100%;width:300%;pointer-events:none;will-change:transform}
+.far svg,.near svg{position:absolute;inset:0;width:100%;height:100%}
+.track{position:absolute;inset:0;width:300%;display:flex;will-change:transform}
+.panel{width:33.3334%;height:100%;padding:72px 24px 150px;display:flex;flex-direction:column;gap:16px;overflow-y:auto;scrollbar-width:none}
+.panel::-webkit-scrollbar{display:none}
+
+.top{position:absolute;left:0;right:0;top:0;height:64px;display:flex;align-items:center;justify-content:flex-end;padding:0 16px;z-index:3}
+.iconbtn{all:unset;cursor:pointer;width:44px;height:44px;border-radius:14px;display:grid;place-items:center;color:var(--ink)}
+.iconbtn:focus-visible,button:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+
+h1{font:600 26px/32px var(--serif);margin:0;letter-spacing:-.01em}
+h2{font:600 12px/16px var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2);margin:0}
+p{margin:0}
+.muted{color:var(--ink-2);font-size:13px;line-height:18px}
+
+/* Today */
+.letter{background:var(--hi);border-radius:20px;padding:20px;box-shadow:var(--raised);display:flex;flex-direction:column;gap:14px}
+.letter .date{font:500 13px/18px var(--sans);color:var(--ink-2)}
+.task{all:unset;box-sizing:border-box;width:100%;cursor:pointer;display:flex;align-items:center;gap:12px;padding:10px 0;border-top:1px solid var(--board)}
+.task:first-of-type{border-top:0}
+.task .t{flex:1;display:flex;flex-direction:column}
+.task b{font:600 15px/20px var(--sans)} .task small{font:400 13px/18px var(--sans);color:var(--ink-2)}
+.tier{font:600 11px/14px var(--sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2);width:58px}
+.dots{display:flex;gap:3px}.dots i{width:6px;height:6px;border-radius:50%;background:var(--line)}.dots i.on{background:var(--ink)}
+.note{display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:16px;background:var(--panel);border:1px dashed var(--line)}
+.seal{width:22px;height:22px;border-radius:50%;background:var(--clay);box-shadow:inset 0 -2px 0 rgba(0,0,0,.15);flex:none}
+
+/* Letters */
+.cal{background:var(--hi);border-radius:20px;padding:16px;box-shadow:var(--raised)}
+.cal .mh{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
+.cal .mh b{font:600 15px/20px var(--sans)}
+.days{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center;font-variant-numeric:tabular-nums}
+.days span{height:34px;display:grid;place-items:center;font:500 13px/1 var(--sans);border-radius:50%}
+.days .dh{height:18px;font:600 11px/1 var(--sans);color:var(--ink-2)}
+.days .got{background:var(--sage)}
+.days .today{box-shadow:inset 0 0 0 2px var(--action)}
+.days .future{color:var(--line)}
+.count{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-radius:16px;background:var(--sage-l)}
+.count b{font:600 20px/24px var(--sans);font-variant-numeric:tabular-nums}
+.past{display:flex;flex-direction:column}
+.past button{all:unset;cursor:pointer;display:flex;justify-content:space-between;align-items:center;padding:12px 2px;border-top:1px solid var(--board);font-size:14px}
+.past button span{color:var(--ink-2);font-size:13px}
+
+/* Games */
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.game{all:unset;cursor:pointer;display:flex;flex-direction:column;gap:10px;padding:14px;border-radius:18px;background:var(--hi);box-shadow:var(--raised);min-height:118px}
+.game .ic{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;color:var(--ink)}
+.game .ic svg{width:22px;height:22px}
+.game b{font:600 14px/18px var(--sans)}
+.game small{font:400 12px/16px var(--sans);color:var(--ink-2);display:flex;align-items:center;gap:5px}
+.game.later{background:transparent;box-shadow:inset 0 0 0 1px var(--line)}
+.game.later .ic{opacity:.45}
+.game.later b{color:var(--ink-2)}
+
+/* bottom */
+.bottom::before{content:"";position:absolute;left:-20px;right:-20px;top:-28px;bottom:calc(-20px - env(safe-area-inset-bottom,0px));background:linear-gradient(rgba(247,242,233,0),var(--paper) 30%);z-index:-1}
+.bottom{position:absolute;left:20px;right:20px;bottom:calc(20px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:8px;z-index:3}
+.pager{display:flex;justify-content:center;gap:4px}
+.pager button{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:7px;height:40px;padding:0 14px;border-radius:20px;font:400 13px/18px var(--sans);color:var(--ink-2)}
+.pager button::before{content:"";width:7px;height:7px;border-radius:50%;box-shadow:inset 0 0 0 1.5px var(--stroke)}
+.pager button[aria-current="true"]{background:var(--sage-l);color:var(--ink);font-weight:600}
+.pager button[aria-current="true"]::before{background:var(--action);box-shadow:none}
+.cta{all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;height:56px;border-radius:18px;background:var(--action);color:var(--hi);font:600 15px/20px var(--sans);box-shadow:var(--raised)}
+.cta:active{background:var(--action-p)}
+.toast{position:absolute;left:50%;top:72px;transform:translateX(-50%);background:var(--ink);color:var(--hi);font:500 13px/18px var(--sans);padding:10px 14px;border-radius:12px;z-index:5;max-width:calc(100% - 48px);text-align:center}
+@media (prefers-reduced-motion:reduce){.track,.layer{transition:none!important}}
+</style>
+
+<div class="phone" id="phone" aria-label="Pocket Puzzle home">
+  <div class="layer far" id="far" aria-hidden="true">
+    <svg viewBox="0 0 1170 844" preserveAspectRatio="none"><circle cx="640" cy="190" r="46" fill="#F3E6CA"/><path d="M0 560C180 520 330 545 500 528S860 500 1170 540V844H0Z" fill="#EFE6D8"/></svg>
+  </div>
+  <div class="layer near" id="near" aria-hidden="true">
+    <svg viewBox="0 0 1170 844" preserveAspectRatio="none"><path d="M0 640C220 610 420 650 640 628S980 600 1170 630V844H0Z" fill="#ECE2D3"/></svg>
+  </div>
+
+  <div class="top"><button class="iconbtn" type="button" aria-label="Settings" id="settings"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg></button></div>
+
+  <div class="track" id="track">
+    <!-- Letters -->
+    <section class="panel" aria-label="Letters">
+      <h1>Letters</h1>
+      <div class="cal" id="cal"></div>
+      <div class="count"><span>Letters sent</span><b id="sentCount">1</b></div>
+      <h2>History</h2>
+      <div class="past" id="past"></div>
+    </section>
+    <!-- Today -->
+    <section class="panel" aria-label="Today">
+      <h1>Today</h1>
+      <div class="letter">
+        <span class="date" id="today"></span>
+        <div id="tasks"></div>
+      </div>
+      <div class="note"><span class="seal" aria-hidden="true"></span><span class="muted">The postman's note opens when all three tasks are solved.</span></div>
+    </section>
+    <!-- Games -->
+    <section class="panel" aria-label="Games">
+      <h1>Games</h1>
+      <p class="muted" id="gamesSub"></p>
+      <div class="grid" id="grid"></div>
+    </section>
+  </div>
+
+  <div class="bottom">
+    <div class="pager" role="group" aria-label="Sections" id="pager">
+      <button type="button" data-i="0" aria-current="false">Letters</button>
+      <button type="button" data-i="1" aria-current="true">Today</button>
+      <button type="button" data-i="2" aria-current="false">Games</button>
+    </div>
+    <button class="cta" type="button" id="cta"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5z"/></svg>New letter</button>
+  </div>
+  <div class="toast" id="toast" role="status" hidden></div>
+</div>
+
+<script>
+(function(){
+const $=id=>document.getElementById(id);
+/* 13 games, author decision 2026-11-03; first three arrive with the first letter */
+const G=[
+ ['Arrow Flip','#A5BBC8','<path d="M4 11h11V6l6 6-6 6v-5H4z"/>'],
+ ['The Gap','#A998AD','<path d="M9 3h6v2h-1v4l5 8.5A2 2 0 0 1 17.3 21H6.7A2 2 0 0 1 5 17.5L10 9V5H9z"/>'],
+ ['Perfect Fit','#C78D73','<rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/>'],
+ ['Slide Out','#A7B39B','<rect x="3" y="9" width="12" height="6" rx="1.5"/><path d="M17 8l4 4-4 4z"/>'],
+ ['Tight Shelf','#E7BE70','<rect x="3" y="5" width="18" height="2" rx="1"/><rect x="3" y="15" width="18" height="2" rx="1"/><circle cx="8" cy="11.5" r="2.5"/><path d="M14 14l3-5 3 5z"/>'],
+ ['Pairs','#A5BBC8','<circle cx="8" cy="12" r="4"/><circle cx="16" cy="12" r="4"/>'],
+ ['Collapse','#C78D73','<rect x="5" y="4" width="6" height="6" rx="1"/><rect x="13" y="8" width="6" height="6" rx="1"/><rect x="5" y="14" width="14" height="6" rx="1"/>'],
+ ['Parcels','#E7BE70','<path d="M4 8l8-4 8 4v8l-8 4-8-4z"/>'],
+ ['Outgrow','#A7B39B','<path d="M12 21V11"/><path d="M12 12c0-4 3-6 7-6 0 4-3 6-7 6zM12 15c0-3-2-5-6-5 0 3 2 5 6 5z"/>'],
+ ['Paint Ladder','#A998AD','<rect x="4" y="15" width="16" height="4" rx="1"/><rect x="6" y="10" width="12" height="4" rx="1"/><rect x="8" y="5" width="8" height="4" rx="1"/>'],
+ ['Streams','#A5BBC8','<path d="M3 8c3-3 6 3 9 0s6 3 9 0M3 14c3-3 6 3 9 0s6 3 9 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>'],
+ ['Four Cards','#C78D73','<rect x="3" y="5" width="8" height="6" rx="1"/><rect x="13" y="5" width="8" height="6" rx="1"/><rect x="3" y="13" width="8" height="6" rx="1"/><rect x="13" y="13" width="8" height="6" rx="1"/>'],
+ ['Marble Selection','#E7BE70','<circle cx="7" cy="8" r="3"/><circle cx="16" cy="8" r="3"/><circle cx="11.5" cy="16" r="3"/>']
+];
+const ARRIVED=3;
+const env='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3.5 6.5 12 13l8.5-6.5"/></svg>';
+$('grid').innerHTML=G.map(([n,c,p],i)=>`<button type="button" class="game${i<ARRIVED?'':' later'}" data-i="${i}"><span class="ic" style="background:${c}"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">${p}</svg></span><b>${n}</b><small>${i<ARRIVED?'Level 1':env+'Arrives by mail'}</small></button>`).join('');
+$('gamesSub').textContent=`${ARRIVED} of ${G.length} have arrived. The rest come by mail.`;
+
+/* Today: three tasks, easy → medium → hard, one per game (example) */
+const T=[['Easy',0,1],['Medium',1,2],['Hard',2,3]];
+$('tasks').innerHTML='<h2 style="margin-bottom:4px">Three tasks</h2>'+T.map(([tier,g,d])=>`<button type="button" class="task" data-g="${g}"><span class="tier">${tier}</span><span class="t"><b>${G[g][0]}</b><small>Next level</small></span><span class="dots" aria-hidden="true">${[1,2,3].map(k=>`<i class="${k<=d?'on':''}"></i>`).join('')}</span></button>`).join('');
+const now=new Date();
+$('today').textContent=now.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'});
+
+/* Letters: calendar of this month; example history */
+(function(){const y=now.getFullYear(),m=now.getMonth(),first=(new Date(y,m,1).getDay()+6)%7,days=new Date(y,m+1,0).getDate(),d0=now.getDate();
+ let s=`<div class="mh"><b>${now.toLocaleDateString('en-GB',{month:'long',year:'numeric'})}</b><span class="muted">example</span></div><div class="days">`+['M','T','W','T','F','S','S'].map(x=>`<span class="dh">${x}</span>`).join('');
+ for(let i=0;i<first;i++)s+='<span></span>';
+ for(let d=1;d<=days;d++){const cls=d<d0?'got':d===d0?'today':'future';s+=`<span class="${cls}">${d}</span>`}
+ $('cal').innerHTML=s+'</div>';
+ const past=[];for(let k=1;k<Math.min(d0,5);k++){const dt=new Date(y,m,d0-k);past.push(`<button type="button">${dt.toLocaleDateString('en-GB',{day:'numeric',month:'short'})}<span>Sent</span></button>`)}
+ $('past').innerHTML=past.join('')||'<p class="muted">Your letters will appear here.</p>';
+ $('sentCount').textContent=Math.max(0,d0-1);})();
+
+/* panels + parallax */
+let idx=1,drag=null;const phone=$('phone'),track=$('track');
+const K={far:.25,near:.55};
+function W(){return phone.clientWidth}
+function place(x,anim){
+  const t=anim?'transform 320ms cubic-bezier(.2,.8,.2,1)':'none';
+  track.style.transition=$('far').style.transition=$('near').style.transition=t;
+  track.style.transform=`translateX(${x}px)`;
+  $('far').style.transform=`translateX(${x*K.far-(W()*(1-K.far))}px)`;
+  $('near').style.transform=`translateX(${x*K.near-(W()*(1-K.near))}px)`;
+}
+function go(i){idx=Math.max(0,Math.min(2,i));place(-idx*W(),!matchMedia('(prefers-reduced-motion: reduce)').matches);
+  [...$('pager').children].forEach((b,j)=>b.setAttribute('aria-current',j===idx?'true':'false'))}
+phone.addEventListener('pointerdown',e=>{if(e.target.closest('button'))return;drag={x:e.clientX,y:e.clientY,base:-idx*W(),on:false};});
+phone.addEventListener('pointermove',e=>{if(!drag)return;const dx=e.clientX-drag.x,dy=e.clientY-drag.y;
+  if(!drag.on){if(Math.abs(dx)>8&&Math.abs(dx)>Math.abs(dy)){drag.on=true;phone.setPointerCapture(e.pointerId)}else return}
+  let x=drag.base+dx;const min=-2*W();if(x>0)x=x*.3;if(x<min)x=min+(x-min)*.3;place(x,false)});
+const end=e=>{if(!drag)return;if(drag.on){const dx=e.clientX-drag.x;go(idx+(Math.abs(dx)>60?(dx<0?1:-1):0))}drag=null};
+phone.addEventListener('pointerup',end);phone.addEventListener('pointercancel',end);
+$('pager').addEventListener('click',e=>{const b=e.target.closest('button');if(b)go(+b.dataset.i)});
+addEventListener('keydown',e=>{if(e.key==='ArrowLeft')go(idx-1);if(e.key==='ArrowRight')go(idx+1)});
+addEventListener('resize',()=>place(-idx*W(),false));
+
+/* placeholders */
+let tt;function toast(m){const t=$('toast');t.textContent=m;t.hidden=false;clearTimeout(tt);tt=setTimeout(()=>t.hidden=true,1800)}
+$('grid').addEventListener('click',e=>{const b=e.target.closest('.game');if(!b)return;const i=+b.dataset.i;toast(i<ARRIVED?`${G[i][0]}: game page with levels — next step`:`${G[i][0]} will arrive in one of the letters`)});
+$('tasks').addEventListener('click',e=>{const b=e.target.closest('.task');if(b)toast(`${G[+b.dataset.g][0]}: the level opens here — next step`)});
+$('cta').addEventListener('click',()=>{go(1);toast('The letter opens here — next step')});
+$('settings').addEventListener('click',()=>toast('Settings — later'));
+$('past').addEventListener('click',e=>{if(e.target.closest('button'))toast('Read-only letter — next step')});
+go(1);
+})();
+</script>

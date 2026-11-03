@@ -7,16 +7,16 @@
 | `arrow-flip/` | Arrow Flip | MVP, ядро | 25 |
 | `perfect-fit/` | Perfect Fit | MVP, ядро | 50 |
 | `the-gap/` | The Gap | MVP, ядро | 8 |
-| `slide-out/` | Slide Out | в игре, после MVP; прототип есть; **в прототипе обратный отсчёт** | [проверить] |
-| `tight-shelf/` | Tight Shelf | в игре, после MVP; прототип есть; **в прототипе таймер на минуту** | [проверить] |
-| `pair-up/` | Pair Up (Пары) | идея | — |
-| `cave-in/` | Cave In (Обвал) | идея | — |
-| `parcels/` | Parcels (Посылки) | идея | — |
-| `outgrow/` | Outgrow (На вырост) | идея | — |
-| `paint-ladder/` | Paint Ladder (Краски) | идея | — |
-| `streams/` | Streams (Русла) | идея | — |
-| `shadow-step/` | Shadow Step (Четыре карты) | идея | — |
-| `one-each/` | One Each (Лишние шарики) | идея | — |
+| `slide-out/` | Slide Out | в игре, после MVP; прототип есть; **в прототипе обратный отсчёт** | 10 |
+| `tight-shelf/` | Tight Shelf | в игре, после MVP; прототип есть; **в прототипе таймер на минуту** | 10 |
+| `pair-up/` | Pair Up (Пары) | идея | 0 |
+| `cave-in/` | Cave In (Обвал) | идея | 0 |
+| `parcels/` | Parcels (Посылки) | идея | 0 |
+| `outgrow/` | Outgrow (На вырост) | идея | 0 |
+| `paint-ladder/` | Paint Ladder (Краски) | идея | 0 |
+| `streams/` | Streams (Русла) | идея | 0 |
+| `shadow-step/` | Shadow Step (Четыре карты) | идея | 0 |
+| `one-each/` | One Each (Лишние шарики) | идея | 0 |
 
 Состав игр — решение автора (2026-11-03); папки идей переименованы в английские названия (2026-11-03). Идеи перенесены из `stazzi/ideas/potential/` (коммит `1413f94`) как `IDEA.md`; в stazzi у них Gate 1 — pending. Slide Out и Tight Shelf — `IDEA.md` из `stazzi/apps/casual/`; правила (`SPEC.md`) пока там.
 

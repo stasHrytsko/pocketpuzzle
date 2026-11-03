@@ -11,7 +11,6 @@
 <meta name="robots" content="noindex">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}[hidden]{display:none!important}</style>
 <title>Postie — daily puzzles</title>
-<meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,500;8..60,600&display=swap">
@@ -26,17 +25,22 @@
   color-scheme:light;
 }
 *{box-sizing:border-box}
+/* mobile first: the phone screen is the page; a framed phone appears only on wide screens */
 html,body{height:100%}
-body{margin:0;background:#E9DFD0;color:var(--ink);font:400 15px/22px var(--sans);display:grid;place-items:center;
-  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:16px}
-.phone{position:relative;width:min(390px,100%);height:min(844px,calc(100vh - 32px));min-height:600px;background:var(--paper);border-radius:36px;overflow:hidden;box-shadow:0 20px 50px rgba(60,40,20,.18);touch-action:pan-y;user-select:none;-webkit-user-select:none}
-@media (max-width:430px){body{padding:0;background:var(--paper)}.phone{width:100%;height:100%;border-radius:0;box-shadow:none;min-height:0}}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font:400 15px/22px var(--sans);overscroll-behavior:none;-webkit-tap-highlight-color:transparent}
+button{touch-action:manipulation}
+.phone{position:relative;width:100%;height:100%;background:var(--paper);overflow:hidden;touch-action:pan-y;user-select:none;-webkit-user-select:none}
+@media (min-width:600px) and (min-height:700px){
+  body{background:#E9DFD0;display:grid;place-items:center;padding:16px}
+  .phone{width:390px;height:min(844px,calc(100dvh - 32px));border-radius:36px;box-shadow:0 20px 50px rgba(60,40,20,.18)}
+}
 
 /* parallax layers: far moves slowest */
 .layer{position:absolute;top:0;left:0;height:100%;width:300%;pointer-events:none;will-change:transform}
 .far svg,.near svg{position:absolute;inset:0;width:100%;height:100%}
 .track{position:absolute;inset:0;width:300%;display:flex;will-change:transform}
-.panel{width:33.3334%;height:100%;padding:72px 24px 150px;display:flex;flex-direction:column;gap:16px;overflow-y:auto;scrollbar-width:none}
+.panel{width:33.3334%;height:100%;padding:72px max(20px,env(safe-area-inset-right,0px)) 160px max(20px,env(safe-area-inset-left,0px));overscroll-behavior:contain;-webkit-overflow-scrolling:touch;display:flex;flex-direction:column;gap:16px;overflow-y:auto;scrollbar-width:none}
 .panel::-webkit-scrollbar{display:none}
 
 .top{position:absolute;left:0;right:0;top:0;height:64px;display:flex;align-items:center;justify-content:flex-end;padding:0 16px;z-index:3}
@@ -95,7 +99,7 @@ p{margin:0}
 .gpage.open{transform:none;visibility:visible}
 .ghead{display:flex;align-items:center;gap:8px;padding:16px 16px 0;height:72px}
 .ghead h1{flex:1;text-align:center;margin-right:44px}
-.gbody{flex:1;overflow-y:auto;padding:12px 28px 120px;display:flex;flex-direction:column;gap:20px}
+.gbody{flex:1;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding:12px 24px 120px;display:flex;flex-direction:column;gap:20px}
 .gprog{display:flex;flex-direction:column;gap:8px}
 .gprog .row{display:flex;justify-content:space-between;align-items:baseline;font:500 13px/18px var(--sans);color:var(--ink-2)}
 .gprog .row b{font:600 15px/20px var(--sans);color:var(--ink);font-variant-numeric:tabular-nums}
@@ -106,14 +110,14 @@ p{margin:0}
 .lv.done svg{color:var(--action)}
 .lv.cur{background:var(--action);color:var(--hi);box-shadow:var(--raised)}
 .lv.fut{color:#9C8E7C;box-shadow:inset 0 0 0 1.5px var(--board)}
-.gplay{position:absolute;left:20px;right:20px;bottom:calc(20px + env(safe-area-inset-bottom,0px))}
-.gplay::before{content:"";position:absolute;left:-20px;right:-20px;top:-28px;bottom:calc(-20px - env(safe-area-inset-bottom,0px));background:linear-gradient(rgba(247,242,233,0),var(--paper) 30%);z-index:-1}
+.gplay{position:absolute;left:20px;right:20px;bottom:16px}
+.gplay::before{content:"";position:absolute;left:-20px;right:-20px;top:-28px;bottom:-16px;background:linear-gradient(rgba(247,242,233,0),var(--paper) 30%);z-index:-1}
 
 /* bottom */
-.bottom::before{content:"";position:absolute;left:-20px;right:-20px;top:-28px;bottom:calc(-20px - env(safe-area-inset-bottom,0px));background:linear-gradient(rgba(247,242,233,0),var(--paper) 30%);z-index:-1}
-.bottom{position:absolute;left:20px;right:20px;bottom:calc(20px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:8px;z-index:3}
+.bottom::before{content:"";position:absolute;left:-20px;right:-20px;top:-28px;bottom:-16px;background:linear-gradient(rgba(247,242,233,0),var(--paper) 30%);z-index:-1}
+.bottom{position:absolute;left:20px;right:20px;bottom:16px;display:flex;flex-direction:column;gap:8px;z-index:3}
 .pager{display:flex;justify-content:center;gap:4px}
-.pager button{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:7px;height:40px;padding:0 14px;border-radius:20px;font:400 13px/18px var(--sans);color:var(--ink-2)}
+.pager button{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:7px;height:44px;padding:0 14px;border-radius:22px;font:400 13px/18px var(--sans);color:var(--ink-2)}
 .pager button::before{content:"";width:7px;height:7px;border-radius:50%;box-shadow:inset 0 0 0 1.5px var(--stroke)}
 .pager button[aria-current="true"]{background:var(--sage-l);color:var(--ink);font-weight:600}
 .pager button[aria-current="true"]::before{background:var(--action);box-shadow:none}
@@ -237,12 +241,24 @@ function place(x,anim){
 }
 function go(i){idx=Math.max(0,Math.min(2,i));place(-idx*W(),!matchMedia('(prefers-reduced-motion: reduce)').matches);
   [...$('pager').children].forEach((b,j)=>b.setAttribute('aria-current',j===idx?'true':'false'))}
-phone.addEventListener('pointerdown',e=>{if(e.target.closest('button'))return;drag={x:e.clientX,y:e.clientY,base:-idx*W(),on:false};});
-phone.addEventListener('pointermove',e=>{if(!drag)return;const dx=e.clientX-drag.x,dy=e.clientY-drag.y;
-  if(!drag.on){if(Math.abs(dx)>8&&Math.abs(dx)>Math.abs(dy)){drag.on=true;phone.setPointerCapture(e.pointerId)}else return}
-  let x=drag.base+dx;const min=-2*W();if(x>0)x=x*.3;if(x<min)x=min+(x-min)*.3;place(x,false)});
-const end=e=>{if(!drag)return;if(drag.on){const dx=e.clientX-drag.x;go(idx+(Math.abs(dx)>60?(dx<0?1:-1):0))}drag=null};
-phone.addEventListener('pointerup',end);phone.addEventListener('pointercancel',end);
+let justDragged=false;
+/* swipe: touch events on phones (they keep coming while the browser scrolls), pointer events for mouse */
+function dStart(x,y){if($('gpage').classList.contains('open'))return;drag={x,y,base:-idx*W(),on:false,dead:false}}
+function dMove(x,y,ev){if(!drag||drag.dead)return;const dx=x-drag.x,dy=y-drag.y;
+  if(!drag.on){if(Math.abs(dy)>10&&Math.abs(dy)>Math.abs(dx)){drag.dead=true;return}
+    if(Math.abs(dx)>8&&Math.abs(dx)>Math.abs(dy))drag.on=true;else return}
+  if(ev&&ev.cancelable)ev.preventDefault();
+  let p=drag.base+dx;const min=-2*W();if(p>0)p=p*.3;if(p<min)p=min+(p-min)*.3;place(p,false)}
+function dEnd(x){if(!drag)return;if(drag.on){justDragged=true;setTimeout(()=>justDragged=false,0);const dx=x-drag.x;go(idx+(Math.abs(dx)>50?(dx<0?1:-1):0))}drag=null}
+phone.addEventListener('touchstart',e=>{const t=e.touches[0];dStart(t.clientX,t.clientY)},{passive:true});
+phone.addEventListener('touchmove',e=>{const t=e.touches[0];dMove(t.clientX,t.clientY,e)},{passive:false});
+phone.addEventListener('touchend',e=>{const t=e.changedTouches[0];dEnd(t.clientX)});
+phone.addEventListener('touchcancel',()=>{if(drag&&drag.on)go(idx);drag=null});
+phone.addEventListener('pointerdown',e=>{if(e.pointerType==='mouse')dStart(e.clientX,e.clientY)});
+addEventListener('pointermove',e=>{if(e.pointerType==='mouse')dMove(e.clientX,e.clientY)});
+addEventListener('pointerup',e=>{if(e.pointerType==='mouse')dEnd(e.clientX)});
+/* a swipe that starts on a card must not also tap it */
+phone.addEventListener('click',e=>{if(justDragged){e.stopPropagation();e.preventDefault();justDragged=false}},true);
 $('pager').addEventListener('click',e=>{const b=e.target.closest('button');if(b)go(+b.dataset.i)});
 addEventListener('keydown',e=>{if(e.key==='ArrowLeft')go(idx-1);if(e.key==='ArrowRight')go(idx+1)});
 addEventListener('resize',()=>place(-idx*W(),false));

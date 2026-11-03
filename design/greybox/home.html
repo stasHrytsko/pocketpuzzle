@@ -65,15 +65,37 @@ p{margin:0}
 .past button span{color:var(--ink-2);font-size:13px}
 
 /* Games */
-.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-.game{all:unset;cursor:pointer;display:flex;flex-direction:column;gap:10px;padding:14px;border-radius:18px;background:var(--hi);box-shadow:var(--raised);min-height:118px}
-.game .ic{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;color:var(--ink)}
-.game .ic svg{width:22px;height:22px}
-.game b{font:600 14px/18px var(--sans)}
-.game small{font:400 12px/16px var(--sans);color:var(--ink-2);display:flex;align-items:center;gap:5px}
-.game.later{background:transparent;box-shadow:inset 0 0 0 1px var(--line)}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.game{all:unset;box-sizing:border-box;cursor:pointer;position:relative;display:flex;flex-direction:column;align-items:center;border-radius:18px;background:var(--hi);box-shadow:var(--raised);overflow:hidden}
+.game .art{display:grid;place-items:center;padding:18px 0 10px}
+.game .ic{width:76px;height:76px;border-radius:22px;display:grid;place-items:center;color:var(--ink);box-shadow:inset 0 -3px 0 rgba(0,0,0,.08)}
+.game .ic svg{width:40px;height:40px}
+.game b{font:600 16px/22px var(--serif);padding:0 8px 12px;text-align:center}
+.game .prog{align-self:stretch;text-align:center;padding:7px 8px;background:var(--panel);border-top:1px solid var(--board);font:600 12px/16px var(--sans);color:var(--ink-2);font-variant-numeric:tabular-nums}
+.game .badge{position:absolute;top:8px;right:8px;width:28px;height:28px;border-radius:50%;background:var(--paper);display:grid;place-items:center;color:var(--ink-2);box-shadow:inset 0 0 0 1px var(--line)}
+.game.later{background:var(--paper);box-shadow:inset 0 0 0 1px var(--line)}
 .game.later .ic{opacity:.45}
 .game.later b{color:var(--ink-2)}
+.game.later .prog{background:transparent;font-weight:500}
+
+/* game page */
+.gpage{position:absolute;inset:0;background:var(--paper);z-index:4;display:flex;flex-direction:column;transform:translateX(100%);transition:transform 300ms cubic-bezier(.2,.8,.2,1);visibility:hidden}
+.gpage.open{transform:none;visibility:visible}
+.ghead{display:flex;align-items:center;gap:8px;padding:16px 16px 0;height:72px}
+.ghead h1{flex:1;text-align:center;margin-right:44px}
+.gbody{flex:1;overflow-y:auto;padding:12px 28px 120px;display:flex;flex-direction:column;gap:20px}
+.gprog{display:flex;flex-direction:column;gap:8px}
+.gprog .row{display:flex;justify-content:space-between;align-items:baseline;font:500 13px/18px var(--sans);color:var(--ink-2)}
+.gprog .row b{font:600 15px/20px var(--sans);color:var(--ink);font-variant-numeric:tabular-nums}
+.bar{height:8px;border-radius:4px;background:var(--board);overflow:hidden}.bar i{display:block;height:100%;background:var(--action)}
+.levels{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.lv{all:unset;box-sizing:border-box;cursor:pointer;aspect-ratio:1;border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font:600 15px/18px var(--sans);font-variant-numeric:tabular-nums}
+.lv.done{background:var(--hi);box-shadow:var(--raised);color:var(--ink)}
+.lv.done svg{color:var(--action)}
+.lv.cur{background:var(--action);color:var(--hi);box-shadow:var(--raised)}
+.lv.fut{color:#9C8E7C;box-shadow:inset 0 0 0 1.5px var(--board)}
+.gplay{position:absolute;left:20px;right:20px;bottom:calc(20px + env(safe-area-inset-bottom,0px))}
+.gplay::before{content:"";position:absolute;left:-20px;right:-20px;top:-28px;bottom:calc(-20px - env(safe-area-inset-bottom,0px));background:linear-gradient(rgba(247,242,233,0),var(--paper) 30%);z-index:-1}
 
 /* bottom */
 .bottom::before{content:"";position:absolute;left:-20px;right:-20px;top:-28px;bottom:calc(-20px - env(safe-area-inset-bottom,0px));background:linear-gradient(rgba(247,242,233,0),var(--paper) 30%);z-index:-1}
@@ -133,6 +155,14 @@ p{margin:0}
     </div>
     <button class="cta" type="button" id="cta"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5z"/></svg>New letter</button>
   </div>
+  <section class="gpage" id="gpage" aria-label="Game" aria-hidden="true">
+    <div class="ghead"><button class="iconbtn" type="button" id="gback" aria-label="Back"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></button><h1 id="gtitle"></h1></div>
+    <div class="gbody">
+      <div class="gprog"><div class="row"><span>Progress</span><b id="gcount"></b></div><div class="bar"><i id="gbar"></i></div></div>
+      <div class="levels" id="levels"></div>
+    </div>
+    <div class="gplay"><button class="cta" type="button" id="gplaybtn" style="width:100%"></button></div>
+  </section>
   <div class="toast" id="toast" role="status" hidden></div>
 </div>
 
@@ -156,8 +186,11 @@ const G=[
  ['Marble Selection','#E7BE70','<circle cx="7" cy="8" r="3"/><circle cx="16" cy="8" r="3"/><circle cx="11.5" cy="16" r="3"/>']
 ];
 const ARRIVED=3;
+/* levels now (TECH-UNITY.md §3); others unknown yet */
+const LEVELS={0:25,1:8,2:57};
+const SOLVED={0:0,1:0,2:0}; /* day 1: nothing solved yet */
 const env='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3.5 6.5 12 13l8.5-6.5"/></svg>';
-$('grid').innerHTML=G.map(([n,c,p],i)=>`<button type="button" class="game${i<ARRIVED?'':' later'}" data-i="${i}"><span class="ic" style="background:${c}"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">${p}</svg></span><b>${n}</b><small>${i<ARRIVED?'Level 1':env+'Arrives by mail'}</small></button>`).join('');
+$('grid').innerHTML=G.map(([n,c,p],i)=>{const a=i<ARRIVED;return `<button type="button" class="game${a?'':' later'}" data-i="${i}" aria-label="${n}${a?'':', arrives by mail'}">${a?'':`<span class="badge">${env}</span>`}<span class="art"><span class="ic" style="background:${c}"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">${p}</svg></span></span><b>${n}</b><span class="prog">${a?`${SOLVED[i]} of ${LEVELS[i]}`:'Arrives by mail'}</span></button>`}).join('');
 $('gamesSub').textContent=`${ARRIVED} of ${G.length} have arrived. The rest come by mail.`;
 
 /* Today: three tasks, easy → medium → hard, one per game (example) */
@@ -201,7 +234,19 @@ addEventListener('resize',()=>place(-idx*W(),false));
 
 /* placeholders */
 let tt;function toast(m){const t=$('toast');t.textContent=m;t.hidden=false;clearTimeout(tt);tt=setTimeout(()=>t.hidden=true,1800)}
-$('grid').addEventListener('click',e=>{const b=e.target.closest('.game');if(!b)return;const i=+b.dataset.i;toast(i<ARRIVED?`${G[i][0]}: game page with levels — next step`:`${G[i][0]} will arrive in one of the letters`)});
+$('grid').addEventListener('click',e=>{const b=e.target.closest('.game');if(!b)return;const i=+b.dataset.i;if(i<ARRIVED)openGame(i);else toast(`${G[i][0]} will arrive in one of the letters`)});
+function openGame(i){const n=LEVELS[i],d=SOLVED[i],cur=d+1;
+  $('gtitle').textContent=G[i][0];$('gcount').textContent=`${d} of ${n}`;$('gbar').style.width=(d/n*100)+'%';
+  const chk='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5 9.5 17 19 7"/></svg>';
+  const play='<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4v16l13-8z"/></svg>';
+  $('levels').innerHTML=Array.from({length:n},(_,k)=>{const L=k+1;const c=L<=d?'done':L===cur?'cur':'fut';return `<button type="button" class="lv ${c}" data-l="${L}" aria-label="Level ${L}${c==='done'?', solved':c==='cur'?', current':''}">${c==='cur'?play:''}${L}${c==='done'?chk:''}</button>`}).join('');
+  $('gplaybtn').innerHTML=`<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5z"/></svg>Play · level ${cur}`;
+  $('gpage').dataset.cur=cur;$('gpage').classList.add('open');$('gpage').setAttribute('aria-hidden','false');}
+function closeGame(){$('gpage').classList.remove('open');$('gpage').setAttribute('aria-hidden','true')}
+$('gback').addEventListener('click',closeGame);
+addEventListener('keydown',e=>{if(e.key==='Escape')closeGame()});
+$('levels').addEventListener('click',e=>{const b=e.target.closest('.lv');if(!b)return;const L=+b.dataset.l,cur=+$('gpage').dataset.cur;toast(L>cur?`Solve level ${cur} first`:`Level ${L} opens here — next step`)});
+$('gplaybtn').addEventListener('click',()=>toast(`Level ${$('gpage').dataset.cur} opens here — next step`));
 $('tasks').addEventListener('click',e=>{const b=e.target.closest('.task');if(b)toast(`${G[+b.dataset.g][0]}: the level opens here — next step`)});
 $('cta').addEventListener('click',()=>{go(1);toast('The letter opens here — next step')});
 $('settings').addEventListener('click',()=>toast('Settings — later'));

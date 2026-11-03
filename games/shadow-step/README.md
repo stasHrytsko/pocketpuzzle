@@ -1,4 +1,4 @@
-# Four Cards (Четыре карты)
+# Shadow Step (Четыре карты)
 
 - **Статус:** идея, будет в игре (решение автора, 2026-11-03); в stazzi Gate 1 — pending
 - **Источник:** `IDEA.md` в этой папке — перенесено из `stazzi/ideas/potential/84-chetyre-karty.md`.

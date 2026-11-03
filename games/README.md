@@ -11,11 +11,11 @@
 | `tight-shelf/` | Tight Shelf | в игре, после MVP; прототип есть; **в прототипе таймер на минуту** | 10 |
 | `pair-up/` | Pair Up (Пары) | идея | 1 пример |
 | `cave-in/` | Cave In (Обвал) | идея | 1 пример |
-| `parcels/` | Parcels (Посылки) | идея | 2 пример |
+| `parcels/` | Parcels (Посылки) | идея | 2 примера |
 | `outgrow/` | Outgrow (На вырост) | идея | 1 пример |
 | `paint-ladder/` | Paint Ladder (Краски) | идея | 1 пример |
 | `streams/` | Streams (Русла) | идея | 1 пример |
-| `shadow-step/` | Shadow Step (Четыре карты) | идея | 2 пример |
+| `shadow-step/` | Shadow Step (Четыре карты) | идея | 2 примера |
 | `one-each/` | One Each (Лишние шарики) | идея | 1 пример |
 
 Состав игр — решение автора (2026-11-03); папки идей переименованы в английские названия (2026-11-03). Идеи перенесены из `stazzi/ideas/potential/` (коммит `1413f94`) как `IDEA.md`; в stazzi у них Gate 1 — pending. Slide Out и Tight Shelf — `IDEA.md` из `stazzi/apps/casual/`; правила (`SPEC.md`) пока там.

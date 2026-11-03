@@ -8,7 +8,7 @@
 | `perfect-fit/` | Perfect Fit | MVP, ядро | 50 |
 | `the-gap/` | The Gap | MVP, ядро | 8 |
 | `slide-out/` | Slide Out | в игре, после MVP; прототип есть; **в прототипе обратный отсчёт** | 10 |
-| `tight-shelf/` | Tight Shelf | в игре, после MVP; прототип есть; **в прототипе таймер на минуту** | 10 |
+| `tight-shelf/` | Tight Shelf | в игре, после MVP; прототип есть; **в игре таймера нет (убран 2026-11-03)** | 10 |
 | `pair-up/` | Pair Up (Пары) | идея | 1 пример |
 | `cave-in/` | Cave In (Обвал) | идея | 1 пример |
 | `parcels/` | Parcels (Посылки) | идея | 2 примера |

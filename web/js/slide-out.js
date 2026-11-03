@@ -45,7 +45,7 @@
             if (!move(s, b.id, dir)) { shake(cell); msg.textContent = 'There’s no free cell that way.'; return; }
             msg.textContent = ''; draw();
             if (s.status === 'won') api.win('All goals served in ' + s.moves + ' moves');
-            if (s.status === 'failed') { msg.className = 'msg bad'; msg.textContent = 'A goal ran out of time. Restart (↻).'; }
+            if (s.status === 'failed') { msg.className = 'msg bad'; msg.textContent = 'A goal’s counter reached 0. Restart (↻).'; }
           });
           grid.appendChild(cell);
         })(r, c);

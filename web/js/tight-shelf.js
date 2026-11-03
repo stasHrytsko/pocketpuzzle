@@ -1,5 +1,5 @@
 (function () {
-  var RULES = ['....', 't...', '.ss.', '..Y.'], TARGET = 5, SECONDS = 60, BONUS = 5;
+  var RULES = ['....', 't...', '.ss.', '..Y.'], TARGET = 5;
   var COL = { B: COLORS.blue, Y: COLORS.butter, C: COLORS.apr }, CN = { B: 'blue', Y: 'yellow', C: 'coral' };
   var LINES = (function () { var L = []; for (var r = 0; r < 4; r++) for (var c = 0; c < 4; c++) [[0, 1], [1, 0], [1, 1], [1, -1]].forEach(function (d) { var cells = []; for (var k = 0; k < 3; k++) { var rr = r + d[0] * k, cc = c + d[1] * k; if (rr < 0 || rr > 3 || cc < 0 || cc > 3) { cells = null; break; } cells.push(rr * 4 + cc); } if (cells) L.push(cells); }); return L; })();
   function rng(seed) { return function () { seed |= 0; seed = seed + 0x6D2B79F5 | 0; var t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
@@ -15,20 +15,18 @@
   function anyFit(board, rs, p) { return board.some(function (x, i) { return !x && fits(rs[i], p); }); }
   var engine = { LINES: LINES, fits: fits, placeAt: placeAt, rules: rules, anyFit: anyFit, rng: rng, piece: piece };
   Games.register({ id: 'tight-shelf', name: 'Tight Shelf', color: COLORS.apr, icon: 'o', engine: engine,
-    rules: '<b>Tap an empty cell</b> that accepts the current piece: a colour-ringed cell wants that colour, a shape cell wants that shape, a plain cell takes anything. Three in a row (any direction) with one colour <i>or</i> one shape vanish: <b>+5 s</b>. Clear 5 lines before the minute runs out.',
+    rules: '<b>Tap an empty cell</b> that accepts the current piece: a colour-ringed cell wants that colour, a shape cell wants that shape, a plain cell takes anything. Three in a row (any direction) with one colour <i>or</i> one shape vanish. Clear <b>5 lines</b> — no clock, take your time.',
     mount: function (root, api) {
       var r = rng(26), queue = [piece(r), piece(r), piece(r), piece(r)], board = []; for (var i = 0; i < 16; i++) board.push(null);
-      var rs = rules(), lines = 0, time = SECONDS, timer = null, over = false;
+      var rs = rules(), lines = 0, placed = 0, over = false;
       var q = h('div', { class: 'row', style: 'align-items:center;gap:18px' }), stat = h('div', { class: 'stat' }), msg = h('div', { class: 'msg' });
       var grid = h('div', { class: 'grid', style: 'grid-template-columns:repeat(4,1fr);max-width:320px' });
       root.appendChild(q); root.appendChild(stat); root.appendChild(grid); root.appendChild(msg);
       function pv(p, size) { return h('div', { style: 'width:' + size + 'px;height:' + size + 'px;display:grid;place-items:center;border-radius:12px;background:' + COL[p[0]], html: shape(p[1], 'none') }); }
-      function stop() { if (timer) clearInterval(timer); timer = null; }
-      api.cleanup(stop);
       function draw() {
         q.innerHTML = ''; q.appendChild(h('div', { style: 'text-align:center;font-size:12px;color:var(--mut)' }, [pv(queue[0], 56), 'Now']));
         var nx = h('div', { style: 'text-align:center;font-size:12px;color:var(--mut)' }, [h('div', { style: 'display:flex;gap:6px' }, queue.slice(1).map(function (p) { return pv(p, 40); })), 'Next']); q.appendChild(nx);
-        stat.innerHTML = '<span>Time <b>' + Math.floor(time / 60) + ':' + ('0' + (time % 60)).slice(-2) + '</b></span><span>Lines <b>' + lines + ' / ' + TARGET + '</b></span>';
+        stat.innerHTML = '<span>Pieces <b>' + placed + '</b></span><span>Lines <b>' + lines + ' / ' + TARGET + '</b></span>';
         grid.innerHTML = '';
         for (var i = 0; i < 16; i++) (function (i) {
           var rule = rs[i], p = board[i], st = 'border-color:var(--line)';
@@ -38,11 +36,10 @@
             if (over) return;
             if (board[i] || !fits(rs[i], queue[0])) { shake(cell); msg.textContent = 'That cell doesn’t take this piece.'; return; }
             msg.textContent = '';
-            if (!timer) timer = setInterval(function () { time--; if (time <= 0) { time = 0; stop(); over = true; msg.className = 'msg bad'; msg.textContent = 'Time’s up. Restart (↻).'; } draw(); }, 1000);
-            var n = placeAt(board, i, queue[0]); lines += n; time += n * BONUS;
+            var n = placeAt(board, i, queue[0]); lines += n; placed++;
             queue.shift(); queue.push(piece(r)); draw();
-            if (lines >= TARGET) { stop(); over = true; api.win(lines + ' lines cleared'); }
-            else if (!anyFit(board, rs, queue[0])) { stop(); over = true; msg.className = 'msg bad'; msg.textContent = 'No cell takes this piece. Restart (↻).'; }
+            if (lines >= TARGET) { over = true; api.win(lines + ' lines cleared'); }
+            else if (!anyFit(board, rs, queue[0])) { over = true; msg.className = 'msg bad'; msg.textContent = 'No cell takes this piece. Restart (↻).'; }
           });
           grid.appendChild(cell);
         })(i);

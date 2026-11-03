@@ -8,12 +8,12 @@
 
   function home() {
     clean(); app.innerHTML = '';
-    app.appendChild(h('header', null, [h('span', { style: 'width:44px' }), h('div', { class: 't' }, [h('h1', null, ['Postie']), h('small', null, ['13 games · one level each'])]), h('span', { style: 'width:44px' })]));
+    app.appendChild(h('header', null, [h('span', { style: 'width:44px' }), h('div', { class: 't' }, [h('h1', null, ['Postie']), h('small', null, ['12 games · playable samples'])]), h('span', { style: 'width:44px' })]));
     var tiles = h('div', { class: 'tiles' });
     Games.list.forEach(function (g) {
       tiles.appendChild(h('button', { class: 'tile', onclick: function () { location.hash = '#/' + g.id; } }, [
         h('div', { class: 'ico', style: 'background:' + g.color, html: shape(g.icon, 'none') }),
-        h('div', null, [h('b', null, [g.name]), h('small', null, [done[g.id] ? 'Level 1 · solved ✓' : 'Level 1'])]),
+        h('div', null, [h('b', null, [g.name]), h('small', null, [(g.levelCount ? g.levelCount + ' levels' : 'Level 1') + (done[g.id] ? ' · solved ✓' : '')])]),
         h('div', { class: 'bar' }, [h('i', { style: 'width:' + (done[g.id] ? 100 : 0) + '%' })])
       ]));
     });
@@ -34,7 +34,7 @@
     var showRules = true;
     function mount() {
       clean(); body.innerHTML = '';
-      body.appendChild(rulesBox);
+      if (g.rules) body.appendChild(rulesBox);
       var root = h('div'); body.appendChild(root);
       g.mount(root, {
         win: function (text) {
@@ -46,12 +46,13 @@
           ])]);
           document.body.appendChild(ov);
         },
+        remount: function () { mount(); },
         cleanup: function (f) { cleanups.push(f); }
       });
     }
     app.appendChild(h('header', null, [
       h('button', { class: 'ib', 'aria-label': 'All games', html: ic('grid'), onclick: function () { location.hash = '#/'; } }),
-      h('div', { class: 't' }, [h('h1', null, [g.name]), h('small', null, ['Level 1'])]),
+      h('div', { class: 't' }, [h('h1', null, [g.name]), h('small', null, [g.levelCount ? g.levelCount + ' levels' : 'Level 1'])]),
       h('div', { style: 'display:flex' }, [
         h('button', { class: 'ib', 'aria-label': 'How to play', html: ic('help'), onclick: function () { showRules = !showRules; rulesBox.style.display = showRules ? '' : 'none'; } }),
         h('button', { class: 'ib', 'aria-label': 'Restart', html: ic('redo'), onclick: mount })

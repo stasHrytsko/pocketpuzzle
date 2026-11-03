@@ -3,7 +3,7 @@
 global.COLORS = { apr: 1, blue: 2, sage: 3, butter: 4 }; global.h = () => {}; global.shape = () => '';
 global.Games = { list: [], engines: {}, register(g) { this.list.push(g); if (g.engine) this.engines[g.id] = g.engine; } };
 const path = require('path'), JS = path.join(__dirname, '..', 'web', 'js');
-['arrow-flip', 'perfect-fit', 'the-gap', 'slide-out', 'tight-shelf', 'pair-up', 'cave-in', 'parcels', 'outgrow', 'paint-ladder', 'streams', 'shadow-step', 'one-each'].forEach(f => require(path.join(JS, f + '.js')));
+['arrow-flip', 'perfect-fit', 'the-gap', 'slide-out', 'tight-shelf', 'pair-up', 'parcels', 'outgrow', 'paint-ladder', 'streams', 'shadow-step', 'one-each'].forEach(f => require(path.join(JS, f + '.js')));
 const E = Games.engines; let fail = 0;
 const check = (name, ok, extra) => { console.log((ok ? 'ok   ' : 'FAIL ') + name + (extra ? ' — ' + extra : '')); if (!ok) fail++; };
 
@@ -30,8 +30,7 @@ const check = (name, ok, extra) => { console.log((ok ? 'ok   ' : 'FAIL ') + name
 { const T = E['tight-shelf']; const b = Array(16).fill(null); b[0] = 'Bo'; b[1] = 'Bs'; const n = T.placeAt(b, 2, 'Bt'); check('tight-shelf line clears', n === 1 && !b[0] && !b[1] && !b[2]); }
 // Pair Up / Cave In / Parcels
 { const P = E['pair-up']; let r = []; P.SOL.forEach(x => { r = P.addRect(r, x); }); check('pair-up solution', P.solved(r)); }
-{ const C = E['cave-in']; let g = C.START, ok = true; C.SOL.forEach(m => { if (!C.valid(g, ...m)) ok = false; else g = C.apply(g, ...m); }); check('cave-in solution', ok && C.done(g)); }
-{ const Q = E['parcels']; let g = Q.START, ok = true; Q.SOL.forEach(m => { if (!Q.valid(g, ...m)) ok = false; else g = Q.apply(g, ...m); }); check('parcels solution', ok && Q.done(g)); }
+{ const P2 = E['parcels']; P2.levels.forEach(L => { let g = L.START, ok = true; L.SOL.forEach(m => { if (!L.valid(g, ...m)) ok = false; else g = L.apply(g, ...m); }); check('parcels ' + L.id + ' solution', ok && L.done(g)); }); }
 // Outgrow / Paint Ladder / One Each / Shadow Step
 { const O = E['outgrow']; let own = O.fresh(), ok = true; O.SOL.forEach(t => { const n = O.click(own, t); if (!n) ok = false; else own = n; }); check('outgrow solution', ok && O.won(own) && !O.over(own)); }
 { const L = E['paint-ladder']; let s = L.fresh(); [null, 2, null, 2, 2, null, 1].forEach(x => { s = L.step(s, x); }); check('paint-ladder solution', L.matches(s)); }

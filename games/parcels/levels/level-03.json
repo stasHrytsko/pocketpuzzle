@@ -1,7 +1,7 @@
 {
-  "game": "cave-in",
-  "level": 1,
-  "title": "Level 1 (sample)",
+  "game": "parcels",
+  "level": 3,
+  "title": "Level 3 (sample, pairs & stones — formerly Cave In)",
   "difficulty": "hard",
   "difficulty_note": "Наивный игрок проигрывает в 94% партий (IDEA.md); из 19 первых ходов 6 не ведут в тупик.",
   "board": [
@@ -55,5 +55,6 @@
     ]
   },
   "source": "games/cave-in/IDEA.md, раздел «Уровень прототипа (проверен солвером)»",
-  "verified": "Симуляция в postie (2026-11-03): решение проходит; из 19 первых ходов 6 решаемы, как в IDEA.md."
+  "verified": "Симуляция в postie (2026-11-03): решение проходит; из 19 первых ходов 6 решаемы, как в IDEA.md.",
+  "rule_set": "pairs"
 }

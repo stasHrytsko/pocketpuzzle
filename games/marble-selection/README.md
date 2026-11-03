@@ -1,4 +1,4 @@
-# Marble Selection (Лишние шарики)
+# One Each (Лишние шарики)
 
 - **Статус:** идея, будет в игре (решение автора, 2026-11-03); в stazzi Gate 1 — pending
 - **Источник:** `IDEA.md` в этой папке — перенесено из `stazzi/ideas/potential/86-marble-selection.md`.

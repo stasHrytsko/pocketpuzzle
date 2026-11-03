@@ -4,19 +4,19 @@
 
 | Папка | Игра | Статус | Уровней сейчас |
 |---|---|---|---|
-| `arrow-flip/` | Arrow Flip | MVP, ядро | 25 (`TECH-UNITY.md` §3) |
+| `arrow-flip/` | Arrow Flip | MVP, ядро | 25 |
 | `perfect-fit/` | Perfect Fit | MVP, ядро | 50 + 6 + 1 |
 | `the-gap/` | The Gap | MVP, ядро | 8 |
 | `slide-out/` | Slide Out | в игре, после MVP; прототип есть; **в прототипе обратный отсчёт** | [проверить] |
 | `tight-shelf/` | Tight Shelf | в игре, после MVP; прототип есть; **в прототипе таймер на минуту** | [проверить] |
-| `pary/` | Pairs (Пары) | идея | — |
-| `obval/` | Collapse (Обвал) | идея | — |
+| `pary/` | Pair Up (Пары) | идея | — |
+| `obval/` | Cave In (Обвал) | идея | — |
 | `posylki/` | Parcels (Посылки) | идея | — |
 | `na-vyrost/` | Outgrow (На вырост) | идея | — |
 | `kraski/` | Paint Ladder (Краски) | идея | — |
 | `rusla/` | Streams (Русла) | идея | — |
 | `chetyre-karty/` | Four Cards (Четыре карты) | идея | — |
-| `marble-selection/` | Marble Selection (Лишние шарики) | идея | — |
+| `marble-selection/` | One Each (Лишние шарики) | идея | — |
 
 Состав игр — решение автора (2026-11-03). Идеи перенесены из `stazzi/ideas/potential/` (коммит `1413f94`) как `IDEA.md`; в stazzi у них Gate 1 — pending. Slide Out и Tight Shelf — `IDEA.md` из `stazzi/apps/casual/`; правила (`SPEC.md`) пока там.
 

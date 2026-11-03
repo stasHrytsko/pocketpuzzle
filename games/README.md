@@ -9,16 +9,16 @@
 | `the-gap/` | The Gap | MVP, ядро | 8 |
 | `slide-out/` | Slide Out | в игре, после MVP; прототип есть; **в прототипе обратный отсчёт** | [проверить] |
 | `tight-shelf/` | Tight Shelf | в игре, после MVP; прототип есть; **в прототипе таймер на минуту** | [проверить] |
-| `pary/` | Pair Up (Пары) | идея | — |
-| `obval/` | Cave In (Обвал) | идея | — |
-| `posylki/` | Parcels (Посылки) | идея | — |
-| `na-vyrost/` | Outgrow (На вырост) | идея | — |
-| `kraski/` | Paint Ladder (Краски) | идея | — |
-| `rusla/` | Streams (Русла) | идея | — |
-| `chetyre-karty/` | Four Cards (Четыре карты) | идея | — |
-| `marble-selection/` | One Each (Лишние шарики) | идея | — |
+| `pair-up/` | Pair Up (Пары) | идея | — |
+| `cave-in/` | Cave In (Обвал) | идея | — |
+| `parcels/` | Parcels (Посылки) | идея | — |
+| `outgrow/` | Outgrow (На вырост) | идея | — |
+| `paint-ladder/` | Paint Ladder (Краски) | идея | — |
+| `streams/` | Streams (Русла) | идея | — |
+| `four-cards/` | Four Cards (Четыре карты) | идея | — |
+| `one-each/` | One Each (Лишние шарики) | идея | — |
 
-Состав игр — решение автора (2026-11-03). Идеи перенесены из `stazzi/ideas/potential/` (коммит `1413f94`) как `IDEA.md`; в stazzi у них Gate 1 — pending. Slide Out и Tight Shelf — `IDEA.md` из `stazzi/apps/casual/`; правила (`SPEC.md`) пока там.
+Состав игр — решение автора (2026-11-03); папки идей переименованы в английские названия (2026-11-03). Идеи перенесены из `stazzi/ideas/potential/` (коммит `1413f94`) как `IDEA.md`; в stazzi у них Gate 1 — pending. Slide Out и Tight Shelf — `IDEA.md` из `stazzi/apps/casual/`; правила (`SPEC.md`) пока там.
 
 Новая игра — новая папка с тем же набором файлов.
 

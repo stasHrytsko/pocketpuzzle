@@ -17,11 +17,13 @@ head = """<!doctype html>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="Pocket Puzzle">
+<meta name="apple-mobile-web-app-title" content="Postie">
 <meta name="robots" content="noindex">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}[hidden]{display:none!important}</style>
 """
 # <title>, <link>, <style> из исходника идут в <head>, остальное — в <body>
+cut = src.index("</style>") + len("</style>")
+src = src.replace("<title>Pocket Puzzle Home</title>", "<title>Postie — daily puzzles</title>").replace('aria-label="Pocket Puzzle home"', 'aria-label="Postie home"')
 cut = src.index("</style>") + len("</style>")
 out = head + src[:cut] + "\n</head>\n<body>\n" + src[cut:] + "\n</body>\n</html>\n"
 (root / "web/index.html").write_text(out, encoding="utf-8")

@@ -60,7 +60,7 @@ A single design style sheet for a calm daily-puzzle mobile app called
    cream text, a secondary cream button "Back".
 6. A task card: small game icon, "Level 4 · Arrow Flip", a small round check.
 7. A cream paper envelope with a flap on top and one postage stamp with
-   perforated edges; inside the stamp a small arrow icon and "1:24".
+   perforated edges; inside the stamp a small arrow icon only, no numbers.
 8. A small crop of a cozy room: a big rounded olive-sage mailbox on a low cream
    pedestal in front of an arched window with soft hills.
 9. One phone screen of a 4x4 grid puzzle: inset cells, a few rounded ceramic
@@ -160,7 +160,7 @@ soft top-left light, labeled:
    postmark partly over the left stamp).
 2. The envelope with three empty stamp places, then with three stamps placed.
 3. Postage stamps 48x56 with perforated edges, each with a small game icon
-   (arrow / block shape / flask) and a time like "1:24"; states: in tray,
+   (arrow / block shape / flask), no numbers; states: in tray,
    selected (lifted), placed.
 4. A stamp tray strip under the envelope.
 5. A letter sheet: serif title "Your letter · Nov 2", three task rows with
@@ -210,7 +210,7 @@ a) Letter screen: serif title "Your letter", date "Nov 2", a short intro
    paragraph, three task cards (Arrow Flip, Perfect Fit, The Gap) with levels,
    a sealed postman's note at the bottom with "Opens when all tasks are solved".
 
-b) Solved: a postage stamp appears with the Arrow Flip icon and "1:24",
+b) Solved: a postage stamp appears with the Arrow Flip icon (no numbers),
    text "Level 4 solved", primary button "Next task", quiet "Back to letter".
 
 c) Decorate envelope: the envelope in the center with three stamp places,

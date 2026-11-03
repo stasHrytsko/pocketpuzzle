@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Postie — design preview</title>
+<style>
+:root{--milk:#F5EFE5;--card:#FCF7EC;--ink:#536342;--txt:#2f3a26;--mut:#7b8470;--sage:#B1BA96;--blue:#AECAD1;--butter:#F1CA7D;--apr:#E8B093;--line:#D8C6A9}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;margin:0;background:var(--milk);color:var(--txt);font:16px/1.45 system-ui,-apple-system,sans-serif}
+#app{height:100%;max-width:430px;margin:0 auto;display:flex;flex-direction:column;position:relative;background:var(--milk)}
+@media(min-width:500px){body{background:#EADFCB;display:flex;align-items:center;justify-content:center}#app{height:min(860px,96vh);border-radius:36px;border:1px solid var(--line);overflow:hidden;width:400px}}
+header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px 8px;min-height:56px}
+header h1{font-weight:300;font-size:22px;letter-spacing:.03em;margin:0}
+header .t{flex:1;text-align:center}
+header small{display:block;color:var(--mut);font-size:13px}
+.ib{width:44px;height:44px;border:0;background:none;color:var(--ink);display:grid;place-items:center;border-radius:12px;cursor:pointer}
+.ib svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+main{flex:1;overflow:auto;padding:8px 20px 16px}
+.lbl{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--mut);margin:14px 0 8px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 16px;display:flex;align-items:center;gap:14px;margin-bottom:10px;width:100%;text-align:left;font:inherit;color:inherit}
+button.card{cursor:pointer}
+.card b{font-weight:500;display:block}.card span.s{color:var(--mut);font-size:14px}
+.card .g{flex:1}
+.ico{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;flex:none}
+.ico svg{width:22px;height:22px;stroke:var(--txt);fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.dis{opacity:.55;background:transparent;border-style:dashed}
+.dot{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--line);display:grid;place-items:center;flex:none}
+.dot.on{background:var(--sage);border-color:var(--sage)}.dot svg{width:13px;stroke:var(--txt);fill:none;stroke-width:2.2}
+.btn{height:54px;border-radius:16px;border:1.5px solid var(--ink);background:var(--ink);color:#fff;font:500 17px system-ui;cursor:pointer;width:100%;letter-spacing:.02em}
+.btn.o{background:none;color:var(--ink)}.btn.t{border:0;background:none;color:var(--mut);height:44px;font-size:15px}
+.foot{padding:8px 20px 6px}
+nav{display:flex;justify-content:space-around;padding:6px 8px calc(10px + env(safe-area-inset-bottom));border-top:1px solid var(--line)}
+nav button{flex:1;border:0;background:none;font:16px system-ui;color:var(--mut);height:44px;cursor:pointer;position:relative}
+nav button.on{color:var(--txt)}nav button.on:after{content:"";position:absolute;left:50%;bottom:2px;width:6px;height:6px;margin-left:-3px;border-radius:50%;background:var(--ink)}
+.seg{display:flex;background:#EDE5D4;border:1px solid var(--line);border-radius:12px;padding:3px;margin:6px 0 14px}
+.seg button{flex:1;height:38px;border:0;border-radius:9px;background:none;font:15px system-ui;color:var(--mut);cursor:pointer}.seg .on{background:var(--card);color:var(--txt)}
+.week{display:flex;justify-content:space-between;text-align:center;font-size:13px;color:var(--mut)}
+.week i{display:block;width:26px;height:26px;border-radius:50%;border:1.5px solid var(--line);margin:6px auto 0}.week i.on{background:var(--sage);border-color:var(--sage)}.week i.now{border-color:var(--blue);border-width:2px}
+.board{display:grid;gap:8px;margin:18px auto;width:100%;max-width:340px}
+.c{aspect-ratio:1;border-radius:12px;border:1.5px solid var(--line);display:grid;place-items:center;background:transparent}
+.c svg{width:46%;stroke:var(--txt);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.u{background:var(--apr);border-color:var(--apr)}.l{background:var(--blue);border-color:var(--blue)}.r{background:var(--sage);border-color:var(--sage)}.d{background:var(--butter);border-color:var(--butter)}
+.center{text-align:center}.big{font-size:28px;font-weight:300;margin:6px 0}
+.ov{position:absolute;inset:0;background:rgba(245,239,229,.82);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:28px}
+.dlg{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:24px 22px;width:100%;text-align:center}
+.stamp{width:64px;height:64px;border-radius:10px;display:grid;place-items:center;border:2px dashed var(--line)}
+.env{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;min-height:200px;display:flex;justify-content:flex-end;gap:10px;align-items:flex-start;margin:14px 0}
+.note{font-style:italic;color:var(--mut)}
+</style></head><body><div id="app"></div>
+<script>
+const I={
+ gear:'<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/>',
+ back:'<path d="M19 12H5M11 6l-6 6 6 6"/>',help:'<path d="M9.5 9a2.5 2.5 0 115 0c0 2-2.5 2-2.5 4M12 17v.5"/><circle cx="12" cy="12" r="10" opacity="0"/>',
+ redo:'<path d="M20 12a8 8 0 11-3-6.2M20 4v5h-5"/>',grid:'<rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/>',
+ mail:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>',lock:'<rect x="6" y="11" width="12" height="9" rx="2"/><path d="M9 11V8a3 3 0 016 0v3"/>',
+ up:'<path d="M12 19V5M6 11l6-6 6 6"/>',down:'<path d="M12 5v14M6 13l6 6 6-6"/>',left:'<path d="M19 12H5M11 6l-6 6 6 6"/>',right:'<path d="M5 12h14M13 6l6 6-6 6"/>',
+ chk:'<path d="M5 12l5 5 9-10"/>',circ:'<circle cx="12" cy="12" r="8"/>',tri:'<path d="M12 5l8 14H4z"/>',sq:'<rect x="5" y="5" width="14" height="14" rx="3"/>'};
+const ic=(n,c)=>`<svg viewBox="0 0 24 24" ${c||''}>${I[n]}</svg>`;
+const G={af:{n:'Arrow Flip',lv:25,c:'var(--apr)',i:'right'},ts:{n:'Tight Shelf',lv:5,c:'var(--blue)',i:'sq'},tg:{n:'The Gap',lv:4,c:'var(--butter)',i:'tri'}};
+const order=['af','ts','tg'];
+let S={tab:'today',scr:'home',done:0,cur:0,sent:false,note:false,seg:'cal',ov:null};
+const set=o=>{Object.assign(S,o);render()};
+function hdr(t,sub,left,right){return `<header>${left||'<span style="width:44px"></span>'}<div class="t"><h1>${t}</h1>${sub?`<small>${sub}</small>`:''}</div>${right||'<span style="width:44px"></span>'}</header>`}
+function nav(){return `<nav>${[['letters','Letters'],['today','Today'],['games','Games']].map(([k,l])=>`<button class="${S.tab==k?'on':''}" onclick="set({tab:'${k}'})">${l}</button>`).join('')}</nav>`}
+function mainBtn(){
+ if(S.note)return '<button class="btn o" onclick="set({scr:\'note\'})">Read the note</button>';
+ if(S.done==3&&!S.sent)return '<button class="btn" onclick="set({scr:\'env\'})">Decorate envelope</button>';
+ if(S.sent)return '<button class="btn" onclick="set({scr:\'note\'})">Read the note</button>';
+ return `<button class="btn" onclick="set({scr:'level',cur:${S.done}})">${S.done?`Continue letter · task ${S.done+1} of 3`:'New letter'}</button>`}
+function today(){
+ let t=order.map((k,i)=>`<button class="card" onclick="set({scr:'level',cur:${i}})"><div class="ico" style="background:${G[k].c}">${ic(G[k].i)}</div><div class="g"><b>${G[k].n}</b><span class="s">Level ${G[k].lv} · ${['easy','medium','hard'][i]}</span></div><div class="dot ${i<S.done?'on':''}">${i<S.done?ic('chk'):''}</div></button>`).join('');
+ return hdr('Postie','Tuesday, 3 Nov','',`<button class="ib" onclick="set({scr:'set'})">${ic('gear')}</button>`)+`<main><div class="lbl">Today's letter</div>${t}<div class="card dis"><div class="ico" style="border:1.5px dashed var(--line)">${ic('lock')}</div><div class="g"><b>Postman's note</b><span class="s">Sealed until all three are solved</span></div></div></main><div class="foot">${mainBtn()}</div>`}
+function games(){
+ let g=order.map(k=>`<button class="card"><div class="ico" style="background:${G[k].c}">${ic(G[k].i)}</div><div class="g"><b>${G[k].n}</b><span class="s">Level ${G[k].lv}</span></div>${ic('right','style="width:22px;stroke:var(--ink);fill:none;stroke-width:1.7"')}</button>`).join('');
+ return hdr('Games')+`<main>${g}<div class="lbl">Coming by mail</div><div class="card dis"><div class="ico" style="border:1.5px dashed var(--line)">${ic('mail')}</div><div class="g"><b>Slide Out</b><span class="s">Arrives by mail</span></div></div></main>`}
+function letters(){
+ let body=S.seg=='cal'?`<div class="card" style="display:block"><div class="week">${['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].map((d,i)=>`<div>${d}<i class="${[1,2,6].includes(i)?'on':''} ${i==1?'now':''}"></i></div>`).join('')}</div></div><p class="s" style="color:var(--mut)">Days with a sent letter are filled. Missed days stay empty, never red.</p>`:`<div class="card"><div class="ico" style="background:var(--sage)">${ic('mail')}</div><div class="g"><b class="note">[Note text — written by the author]</b><span class="s">Letter 1</span></div></div>`;
+ return hdr('Letters')+`<main><div class="seg"><button class="${S.seg=='cal'?'on':''}" onclick="set({seg:'cal'})">Calendar</button><button class="${S.seg=='notes'?'on':''}" onclick="set({seg:'notes'})">Notes</button></div>${body}</main>`}
+function level(){
+ const k=order[S.cur],g=G[k];let b='';
+ if(k=='af'){const m=[['u','redo','u','d','u'],['l','','u','d','d'],['l','u','r','l','d'],['r','l','d','',''],['d','u','','u','d']];
+  b=`<div class="board" style="grid-template-columns:repeat(5,1fr)">${m.flat().map(x=>x==='redo'?`<div class="c">${ic('redo')}</div>`:`<div class="c ${x}">${{u:ic('up'),d:ic('down'),l:ic('left'),r:ic('right')}[x]||''}</div>`).join('')}</div><div class="center" style="color:var(--mut)">Moves 0</div>`}
+ else if(k=='ts'){const m=['','','circ','','sq','circ','','sq','tri','circ','sq',''];
+  b=`<div class="board" style="grid-template-columns:repeat(4,1fr)">${m.map(x=>`<div class="c">${x?ic(x):''}</div>`).join('')}</div><p class="center" style="color:var(--mut);font-size:14px">Three in a row sharing a colour or a shape disappear</p>`}
+ else b=`<div class="board" style="grid-template-columns:repeat(4,1fr)">${['dark','','','','','dark','','l','','tri','','tri'].map(x=>x=='dark'?'<div class="c" style="background:var(--ink);border-color:var(--ink)"></div>':`<div class="c ${x=='l'?'l':x=='tri'?'u':''}">${x=='tri'?ic('tri'):x=='l'?ic('circ'):''}</div>`).join('')}</div>`;
+ return hdr(g.n,'Level '+g.lv,`<button class="ib" onclick="set({scr:'home'})">${ic('grid')}</button>`,`<button class="ib">${ic('help')}</button>`)+`<main>${b}</main><div class="foot"><button class="btn t" onclick="set({ov:'win'})">Mark solved (demo)</button></div>`+(S.ov=='win'?`<div class="ov"><div class="dlg"><div style="width:56px;height:56px;margin:0 auto;border:1.5px solid var(--ink);border-radius:16px;transform:rotate(45deg);display:grid;place-items:center"><span style="transform:rotate(-45deg);color:var(--ink)">${ic('chk','style="width:26px;stroke:currentColor;fill:none;stroke-width:1.8"')}</span></div><div class="big">Well done</div><p style="color:var(--mut);margin:0 0 18px">Stamp earned</p><button class="btn" onclick="win()">${S.cur<2?'Next':'To the letter'}</button></div></div>`:'')}
+function win(){const d=Math.max(S.done,S.cur+1);set({ov:null,done:d,scr:d==3?'home':'level',cur:Math.min(S.cur+1,2)})}
+function env(){return hdr('Envelope','Stick your stamps',`<button class="ib" onclick="set({scr:'home'})">${ic('back')}</button>`)+`<main><div class="env">${order.map(k=>`<div class="stamp" style="background:${G[k].c};border:0">${ic(G[k].i)}</div>`).join('')}</div><p style="color:var(--mut)">A stamp is just the game's icon — no solve time.</p></main><div class="foot"><button class="btn" onclick="set({sent:true,scr:'note'})">Send</button></div>`}
+function note(){return hdr('Postman\'s note','Letter 1',`<button class="ib" onclick="set({scr:'home',note:false})">${ic('back')}</button>`)+`<main><div class="card" style="display:block;padding:24px"><p class="note" style="margin:0">[Note text — one fact of the world plus one new question. Written by the author.]</p></div></main><div class="foot"><button class="btn o" onclick="set({scr:'home',tab:'letters'})">Done</button></div>`}
+function setg(){return hdr('Settings','',`<button class="ib" onclick="set({scr:'home'})">${ic('back')}</button>`)+`<main>${['Sound','Haptics','Reminder'].map(x=>`<div class="card"><div class="g"><b>${x}</b></div><div style="width:46px;height:28px;border-radius:14px;background:var(--sage);position:relative"><i style="position:absolute;right:3px;top:3px;width:22px;height:22px;border-radius:50%;background:#fff"></i></div></div>`).join('')}<div style="text-align:center;margin-top:16px"><button class="btn t" onclick="set({done:0,sent:false,note:false,scr:'home',tab:'today'})">Reset demo</button></div></main>`}
+function render(){const a=document.getElementById('app');
+ if(S.scr=='home'){a.innerHTML={today,games,letters}[S.tab]()+nav()}
+ else a.innerHTML={level,env,note,set:setg}[S.scr]()}
+render();
+</script></body></html>
